@@ -32,7 +32,7 @@ export class StartupService {
 
   private viaHttp(resolve: any, reject: any) {
     zip(
-      this.httpClient.get('assets/tmp/app-data.json')
+      this.httpClient.get('/system/getStartup')
     ).pipe(
       catchError(([appData]) => {
           resolve(null);
@@ -41,7 +41,7 @@ export class StartupService {
     ).subscribe(([appData]) => {
 
       // Application data
-      const res: any = appData;
+      const res: any = appData.data;
       // Application information: including site name, description, year
       this.settingService.setApp(res.app);
       // User information: including name, avatar, email address
@@ -58,7 +58,7 @@ export class StartupService {
       resolve(null);
     });
   }
-  
+
   private viaMock(resolve: any, reject: any) {
     // const tokenData = this.tokenService.get();
     // if (!tokenData.token) {
@@ -68,7 +68,7 @@ export class StartupService {
     // }
     // mock
     const app: any = {
-      name: `ng-alain`,
+      name: `上汽通用五菱宝骏物流`,
       description: `Ng-zorro admin panel front-end framework`
     };
     const user: any = {
@@ -115,7 +115,7 @@ export class StartupService {
       // http
       // this.viaHttp(resolve, reject);
       // mock：请勿在生产环境中这么使用，viaMock 单纯只是为了模拟一些数据使脚手架一开始能正常运行
-      this.viaMock(resolve, reject);
+      this.viaHttp(resolve, reject);
 
     });
   }

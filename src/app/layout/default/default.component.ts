@@ -14,7 +14,7 @@ import { DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationError, NavigationCancel } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
 import { updateHostClass } from '@delon/util';
-import { SettingsService } from '@delon/theme';
+import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     private settings: SettingsService,
     private el: ElementRef,
     private renderer: Renderer2,
+    private http: _HttpClient,
     @Inject(DOCUMENT) private doc: any,
   ) {
     // scroll to top in change page
@@ -89,6 +90,7 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
+
   }
 
   ngOnDestroy() {
