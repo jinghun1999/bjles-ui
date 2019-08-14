@@ -1,9 +1,153 @@
 <page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
+  本功能提供用户快速拉动零件，请在下方依次添加需要拉动的零件提交即可。
 </page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
-</nz-card>
+<form nz-form [formGroup]="form_query" (ngSubmit)="_submitForm()" [nzLayout]="'inline'">
+  <nz-card [nzBordered]="false" [nzSize]="size">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzFor="plant">工厂</nz-form-label>
+      <nz-form-control [nzSpan]="20" nzErrorTip="请选择工厂">
+        <nz-select formControlName="plant" [nzSize]="size" (ngModelChange)="plantChange($event)">
+          <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" ngFor="workshop">车间</nz-form-label>
+      <nz-form-control [nzSpan]="20" nzErrorTip="请选择车间">
+        <nz-select formControlName="workshop" [nzSize]="size" nzShowSearch nzAllowClear>
+          <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>零件号</nz-form-label>
+      <nz-form-control nzErrorTip="请输入零件号">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input nz-input maxlength="8" formControlName="part_no" [nzSize]="size" placeholder="请输入零件号" (keyup.enter)="search()" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+  </nz-card>
+</form>
+
+<form nz-form [formGroup]="form" (ngSubmit)="_submitForm()" [nzLayout]="'inline'">
+  <nz-card [nzBordered]="false" [nzSize]="size" nzTitle="零件信息">
+    <nz-form-item>
+      <nz-form-label>卡号</nz-form-label>
+      <nz-form-control nzErrorTip="请选择卡号">
+        <nz-select formControlName="card" [nzSize]="size" (ngModelChange)="cardChange($event)">
+          <nz-option *ngFor="let option of fetch_res.partstocks" [nzLabel]="option.card_no" [nzValue]="option.card_no"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label>供应商</nz-form-label>
+      <nz-form-control nzErrorTip="请选择供应商">
+        <nz-select formControlName="supplier" [nzSize]="size" nzShowSearch nzAllowClear>
+          <nz-option *ngFor="let t of fetch_res.supplier" [nzLabel]="t" [nzValue]="t"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <sv-container size="small">
+      <sv label="拉动类型">{{selected_card.card_type_name}}</sv>
+      <sv label="DOCK">{{selected_card.dock}}</sv>
+      <sv label="路径">{{selected_card.route}}</sv>
+      <sv label="零件名称">{{fetch_res.part_name}}</sv>
+      <sv label="工位">{{selected_card.uloc}}</sv>
+      <sv label="包装类型	">1</sv>
+    </sv-container>
+    <nz-divider></nz-divider>
+    <sv-container size="small" title="库存情况">
+      <sv label="库位">{{selected_card.dloc}}</sv>
+      <sv label="最大库存">{{selected_card.max_storage}}</sv>
+      <sv label="最小库存	">{{selected_card.min_storage}}</sv>
+      <sv label="当前库存">{{selected_card.current_storage}}</sv>
+      <sv label="在途库存	">{{selected_card.online_store}}</sv>
+      <sv label="标准包装数">{{selected_card.store_packing}}</sv>
+    </sv-container>
+    <nz-alert nzType="info" nzMessage="说明" nzDescription="1.输入需手工拉动的零件号或是卡号后，请按回车键，系统将加载相关数据进行手工拉动。
+      2.如果一个零件号对应多个零件卡，请选择一个卡号进行手工拉动；" [nzCloseable]="true"></nz-alert>
+  </nz-card>
+  <nz-card [nzBordered]="false" [nzSize]="size" nzTitle="需求">
+    <nz-form-item>
+      <nz-form-label>物料范畴</nz-form-label>
+      <nz-form-control nzErrorTip="请选择物料范畴">
+        <!--<nz-select formControlName="boxes" [nzSize]="size" [nzPlaceHolder]="'请选择物料范畴'" [nzShowSearch]="true">-->
+          <!--<nz-option *ngFor="let i of data" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>-->
+        <!--</nz-select>-->
+        <input nz-input maxlength="8" formControlName="material_category_name" [nzSize]="size" placeholder="请选择物料范畴" [disabled]="true" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label>需求箱数</nz-form-label>
+      <nz-form-control nzErrorTip="请输入需求箱数!">
+        <nz-input-number formControlName="boxes" [nzSize]="size" [nzMin]="1" [nzMax]="10000" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label>需求件数</nz-form-label>
+      <nz-form-control nzErrorTip="请输入需求件数!">
+        <nz-input-number formControlName="parts" [nzSize]="size" [nzMin]="1" [nzMax]="10000" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+  </nz-card>
+  <nz-card [nzBordered]="false" nzTitle="将拉动的零件">
+    <nz-table #rowSelectionTable
+              [nzData]="data"
+              [nzShowPagination]="false">
+      <thead>
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="isAllDisplayDataChecked"
+          [nzIndeterminate]="isIndeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th>零件号</th>
+        <th>卡号</th>
+        <th>拉动类型</th>
+        <th>供应商代码</th>
+        <th>零件中文名称</th>
+        <th>需求箱数</th>
+        <th>需求件数</th>
+        <th>卸货区</th>
+        <th>源库位地址</th>
+        <th>包装数</th>
+        <th>当前箱数</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of data; let i = index" [formGroupName]="i">
+        <td
+          nzShowCheckbox
+          [(nzChecked)]="mapOfCheckedId[item.id]"
+          (nzCheckedChange)="refreshStatus()"
+        ></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+  <footer-toolbar errorCollect>
+    <button nz-button nzType="primary">保存</button>
+    <button nz-button nzType="danger">提交</button>
+  </footer-toolbar>
+</form>
