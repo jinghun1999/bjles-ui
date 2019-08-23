@@ -27,7 +27,8 @@ const routes: Routes = [
       { path: 'exception', loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule) },
       // 业务子模块
       // { path: 'widgets', loadChildren: () => import('./widgets/widgets.module').then(m => m.WidgetsModule) },
-      { path: 'dd', loadChildren: ()=> import('./dd/dd.module').then(m => m.DdModule) },
+      { path: 'loc', loadChildren: () => import('./loc/loc.module').then(m => m.LocModule) },// 位置信息
+      { path: 'dd', loadChildren: () => import('./dd/dd.module').then(m => m.DdModule) },// 物料单查询
     ]
   },
   // 全屏布局
