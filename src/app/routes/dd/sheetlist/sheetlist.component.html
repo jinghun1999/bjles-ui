@@ -31,7 +31,7 @@
             <nz-form-label>零件号</nz-form-label>
             <nz-form-control nzErrorTip="请输入零件号">
               <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" [nzSize]="size">
-                <input nz-input maxlength="8" formControlName="part_no" [nzSize]="size" placeholder="请输入零件号" />
+                <input nz-input maxlength="8" [(ngModel)]="q.part_no" [nzSize]="size" placeholder="请输入零件号" />
               </nz-input-group>
             </nz-form-control>
           </nz-form-item>
@@ -59,9 +59,9 @@
       </div>
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="SheetStatus">物料单状态</nz-form-label>
+          <nz-form-label nzFor="sheet_status">物料单状态</nz-form-label>
           <nz-form-control>
-              <nz-select [(ngModel)]="q.SheetStatus" [nzSize]="size" name="SheetStatus" id="SheetStatus" [nzPlaceHolder]="'请选择'"
+              <nz-select [(ngModel)]="q.sheet_status" [nzSize]="size" name="sheet_status" id="sheet_status" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true" nzAllowClear>
               <nz-option *ngFor="let i of dataCDSheetStatus;" [nzLabel]="i.Value_cdescription"
                 [nzValue]="i.Code_value"></nz-option>
@@ -71,9 +71,9 @@
       </div>
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="PublishTime">物料单发布时间</nz-form-label>
+          <nz-form-label nzFor="publish_time">物料单发布时间</nz-form-label>
           <nz-form-control>
-              <nz-range-picker [(ngModel)]="q.PublishTime" [nzSize]="size"></nz-range-picker>
+              <nz-range-picker [(ngModel)]="q.publish_time" [nzSize]="size"></nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>

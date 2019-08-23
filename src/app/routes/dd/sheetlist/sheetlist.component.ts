@@ -89,8 +89,8 @@ export class DdSheetlistComponent implements OnInit {
       if(res.successful){
         this.pre_lists = res.data;
         this.sub_workshops = res.data[0].children;
-        // this.q.plant!.setValue(res.data[0].value);
-        // this.q.workshop!.setValue(this.sub_workshops[0].value);
+         this.q.plant.setValue(res.data[0].value);
+         this.q.workshop.setValue(this.sub_workshops[0].value);
       }else{
         this.msg.error(res.message);
         this.loading = false;
