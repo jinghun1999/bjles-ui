@@ -1,6 +1,5 @@
 <page-header [action]="phActionTpl">
   本功能提供用户快速拉动零件，请在下方依次添加需要拉动的零件提交即可。
-  {{part.part_no}}
 </page-header>
 <form nz-form [formGroup]="form_query" (ngSubmit)="search()" [nzLayout]="'inline'">
   <nz-card [nzBordered]="false" [nzSize]="size">
@@ -100,61 +99,62 @@
       </nz-form-control>
     </nz-form-item>
   </nz-card>
-  <nz-card [nzBordered]="false" [nzSize]="size" nzTitle="将拉动的零件" [nzExtra]="extraListCard">
-    <nz-table #rowSelectionTable
-              [nzData]="data"
-              [nzSize]="size"
-              [nzShowPagination]="false">
-      <thead>
-      <tr>
-        <th
-          nzShowCheckbox
-          [(nzChecked)]="isAllDisplayDataChecked"
-          [nzIndeterminate]="isIndeterminate"
-          (nzCheckedChange)="checkAll($event)"
-        ></th>
-        <th>零件号</th>
-        <th>卡号</th>
-        <th>拉动类型</th>
-        <th>供应商代码</th>
-        <th>零件中文名称</th>
-        <th>需求箱数</th>
-        <th>需求件数</th>
-        <th>卸货区</th>
-        <th>源库位地址</th>
-        <th>包装数</th>
-        <th>当前箱数</th>
-        <th>期望到达时间</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of data; let i = index">
-        <td
-          nzShowCheckbox
-          [(nzChecked)]="mapOfCheckedId[item.id]"
-          (nzCheckedChange)="refreshStatus()"
-        ></td>
-        <td>{{item.part_no}}</td>
-        <td>{{item.card_no}}</td>
-        <td>{{item.card_type_name}}</td>
-        <td>{{item.supplier}}</td>
-        <td>{{item.part_name}}</td>
-        <td>{{item.boxes}}</td>
-        <td>{{item.parts}}</td>
-        <td>{{item.dock}}</td>
-        <td>{{item.dloc}}</td>
-        <td>{{item.packing_qty}}</td>
-        <td>{{item.current_storage}}</td>
-        <td><nz-date-picker [(ngModel)]="item.dock" nzShowTime></nz-date-picker></td>
-      </tr>
-      </tbody>
-    </nz-table>
-  </nz-card>
-  <ng-template #extraListCard>
-    <button nz-button nzType="danger" [nzSize]="size" (click)="remove()">删除</button>
-  </ng-template>
   <footer-toolbar errorCollect>
     <button nz-button nzType="primary" (click)="add()" [disabled]="!selected_card.card_no || !part.parts">添加零件</button>
-    <button nz-button nzType="danger" [disabled]="!data.length" (click)="commit()">提交</button>
+    <button nz-button nzType="danger" [disabled]="!data.length" (click)="commit()" [nzLoading]="loading">提交</button>
   </footer-toolbar>
 </form>
+
+<nz-card [nzBordered]="false" [nzSize]="size" nzTitle="将拉动的零件" [nzExtra]="extraListCard" *ngIf="data.length">
+  <nz-table [nzPageSize]="10"
+            [nzSize]="size"
+            nzShowPagination
+            nzShowSizeChanger
+            (nzCurrentPageDataChange)="currentPageDataChange($event)">
+    <thead>
+    <tr>
+      <th
+        nzShowCheckbox
+        [(nzChecked)]="isAllDisplayDataChecked"
+        [nzIndeterminate]="isIndeterminate"
+        (nzCheckedChange)="checkAll($event)"
+      ></th>
+      <th>零件号</th>
+      <th>卡号</th>
+      <th>拉动类型</th>
+      <th>供应商代码</th>
+      <th>零件中文名称</th>
+      <th>需求箱数</th>
+      <th>需求件数</th>
+      <th>卸货区</th>
+      <th>源库位地址</th>
+      <th>包装数</th>
+      <th>当前箱数</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of rowSelectionTable.data">
+      <td
+        nzShowCheckbox
+        [(nzChecked)]="mapOfCheckedId[data.id]"
+        (nzCheckedChange)="refreshStatus()"
+      ></td>
+      <td>{{data.part_no}}</td>
+      <td>{{data.card_no}}</td>
+      <td>{{data.card_type_name}}</td>
+      <td>{{data.supplier}}</td>
+      <td>{{data.part_name}}</td>
+      <td>{{data.boxes}}</td>
+      <td>{{data.parts}}</td>
+      <td>{{data.dock}}</td>
+      <td>{{data.dloc}}</td>
+      <td>{{data.packing_qty}}</td>
+      <td>{{data.current_storage}}</td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <input nz-input placeholder="请填写备注信息" [(ngModel)]="remark" />
+</nz-card>
+<ng-template #extraListCard>
+  <button nz-button nzType="danger" [nzSize]="size" (click)="remove()">删除</button>
+</ng-template>
