@@ -1,6 +1,6 @@
 <page-header [title]="'物料单查询'"></page-header>
 <nz-card [nzBordered]="false">
-  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+  <form nz-form [nzLayout]="'inline'" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
 
       <div nz-col nzMd="8" nzSm="24">
@@ -71,12 +71,14 @@
         <nz-form-item>
           <nz-form-label nzFor="publish_time">物料单发布时间</nz-form-label>
           <nz-form-control>
-              <nz-range-picker [(ngModel)]="q.publish_time"  name="publish_time" id="publish_time" [nzSize]="size"></nz-range-picker>
+              <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear [nzSize]="size"></nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
       <div nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
-        <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+          <button *ngFor="let i of dataAction;" nz-button value="{{ i.action_name }}" type="click" (click)="toolBarOnClick(i)" >
+              {{ i.action_name_cn }}
+            </button>
         <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
         <a (click)="expandForm = !expandForm">
           {{ expandForm ? '收起' : '展开' }}

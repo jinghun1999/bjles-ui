@@ -1,30 +1,38 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, TemplateRef } from '@angular/core';
-import { _HttpClient, ModalHelper } from '@delon/theme';
+import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { SFSchema } from '@delon/form';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { CacheService } from '@delon/cache';
+import { ExtrasPoiEditComponent } from './edit/edit.component';
 
 @Component({
   selector: 'app-dd-sheetlist',
   templateUrl: './sheetlist.component.html',
 })
 export class DdSheetlistComponent implements OnInit {
+  actionPath = 'DDManagement/RunSheetList.aspx';
   q: any = {
     pi: 1,
     ps: 10,
+    export:false,
     plant:'',
     workshop:'',
+    publish_time: '',
     sorter: '',
     asc:''
   };
   form_query: FormGroup;
   size = 'small';
+  nzmd = '8';
+  nzsm = '24';
   data: any[] = [];
+  dataAction:any[] = [];
   dataCDRunSheetType: any[] = [];
   dataCDSheetStatus: any[] = [];
+  dataPrints:any[]=[];
   pre_lists = [];
   sub_workshops = [];
   loading = false;
@@ -32,6 +40,22 @@ export class DdSheetlistComponent implements OnInit {
   st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'runsheet_id', type: 'checkbox' },
+    {
+      title: '操作',
+      buttons: [
+        {
+          text: '查看',
+          type: 'modal',
+          component: ExtrasPoiEditComponent,
+          paramName: 'i',
+          click: () => this.msg.info('回调，重新发起列表刷新'),
+        },
+      {
+          text: '查看',
+          click: (item: any) => this.msg.success(`查看${item.runsheet_id}`),
+        },
+      ],
+    },
     { title: '工厂', index: 'plant',sort:true },
     { title: '车间', index: 'workshop',sort:true },
     {
@@ -41,23 +65,9 @@ export class DdSheetlistComponent implements OnInit {
     {
       title: '发布时间',
       index: 'publish_time',
-      sort: {
-        compare: (a: any, b: any) => a.publish_time - b.publish_time,
-      },
+      sort: true,
     },
-    {
-      title: '操作',
-      buttons: [
-        {
-          text: '配置',
-          click: (item: any) => this.msg.success(`配置${item.no}`),
-        },
-        {
-          text: '订阅警报',
-          click: (item: any) => this.msg.success(`订阅警报${item.no}`),
-        },
-      ],
-    },
+    { title: '供应商名称', index: 'supplier_name',sort:true },
   ];
   selectedRows: STData[] = [];
   expandForm = false;
@@ -110,36 +120,42 @@ export class DdSheetlistComponent implements OnInit {
       this.dataCDSheetStatus = res.data;
     });
 
+    this.http.get('/System/GetActions?actionPath='+this.actionPath).subscribe(res => {
+      this.dataAction = res.data;
+    });
+
   }
 
   getData() {
     this.loading = true;
-    // this.q.statusList = this.status.filter(w => w.checked).map(item => item.index);
-    // if (this.q.status !== null && this.q.status > -1) {
-    //   this.q.statusList.push(this.q.status);
-    // }
-    // tslint:disable-next-line:prefer-conditional-expression
     if (this.q.workshop==='' || this.q.workshop===undefined) {
       this.q.workshop='';
-      // for(let j = 0,len = this.sub_workshops.length; j < len; j++){
-        // this.q.workshop+=value+",";
-        // this.q.workshop+=this.sub_workshops[j].value+",";
-      // }
       this.sub_workshops.forEach(p=>{
         this.q.workshop+=p.value+",";
       });
     }
     else
       this.q.workshop=this.q.workshop.toString();
+    if (this.q.publish_time !=='' && this.q.publish_time !== undefined && this.q.publish_time.length>0) {
+      for(let j = 0,len = this.q.publish_time.length; j < len; j++){
+        this.q.publish_time[j]=this.q.publish_time[j].toLocaleDateString();
+        // this.q.publish_time[j]=this.q.publish_time[j].toLocaleString();
+      }
+    }
 
     this.http
       .get('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
-        this.data = res.data.rows;
-        this.st.total = res.data.total;
-        this.cdr.detectChanges();
-      });
+        if (res.successful) {
+          this.data = res.data.rows;
+          this.st.total = res.data.total;
+          this.cdr.detectChanges();
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+      }
+      }, (err: any) => this.msg.error('系统异常'));
   }
 
   stChange(e: STChange) {
@@ -160,39 +176,50 @@ export class DdSheetlistComponent implements OnInit {
         this.q.ps = e.ps;
         this.getData();
         break;
-        case 'sort':
-          this.q.sorter = e.sort.column.indexKey;
-          this.q.asc = e.sort.value;
-          this.getData();
-          break;
+      case 'sort':
+        this.q.sorter = e.sort.column.indexKey;
+        this.q.asc = e.sort.value;
+        this.getData();
+        break;
       }
+
   }
 
-  remove() {
-    this.http.delete('/rule', { nos: this.selectedRows.map(i => i.no).join(',') }).subscribe(() => {
-      this.getData();
-      this.st.clearCheck();
-    });
-  }
+  toolBarOnClick(e:any){
+    // tslint:disable-next-line:no-debugger
+    // debugger;
+    switch (e.action_name) {
+      case 'Search':
+        this.search();
+        break;
+        case 'Export':
+          this.export();
+          break;
+        case 'ManualClose':
+          // 手工关单
+          this.manualClose();
+          break;
+        case 'HideOrExpand':
+          this.hideOrExpand();
+          break;
+        case 'StopRefresh':
+          // 开始/暂停刷新
+          break;
+        case 'Print':
+          this.print();
+          break;
+    }
 
-  approval() {
-    this.msg.success(`审批了 ${this.selectedRows.length} 笔`);
-  }
-
-  add(tpl: TemplateRef<{}>) {
-    this.modalSrv.create({
-      nzTitle: '新建规则',
-      nzContent: tpl,
-      nzOnOk: () => {
-        this.loading = true;
-        this.http.post('/rule', { description: this.description }).subscribe(() => this.getData());
-      },
-    });
   }
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => this.getData());
+    setTimeout(()=>{});
+    // setTimeout(() => this.getData());
+  }
+
+  search(){
+    this.getData();
   }
 
   plantChange(value: string): void {
@@ -201,4 +228,106 @@ export class DdSheetlistComponent implements OnInit {
     this.q.workshop.setValue(l.children[0].value);
   }
 
+  print() {
+    if (this.selectedRows.length===0){
+      this.msg.error('请选择要打印的记录')
+      return false;
+    } else{
+      this.loading = true;
+      this.http
+        .post('/dd/RunsheetPrint', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(res => {
+          if (res.successful) {
+
+            this.dataPrints = res.data.data;
+            this.msg.success(res.data.msg);
+
+            this.dataPrints.forEach(p=>{
+
+              window.open(p.print_file, '_blank')
+            });
+
+          } else {
+            this.msg.error(res.message);
+        }
+        }, (err: any) => this.msg.error('系统异常'));
+    }
+    this.st.clearCheck();
+  }
+
+  hideOrExpand(){
+    this.expandForm = !this.expandForm;
+  }
+
+  manualClose(){
+    let msg = "";
+    if (this.selectedRows.length === 0){
+      this.msg.error('请选择需要关单的记录！')
+      return false;
+    } else{
+      this.loading = true;
+
+      let str_runsheet_code = "";
+      let str_runsheet_ids="";
+      for(let j = 0,len = this.selectedRows.length; j < len; j++){
+        if (this.selectedRows[j].runsheet_code==="6"){
+          str_runsheet_code+=this.selectedRows[j].runsheet_code+","
+        }
+        else{
+          str_runsheet_ids+=this.selectedRows[j].runsheet_id+",";
+        }
+
+      }
+      if (str_runsheet_code!=="")
+        msg = "单号【"+str_runsheet_code+"】的类型不允许手工关单";
+
+
+        if (str_runsheet_ids!=="")
+          this.http
+          .post('/dd/ManualClose', str_runsheet_ids)
+          .pipe(tap(() => (this.loading = false)))
+          .subscribe(res => {
+            if (res.successful) {
+
+              this.msg.success(res.data.msg);
+            } else {
+              this.msg.error(res.message);
+          }
+          }, (err: any) => this.msg.error('系统异常'));
+    }
+    this.st.clearCheck();
+  }
+
+  export(){
+    if (this.st.total===0){
+      this.msg.error('请输入条件，查询出数据方可导出数据！')
+      return false;
+    }
+
+    this.q.export=true;
+    this.http
+      .get('/dd/GetRunsheetPager', this.q)
+      .pipe(tap(() => (this.loading = false)))
+      .subscribe(res => {
+        if (res.successful) {
+          this.st.export(res.data.rows, {callback:this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+      }
+      }, (err: any) => this.msg.error('系统异常'));
+
+    this.q.export=false;
+
+  }
+  d_callback(e:any){
+    // debugger;
+    for(let j = 65,len = 65+26; j < len; j++){
+      let tmpTitle=eval("e.Sheets.sheet1."+String.fromCharCode(j)+"1");
+      if (tmpTitle===undefined)
+        break;
+        tmpTitle.v = tmpTitle.v.text;
+    }
+  }
 }
