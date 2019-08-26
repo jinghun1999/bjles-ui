@@ -1,0 +1,50 @@
+<page-header [action]="phActionTpl">
+  <ng-template #phActionTpl>
+    <button (click)="add(modalContent)" nz-button nzType="primary">新建</button>
+    <button nz-button (click)="export()">Export via data</button>
+  </ng-template>
+</page-header>
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <nz-form-label nzFor="no">工厂编号</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="q.plant_code" name="no" nzSize="small" placeholder="工厂编号" id="no" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <nz-form-label nzFor="na">工厂名称</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="q.plant_name" name="na" nzSize="small" placeholder="工厂名称" id="na" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
+        <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+      </div>
+    </div>
+  </form>
+  <st #st [columns]="columns" size="small" bordered="false" [data]="data" [loading]="loading"
+    (change)="stChange($event)" [page]="pages">
+  </st>
+</nz-card>
+
+
+<ng-template #modalContent>
+  <nz-form-item>
+    <nz-form-label nzFor="plant">工厂编号</nz-form-label>
+    <nz-form-control>
+      <input nz-input [(ngModel)]="plant.plant_code" name="plant.code" placeholder="请输入工厂编号" id="plant" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzFor="name">工厂名称</nz-form-label>
+    <nz-form-control>
+      <input nz-input [(ngModel)]="plant.plant_name" name="plant.name" placeholder="请输入工厂名称" id="name" />
+    </nz-form-control>
+  </nz-form-item>
+</ng-template>

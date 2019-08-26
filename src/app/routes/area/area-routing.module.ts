@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LocPlantComponent } from './plant/plant.component';
+import { AreaPlantComponent } from './plant/plant.component';
 
 const routes: Routes = [
 
-  { path: 'plant', component: LocPlantComponent }];
+  { path: 'plant', component: AreaPlantComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class LocRoutingModule { }
+export class AreaRoutingModule { }

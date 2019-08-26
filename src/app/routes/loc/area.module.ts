@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@shared';
-import { LocRoutingModule } from './loc-routing.module';
-import { LocPlantComponent } from './plant/plant.component';
+import { SharedModule } from './node_modules/@shared';
+import { AreaRoutingModule } from './area-routing.module';
+import { AreaPlantComponent } from './plant/plant.component';
 
 const COMPONENTS = [
-  LocPlantComponent];
+  AreaPlantComponent];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
   imports: [
     SharedModule,
-    LocRoutingModule
+    AreaRoutingModule
   ],
   declarations: [
     ...COMPONENTS,
@@ -18,4 +18,4 @@ const COMPONENTS_NOROUNT = [];
   ],
   entryComponents: COMPONENTS_NOROUNT
 })
-export class LocModule { }
+export class AreaModule { }
