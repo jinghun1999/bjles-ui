@@ -110,8 +110,7 @@
 </form>
 
 <nz-card [nzBordered]="false" [nzSize]="size" nzTitle="将拉动的零件" [nzExtra]="extraListCard" *ngIf="data.length">
-  <nz-table [nzPageSize]="10" [nzSize]="size" nzShowPagination nzShowSizeChanger
-    (nzCurrentPageDataChange)="currentPageDataChange($event)">
+  <nz-table [nzPageSize]="10" [nzSize]="size" nzShowPagination nzShowSizeChanger>
     <thead>
       <tr>
         <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
@@ -130,7 +129,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of rowSelectionTable.data">
+      <tr *ngFor="let data of data">
         <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()"></td>
         <td>{{data.part_no}}</td>
         <td>{{data.card_no}}</td>
