@@ -30,9 +30,7 @@
             <nz-form-item>
             <nz-form-label>零件号</nz-form-label>
             <nz-form-control nzErrorTip="请输入零件号">
-              <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" [nzSize]="size">
-                <input nz-input maxlength="8" [(ngModel)]="q.part_no" [nzSize]="size" placeholder="请输入零件号" />
-              </nz-input-group>
+              <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size" placeholder="请输入零件号" />
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -73,7 +71,7 @@
         <nz-form-item>
           <nz-form-label nzFor="publish_time">物料单发布时间</nz-form-label>
           <nz-form-control>
-              <nz-range-picker [(ngModel)]="q.publish_time" [nzSize]="size"></nz-range-picker>
+              <nz-range-picker [(ngModel)]="q.publish_time"  name="publish_time" id="publish_time" [nzSize]="size"></nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -105,7 +103,7 @@
       <ng-template #message>
         已选择
         <strong class="text-primary">{{ selectedRows.length }}</strong> 项
-        <a *ngIf="totalCallNo > 0" (click)="st.clearCheck()" class="ml-lg">清空</a>
+        <a *ngIf="selectedRows.length > 0" (click)="st.clearCheck()" class="ml-lg">清空</a>
       </ng-template>
     </nz-alert>
   </div>

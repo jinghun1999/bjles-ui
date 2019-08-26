@@ -5,6 +5,7 @@ import { SFSchema } from '@delon/form';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
+import { CacheService } from '@delon/cache';
 
 @Component({
   selector: 'app-dd-sheetlist',
@@ -17,6 +18,7 @@ export class DdSheetlistComponent implements OnInit {
     plant:'',
     workshop:'',
     sorter: '',
+    asc:''
   };
   form_query: FormGroup;
   size = 'small';
@@ -30,15 +32,18 @@ export class DdSheetlistComponent implements OnInit {
   st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'runsheet_id', type: 'checkbox' },
-    { title: '工厂', index: 'plant' },
-    { title: '车间', index: 'workshop' },
+    { title: '工厂', index: 'plant',sort:true },
+    { title: '车间', index: 'workshop',sort:true },
     {
       title: '单号',
-      index: 'runsheet_code',
+      index: 'runsheet_code',sort:true
     },
     {
       title: '发布时间',
       index: 'publish_time',
+      sort: {
+        compare: (a: any, b: any) => a.publish_time - b.publish_time,
+      },
     },
     {
       title: '操作',
@@ -77,6 +82,7 @@ export class DdSheetlistComponent implements OnInit {
 
   constructor(
     private http: _HttpClient,
+    private srv: CacheService,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
@@ -89,8 +95,8 @@ export class DdSheetlistComponent implements OnInit {
       if(res.successful){
         this.pre_lists = res.data;
         this.sub_workshops = res.data[0].children;
-         this.q.plant.setValue(res.data[0].value);
-         this.q.workshop.setValue(this.sub_workshops[0].value);
+        // this.q.plant=res.data[0].value;
+        // this.q.workshop=this.sub_workshops[0].value;
       }else{
         this.msg.error(res.message);
         this.loading = false;
@@ -113,8 +119,7 @@ export class DdSheetlistComponent implements OnInit {
     //   this.q.statusList.push(this.q.status);
     // }
     // tslint:disable-next-line:prefer-conditional-expression
-    if (this.q.workshop==='' || this.q.workshop===undefined)
-    {
+    if (this.q.workshop==='' || this.q.workshop===undefined) {
       this.q.workshop='';
       // for(let j = 0,len = this.sub_workshops.length; j < len; j++){
         // this.q.workshop+=value+",";
@@ -155,7 +160,12 @@ export class DdSheetlistComponent implements OnInit {
         this.q.ps = e.ps;
         this.getData();
         break;
-    }
+        case 'sort':
+          this.q.sorter = e.sort.column.indexKey;
+          this.q.asc = e.sort.value;
+          this.getData();
+          break;
+      }
   }
 
   remove() {
@@ -185,7 +195,7 @@ export class DdSheetlistComponent implements OnInit {
     setTimeout(() => this.getData());
   }
 
-  6(value: string): void {
+  plantChange(value: string): void {
     const l = this.pre_lists.find(p=>p.value === value);
     this.sub_workshops = l.children;
     this.q.workshop.setValue(l.children[0].value);
