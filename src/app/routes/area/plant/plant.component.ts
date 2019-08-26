@@ -67,7 +67,7 @@ export class AreaPlantComponent implements OnInit {
       window.open(objUrl);
       URL.revokeObjectURL(objUrl);
     });*/
-    this.exportService.export('/area/getPlantExport', null, 'plant-list');
+    this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
   }
   stChange(e: STChange) {
     switch (e.type) {
