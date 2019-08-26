@@ -47,10 +47,10 @@ export class DdManualComponent implements OnInit {
   mapOfCheckedId: { [key: string]: boolean } = {};
 
   constructor(private fb: FormBuilder,
-              private http: _HttpClient,
-              private msg: NzMessageService,
-              private srv: CacheService,
-              private cdr: ChangeDetectorRef) {
+    private http: _HttpClient,
+    private msg: NzMessageService,
+    private srv: CacheService,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {

@@ -41,8 +41,10 @@
     <nz-form-item>
       <nz-form-label>卡号</nz-form-label>
       <nz-form-control nzErrorTip="请选择卡号">
-        <nz-select name="card_no" [(ngModel)]="selected_card.card_no" [nzSize]="size" (ngModelChange)="cardChange($event)">
-          <nz-option *ngFor="let option of fetch_res.part_stocks" [nzLabel]="option.card_no" [nzValue]="option.card_no"></nz-option>
+        <nz-select name="card_no" [(ngModel)]="selected_card.card_no" [nzSize]="size"
+          (ngModelChange)="cardChange($event)">
+          <nz-option *ngFor="let option of fetch_res.part_stocks" [nzLabel]="option.card_no" [nzValue]="option.card_no">
+          </nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -79,23 +81,26 @@
       <nz-form-label>物料范畴</nz-form-label>
       <nz-form-control nzErrorTip="请选择物料范畴">
         <!--<nz-select formControlName="boxes" [nzSize]="size" [nzPlaceHolder]="'请选择物料范畴'" [nzShowSearch]="true">-->
-          <!--<nz-option *ngFor="let i of data" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>-->
+        <!--<nz-option *ngFor="let i of data" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>-->
         <!--</nz-select>-->
-        <input nz-input maxlength="8" name="cn" [(ngModel)]="fetch_res.material_category_name" [nzSize]="size" placeholder="请选择物料范畴" [disabled]="true" />
+        <input nz-input maxlength="8" name="cn" [(ngModel)]="fetch_res.material_category_name" [nzSize]="size"
+          placeholder="请选择物料范畴" [disabled]="true" />
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
       <nz-form-label>需求箱数</nz-form-label>
       <nz-form-control nzErrorTip="请输入需求箱数!">
-        <nz-input-number required name="boxes" [(ngModel)]="part.boxes" [nzSize]="size" [nzMin]="1" [nzMax]="10000" (ngModelChange)="changeBox()" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
+        <nz-input-number required name="boxes" [(ngModel)]="part.boxes" [nzSize]="size" [nzMin]="1" [nzMax]="10000"
+          (ngModelChange)="changeBox()" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
       <nz-form-label>需求件数</nz-form-label>
       <nz-form-control nzErrorTip="请输入需求件数!">
-        <nz-input-number required name="parts" [(ngModel)]="part.parts" [nzSize]="size" [nzMin]="1" [nzMax]="10000" (ngModelChange)="changePart()" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
+        <nz-input-number required name="parts" [(ngModel)]="part.parts" [nzSize]="size" [nzMin]="1" [nzMax]="10000"
+          (ngModelChange)="changePart()" [nzPrecision]="0" [nzStep]="1"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
   </nz-card>
@@ -106,51 +111,40 @@
 </form>
 
 <nz-card [nzBordered]="false" [nzSize]="size" nzTitle="将拉动的零件" [nzExtra]="extraListCard" *ngIf="data.length">
-  <nz-table [nzPageSize]="10"
-            [nzSize]="size"
-            nzShowPagination
-            nzShowSizeChanger
-            (nzCurrentPageDataChange)="currentPageDataChange($event)">
+  <nz-table [nzPageSize]="10" [nzSize]="size" nzShowPagination nzShowSizeChanger
+    (nzCurrentPageDataChange)="currentPageDataChange($event)">
     <thead>
-    <tr>
-      <th
-        nzShowCheckbox
-        [(nzChecked)]="isAllDisplayDataChecked"
-        [nzIndeterminate]="isIndeterminate"
-        (nzCheckedChange)="checkAll($event)"
-      ></th>
-      <th>零件号</th>
-      <th>卡号</th>
-      <th>拉动类型</th>
-      <th>供应商代码</th>
-      <th>零件中文名称</th>
-      <th>需求箱数</th>
-      <th>需求件数</th>
-      <th>卸货区</th>
-      <th>源库位地址</th>
-      <th>包装数</th>
-      <th>当前箱数</th>
-    </tr>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+          (nzCheckedChange)="checkAll($event)"></th>
+        <th>零件号</th>
+        <th>卡号</th>
+        <th>拉动类型</th>
+        <th>供应商代码</th>
+        <th>零件中文名称</th>
+        <th>需求箱数</th>
+        <th>需求件数</th>
+        <th>卸货区</th>
+        <th>源库位地址</th>
+        <th>包装数</th>
+        <th>当前箱数</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let data of rowSelectionTable.data">
-      <td
-        nzShowCheckbox
-        [(nzChecked)]="mapOfCheckedId[data.id]"
-        (nzCheckedChange)="refreshStatus()"
-      ></td>
-      <td>{{data.part_no}}</td>
-      <td>{{data.card_no}}</td>
-      <td>{{data.card_type_name}}</td>
-      <td>{{data.supplier}}</td>
-      <td>{{data.part_name}}</td>
-      <td>{{data.boxes}}</td>
-      <td>{{data.parts}}</td>
-      <td>{{data.dock}}</td>
-      <td>{{data.dloc}}</td>
-      <td>{{data.packing_qty}}</td>
-      <td>{{data.current_storage}}</td>
-    </tr>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()"></td>
+        <td>{{data.part_no}}</td>
+        <td>{{data.card_no}}</td>
+        <td>{{data.card_type_name}}</td>
+        <td>{{data.supplier}}</td>
+        <td>{{data.part_name}}</td>
+        <td>{{data.boxes}}</td>
+        <td>{{data.parts}}</td>
+        <td>{{data.dock}}</td>
+        <td>{{data.dloc}}</td>
+        <td>{{data.packing_qty}}</td>
+        <td>{{data.current_storage}}</td>
+      </tr>
     </tbody>
   </nz-table>
   <input nz-input placeholder="请填写备注信息" [(ngModel)]="remark" />
