@@ -318,8 +318,14 @@ export class DdSheetlistComponent implements OnInit {
     // debugger;
     for (let j = 65, len = 65 + 26; j < len; j++) {
       // tslint:disable-next-line: no-eval
+<<<<<<< HEAD
       const tmpTitle = eval('e.Sheets.sheet1.' + String.fromCharCode(j) + '1');
       if (tmpTitle === undefined) break;
+=======
+      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
+      if (tmpTitle === undefined)
+        break;
+>>>>>>> 9bb701a937f107a7976156c341019ed2c23491cf
       tmpTitle.v = tmpTitle.v.text;
     }
   }

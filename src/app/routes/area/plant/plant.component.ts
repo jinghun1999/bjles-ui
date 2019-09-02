@@ -122,8 +122,39 @@ export class AreaPlantComponent implements OnInit {
       window.open(objUrl);
       URL.revokeObjectURL(objUrl);
     });*/
-    this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
+    // this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
+    if (this.st.total === 0) {
+      this.msg.error('请输入条件，查询出数据方可导出数据！')
+      return false;
+    }
+
+    this.q.export = true;
+    this.http
+      .get('/dd/getPlantPager', this.q)
+      .pipe(tap(() => (this.loading = false)))
+      .subscribe(res => {
+        if (res.successful) {
+          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+        }
+      }, (err: any) => this.msg.error('系统异常'));
+
+    this.q.export = false;
   }
+  d_callback(e: any) {
+    // debugger;
+    for (let j = 65, len = 65 + 26; j < len; j++) {
+      // tslint:disable-next-line: no-eval
+      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
+      if (tmpTitle === undefined)
+        break;
+      tmpTitle.v = tmpTitle.v.text;
+    }
+  }
+
+
   add(tpl: TemplateRef<{}>) {
     this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
