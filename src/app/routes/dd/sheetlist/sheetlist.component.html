@@ -5,41 +5,45 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
-            <nz-form-label nzFor="plant">工厂</nz-form-label>
-            <nz-form-control nzErrorTip="请选择工厂">
-              <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant" (ngModelChange)="plantChange($event)">
-                <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+          <nz-form-label nzFor="plant">工厂</nz-form-label>
+          <nz-form-control nzErrorTip="请选择工厂">
+            <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)">
+              <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
 
-          <div nz-col nzMd="8" nzSm="24">
-              <nz-form-item>
-            <nz-form-label ngFor="workshop">车间</nz-form-label>
-            <nz-form-control nzErrorTip="请选择车间">
-              <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
-               nzMode="multiple" nzShowSearch="true" nzAllowClear>
-                <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <nz-form-label ngFor="workshop">车间</nz-form-label>
+          <nz-form-control nzErrorTip="请选择车间">
+            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
 
-          <div nz-col nzMd="8" nzSm="24">
-            <nz-form-item>
-            <nz-form-label>零件号</nz-form-label>
-            <nz-form-control nzErrorTip="请输入零件号">
-              <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size" placeholder="请输入零件号" />
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <nz-form-label>零件号</nz-form-label>
+          <nz-form-control nzErrorTip="请输入零件号">
+            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
+              placeholder="请输入零件号" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
           <nz-form-label nzFor="runsheet_code">物料单号</nz-form-label>
           <nz-form-control>
-            <input nz-input [(ngModel)]="q.runsheet_code" [nzSize]="size" name="runsheet_code" placeholder="请输入" id="runsheet_code" />
+            <input nz-input [(ngModel)]="q.runsheet_code" [nzSize]="size" name="runsheet_code" placeholder="请输入"
+              id="runsheet_code" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -47,8 +51,8 @@
         <nz-form-item>
           <nz-form-label nzFor="runsheet_type">物料单类型</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="q.runsheet_type" [nzSize]="size" name="runsheet_type" id="runsheet_type" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" nzAllowClear>
+            <nz-select [(ngModel)]="q.runsheet_type" [nzSize]="size" name="runsheet_type" id="runsheet_type"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear>
               <nz-option *ngFor="let i of dataCDRunSheetType;" [nzLabel]="i.Value_cdescription"
                 [nzValue]="i.Code_value"></nz-option>
             </nz-select>
@@ -59,10 +63,10 @@
         <nz-form-item>
           <nz-form-label nzFor="sheet_status">物料单状态</nz-form-label>
           <nz-form-control>
-              <nz-select [(ngModel)]="q.sheet_status" [nzSize]="size" name="sheet_status" id="sheet_status" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" nzAllowClear>
-              <nz-option *ngFor="let i of dataCDSheetStatus;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value"></nz-option>
+            <nz-select [(ngModel)]="q.sheet_status" [nzSize]="size" name="sheet_status" id="sheet_status"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of dataCDSheetStatus;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+              </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -71,14 +75,16 @@
         <nz-form-item>
           <nz-form-label nzFor="publish_time">物料单发布时间</nz-form-label>
           <nz-form-control>
-              <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear [nzSize]="size"></nz-range-picker>
+            <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear
+              [nzSize]="size"></nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
       <div nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
-          <button *ngFor="let i of dataAction;" nz-button value="{{ i.action_name }}" type="click" (click)="toolBarOnClick(i)" >
-              {{ i.action_name_cn }}
-            </button>
+        <button *ngFor="let i of dataAction;" nz-button value="{{ i.action_name }}" type="click"
+          (click)="toolBarOnClick(i)">
+          {{ i.action_name_cn }}
+        </button>
         <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
         <a (click)="expandForm = !expandForm">
           {{ expandForm ? '收起' : '展开' }}
@@ -87,19 +93,6 @@
       </div>
     </div>
   </form>
-  <ng-container *ngIf="selectedRows.length > 0">
-    <button nz-button>批量操作</button>
-    <button nz-button nz-dropdown [nzDropdownMenu]="batchMenu" nzPlacement="bottomLeft">
-      更多操作
-      <i nz-icon nzType="down"></i>
-    </button>
-    <nz-dropdown-menu #batchMenu="nzDropdownMenu">
-      <ul nz-menu>
-        <li nz-menu-item (click)="remove()">删除</li>
-        <li nz-menu-item (click)="approval()">批量审批</li>
-      </ul>
-    </nz-dropdown-menu>
-  </ng-container>
   <div class="my-md">
     <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
       <ng-template #message>

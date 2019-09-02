@@ -7,6 +7,7 @@ import { tap } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
+import { PageInfo, SortInfo } from 'src/app/model';
 
 @Component({
   selector: 'app-dd-sheetlist',
@@ -15,14 +16,11 @@ import { DdDetailComponent } from '../detail/detail.component';
 export class DdSheetlistComponent implements OnInit {
   actionPath = 'DDManagement/RunSheetList.aspx';
   q: any = {
-    pi: 1,
-    ps: 10,
-    export: false,
+    page: new PageInfo(),
+    sort: new SortInfo(),
     plant: '',
     workshop: '',
     publish_time: '',
-    sorter: '',
-    asc: ''
   };
   form_query: FormGroup;
   size = 'small';
@@ -47,16 +45,16 @@ export class DdSheetlistComponent implements OnInit {
           text: '查看',
           type: 'modal',
           component: DdDetailComponent,
-          paramName: 'i',
-          click: () => this.msg.info('回调，重新发起列表刷新'),
-        }
+          click: (_record, modal) => {},
+        },
       ],
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
     {
       title: '单号',
-      index: 'runsheet_code', sort: true
+      index: 'runsheet_code',
+      sort: true,
     },
     {
       title: '发布时间',
@@ -79,12 +77,11 @@ export class DdSheetlistComponent implements OnInit {
     properties: {
       no: {
         type: 'string',
-        title: '编号'
-      }
-    }
+        title: '编号',
+      },
+    },
   };
   description: any;
-
 
   constructor(
     private http: _HttpClient,
@@ -92,22 +89,24 @@ export class DdSheetlistComponent implements OnInit {
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) {}
 
   ngOnInit() {
-
-    this.http.get('/system/getplants').subscribe((res: any) => {
-      this.loading = false;
-      if (res.successful) {
-        this.pre_lists = res.data;
-        this.sub_workshops = res.data[0].children;
-        // this.q.plant=res.data[0].value;
-        // this.q.workshop=this.sub_workshops[0].value;
-      } else {
-        this.msg.error(res.message);
+    this.http.get('/system/getplants').subscribe(
+      (res: any) => {
         this.loading = false;
-      }
-    }, (err: any) => this.msg.error('系统异常'));
+        if (res.successful) {
+          this.pre_lists = res.data;
+          this.sub_workshops = res.data[0].children;
+          // this.q.plant=res.data[0].value;
+          // this.q.workshop=this.sub_workshops[0].value;
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+        }
+      },
+      (err: any) => this.msg.error('系统异常'),
+    );
 
     this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_type&orderName=').subscribe(res => {
       this.dataCDRunSheetType = res.data;
@@ -119,7 +118,6 @@ export class DdSheetlistComponent implements OnInit {
     this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
       this.dataAction = res.data;
     });
-
   }
 
   getData() {
@@ -127,11 +125,9 @@ export class DdSheetlistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined) {
       this.q.workshop = '';
       this.sub_workshops.forEach(p => {
-        this.q.workshop += p.value + ",";
+        this.q.workshop += p.value + ',';
       });
-    }
-    else
-      this.q.workshop = this.q.workshop.toString();
+    } else this.q.workshop = this.q.workshop.toString();
     if (this.q.publish_time !== '' && this.q.publish_time !== undefined && this.q.publish_time.length > 0) {
       for (let j = 0, len = this.q.publish_time.length; j < len; j++) {
         this.q.publish_time[j] = this.q.publish_time[j].toLocaleDateString();
@@ -140,18 +136,21 @@ export class DdSheetlistComponent implements OnInit {
     }
 
     this.http
-      .get('/dd/GetRunsheetPager', this.q)
+      .post('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
-      .subscribe(res => {
-        if (res.successful) {
-          this.data = res.data.rows;
-          this.st.total = res.data.total;
-          this.cdr.detectChanges();
-        } else {
-          this.msg.error(res.message);
-          this.loading = false;
-        }
-      }, (err: any) => this.msg.error('系统异常'));
+      .subscribe(
+        res => {
+          if (res.successful) {
+            this.data = res.data.rows;
+            this.st.total = res.data.total;
+            this.cdr.detectChanges();
+          } else {
+            this.msg.error(res.message);
+            this.loading = false;
+          }
+        },
+        (err: any) => this.msg.error('系统异常'),
+      );
   }
 
   stChange(e: STChange) {
@@ -164,21 +163,20 @@ export class DdSheetlistComponent implements OnInit {
         this.getData();
         break;
       case 'pi':
-        this.q.pi = e.pi;
+        this.q.page.pi = e.pi;
         this.getData();
         this.msg.success('已经选择了另一个页码' + e.pi.toString());
         break;
       case 'ps':
-        this.q.ps = e.ps;
+        this.q.page.ps = e.ps;
         this.getData();
         break;
       case 'sort':
-        this.q.sorter = e.sort.column.indexKey;
-        this.q.asc = e.sort.value;
+        this.q.sort.field = e.sort.column.indexKey;
+        this.q.sort.order = e.sort.value;
         this.getData();
         break;
     }
-
   }
 
   toolBarOnClick(e: any) {
@@ -209,7 +207,7 @@ export class DdSheetlistComponent implements OnInit {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => { });
+    setTimeout(() => {});
     // setTimeout(() => this.getData());
   }
 
@@ -225,28 +223,28 @@ export class DdSheetlistComponent implements OnInit {
 
   print() {
     if (this.selectedRows.length === 0) {
-      this.msg.error('请选择要打印的记录')
+      this.msg.error('请选择要打印的记录');
       return false;
     } else {
       this.loading = true;
       this.http
         .post('/dd/RunsheetPrint', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
-        .subscribe(res => {
-          if (res.successful) {
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.dataPrints = res.data.data;
+              this.msg.success(res.data.msg);
 
-            this.dataPrints = res.data.data;
-            this.msg.success(res.data.msg);
-
-            this.dataPrints.forEach(p => {
-
-              window.open(p.print_file, '_blank')
-            });
-
-          } else {
-            this.msg.error(res.message);
-          }
-        }, (err: any) => this.msg.error('系统异常'));
+              this.dataPrints.forEach(p => {
+                window.open(p.print_file, '_blank');
+              });
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
     }
     this.st.clearCheck();
   }
@@ -256,72 +254,72 @@ export class DdSheetlistComponent implements OnInit {
   }
 
   manualClose() {
-    let msg = "";
+    let msg = '';
     if (this.selectedRows.length === 0) {
-      this.msg.error('请选择需要关单的记录！')
+      this.msg.error('请选择需要关单的记录！');
       return false;
     } else {
       this.loading = true;
 
-      let str_runsheet_code = "";
-      let str_runsheet_ids = "";
+      let str_runsheet_code = '';
+      let str_runsheet_ids = '';
       for (let j = 0, len = this.selectedRows.length; j < len; j++) {
-        if (this.selectedRows[j].runsheet_code === "6") {
-          str_runsheet_code += this.selectedRows[j].runsheet_code + ","
+        if (this.selectedRows[j].runsheet_code === '6') {
+          str_runsheet_code += this.selectedRows[j].runsheet_code + ',';
+        } else {
+          str_runsheet_ids += this.selectedRows[j].runsheet_id + ',';
         }
-        else {
-          str_runsheet_ids += this.selectedRows[j].runsheet_id + ",";
-        }
-
       }
-      if (str_runsheet_code !== "")
-        msg = "单号【" + str_runsheet_code + "】的类型不允许手工关单";
+      if (str_runsheet_code !== '') msg = '单号【' + str_runsheet_code + '】的类型不允许手工关单';
 
-
-      if (str_runsheet_ids !== "")
+      if (str_runsheet_ids !== '')
         this.http
           .post('/dd/ManualClose', str_runsheet_ids)
           .pipe(tap(() => (this.loading = false)))
-          .subscribe(res => {
-            if (res.successful) {
-
-              this.msg.success(res.data.msg);
-            } else {
-              this.msg.error(res.message);
-            }
-          }, (err: any) => this.msg.error('系统异常'));
+          .subscribe(
+            res => {
+              if (res.successful) {
+                this.msg.success(res.data.msg);
+              } else {
+                this.msg.error(res.message);
+              }
+            },
+            (err: any) => this.msg.error('系统异常'),
+          );
     }
     this.st.clearCheck();
   }
 
   export() {
     if (this.st.total === 0) {
-      this.msg.error('请输入条件，查询出数据方可导出数据！')
+      this.msg.error('请输入条件，查询出数据方可导出数据！');
       return false;
     }
 
-    this.q.export = true;
+    this.q.page.export = true;
     this.http
       .get('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
-      .subscribe(res => {
-        if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
-        } else {
-          this.msg.error(res.message);
-          this.loading = false;
-        }
-      }, (err: any) => this.msg.error('系统异常'));
+      .subscribe(
+        res => {
+          if (res.successful) {
+            this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+          } else {
+            this.msg.error(res.message);
+            this.loading = false;
+          }
+        },
+        (err: any) => this.msg.error('系统异常'),
+      );
 
-    this.q.export = false;
-
+    this.q.page.export = false;
   }
   d_callback(e: any) {
     // debugger;
     for (let j = 65, len = 65 + 26; j < len; j++) {
-      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
-      if (tmpTitle === undefined)
-        break;
+      // tslint:disable-next-line: no-eval
+      const tmpTitle = eval('e.Sheets.sheet1.' + String.fromCharCode(j) + '1');
+      if (tmpTitle === undefined) break;
       tmpTitle.v = tmpTitle.v.text;
     }
   }
