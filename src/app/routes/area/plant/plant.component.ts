@@ -5,7 +5,8 @@ import { SFSchema } from '@delon/form';
 import { ExportService } from "@core";
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
-import { HttpHeaders } from '@angular/common/http';
+// import { HttpHeaders } from '@angular/common/http';
+import { AreaPlantEditComponent } from './edit/edit.component';
 
 @Component({
   selector: 'app-area-plant',
@@ -42,7 +43,11 @@ export class AreaPlantComponent implements OnInit {
       title: '',
       buttons: [
         { text: '修改', click: (item: any) => `/form/${item.id}` },
-        // { text: '编辑', type: 'static', component: FormEditComponent, click: 'reload' },
+        {
+          text: '修改', icon: 'edit', type: 'modal', component: AreaPlantEditComponent, click: (_record, modal) => {
+
+          }
+        },
       ]
     }
   ];
