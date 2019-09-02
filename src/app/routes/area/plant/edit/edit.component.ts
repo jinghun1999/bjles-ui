@@ -17,9 +17,19 @@ export class AreaPlantEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.http.get(`/user/${this.record.id}`).subscribe(res => this.i = res);
+    // this.http.get(`/user/${this.record.id}`).subscribe(res => this.i = res);
   }
-
+  save() {
+    this.http.post('/area/postPlant', this.record).subscribe((res: any) => {
+      if (res.successful) {
+        this.msgSrv.success('保存成功');
+        this.modal.close(true);
+        this.close();
+      } else {
+        this.msgSrv.error(res.message);
+      }
+    });
+  }
   close() {
     this.modal.destroy();
   }

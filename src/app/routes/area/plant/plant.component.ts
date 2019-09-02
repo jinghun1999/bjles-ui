@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { _HttpClient } from '@delon/theme';
-import { STColumn, STComponent, STPage, STChange } from '@delon/abc';
+import { _HttpClient, ModalHelper } from '@delon/theme';
+import { STColumn, STComponent, STPage, STChange, STData } from '@delon/abc';
 import { SFSchema } from '@delon/form';
 import { ExportService } from "@core";
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
@@ -16,11 +16,14 @@ export class AreaPlantComponent implements OnInit {
   constructor(private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
+    private model: ModalHelper,
     private exportService: ExportService) { }
-
+  actionPath = 'AreaManagement/PlantList.aspx';
   loading = false;
   plant: any = {};
   data: [] = [];
+  dataAction = [];
+  selectedRows: STData[] = [];
   q: any = {
     pi: 1,
     ps: 10,
@@ -35,25 +38,33 @@ export class AreaPlantComponent implements OnInit {
     pageSizes: [10, 30, 50, 100],
   };
 
-  @ViewChild('st', { static: false }) st: STComponent;
+  @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
-    { title: '工厂编号', index: 'plant_code' },
-    { title: '工厂名称', index: 'plant_name' },
+    { title: '', index: 'runsheet_id', type: 'checkbox' },
     {
       title: '',
       buttons: [
-        { text: '修改', click: (item: any) => `/form/${item.id}` },
         {
-          text: '修改', icon: 'edit', type: 'modal', component: AreaPlantEditComponent, click: (_record, modal) => {
+          text: '修改',
+          icon: 'edit',
+          type: 'modal',
+          modal: {
+            component: AreaPlantEditComponent,
+          },
+          click: (_record, modal) => {
 
           }
         },
       ]
-    }
+    },
+    { title: '工厂编号', index: 'plant_code' },
+    { title: '工厂名称', index: 'plant_name' },
   ];
 
   ngOnInit() {
-    this.getData();
+    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
+      this.dataAction = res.data;
+    });
   }
   getData() {
     this.loading = true;
@@ -65,21 +76,10 @@ export class AreaPlantComponent implements OnInit {
         // this.cdr.detectChanges();
       });
   }
-  export() {
-    /*this.http.get('/area/getPlantExport', null, { responseType: 'blob' }).subscribe((res: any) => {
-      const file = new File([res], "mm.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-      const objUrl = URL.createObjectURL(file);
-      window.open(objUrl);
-      URL.revokeObjectURL(objUrl);
-    });*/
-    this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
-  }
   stChange(e: STChange) {
     switch (e.type) {
       case 'checkbox':
-        // this.selectedRows = e.checkbox!;
-        // this.cdr.detectChanges();
-
+        this.selectedRows = e.checkbox!;
         break;
       case 'filter':
         this.getData();
@@ -99,15 +99,54 @@ export class AreaPlantComponent implements OnInit {
         break;
     }
   }
-  add(tpl: TemplateRef<{}>) {
-    this.modalSrv.create({
-      nzTitle: '新建规则',
-      nzContent: tpl,
-      nzOnOk: () => {
-        this.loading = true;
-        this.http.post('/area/postPlant', this.plant).subscribe(() => this.getData());
-      },
-    });
+
+  toolBarOnClick(e: any) {
+    switch (e.action_name) {
+      case 'Export':
+        this.export();
+        break;
+      case 'Delete':
+        // 手工关单
+        this.delete();
+        break;
+      case 'Search':
+        this.getData();
+        break;
+    }
   }
 
+  export() {
+    /*this.http.get('/area/getPlantExport', null, { responseType: 'blob' }).subscribe((res: any) => {
+      const file = new File([res], "mm.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const objUrl = URL.createObjectURL(file);
+      window.open(objUrl);
+      URL.revokeObjectURL(objUrl);
+    });*/
+    this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
+  }
+  add(tpl: TemplateRef<{}>) {
+    this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
+      this.getData();
+    });
+  }
+  delete() {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请先选择要操作的数据');
+      return false;
+    } else {
+      this.modalSrv.confirm({
+        nzTitle: '删除提示',
+        nzContent: '删除后不可恢复，确认删除吗？',
+        nzOkType: 'danger',
+        nzOnOk: () => {
+          this.http.post('/area/deletePlant', this.selectedRows).subscribe((res: any) => {
+            if (res.successful) {
+              this.msg.success('删除成功');
+              this.getData();
+            }
+          });
+        },
+      });
+    }
+  }
 }

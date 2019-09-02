@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.search__form-mixin(@enabled) when(@enabled =true) {
+  .search {
+    &__form {
+      .@{ant-prefix}-form-item {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}

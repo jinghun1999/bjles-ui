@@ -1,6 +1,6 @@
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 
 @Component({
@@ -8,23 +8,23 @@ import { _HttpClient } from '@delon/theme';
   templateUrl: './detail.component.html',
 })
 export class DdDetailComponent implements OnInit {
-  i: any;
-  cat: string[] = ['美食', '美食,粤菜', '美食,粤菜,湛江菜'];
-
+  @Input() record: any;
   constructor(private modal: NzModalRef, public msgSrv: NzMessageService, public http: _HttpClient) { }
 
   ngOnInit() {
-    if (this.i.id > 0) {
-      // this.http.get('/pois').subscribe((res: any) => (this.i = res.list[0]));
-    }
+
   }
 
   save() {
-    // this.http.get('/pois').subscribe(() => {
-    // this.msgSrv.success('保存成功，只是模拟，实际未变更');
-    // this.modal.close(true);
-    // this.close();
-    // });
+    this.http.post('/area/postPlant', this.record).subscribe((res: any) => {
+      if (res.successful) {
+        this.msgSrv.success('保存成功');
+        this.modal.close(true);
+        this.close();
+      } else {
+        this.msgSrv.error(res.message);
+      }
+    });
   }
 
   close() {

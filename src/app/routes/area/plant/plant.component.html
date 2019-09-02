@@ -1,11 +1,10 @@
 <page-header [action]="phActionTpl">
   <ng-template #phActionTpl>
-    <button (click)="add(modalContent)" nz-button nzType="primary">新建</button>
-    <button nz-button (click)="export()">Export via data</button>
+
   </ng-template>
 </page-header>
-<nz-card>
-  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="search__form">
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
@@ -23,13 +22,17 @@
           </nz-form-control>
         </nz-form-item>
       </div>
+    </div>
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
       <div nz-col>
-        <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+        <button *ngFor="let i of dataAction;" nz-button nzSize="small" value="{{ i.action_name }}" type="click" [nzLoading]="loading"
+          (click)="toolBarOnClick(i)">
+          {{ i.action_name_cn }}
+        </button>
       </div>
     </div>
   </form>
-  <st #st [columns]="columns" size="small" bordered="false" [data]="data" [loading]="loading"
-    (change)="stChange($event)" [page]="pages">
+  <st #st [columns]="columns" [data]="data" [loading]="loading" (change)="stChange($event)" [page]="pages">
   </st>
 </nz-card>
 
