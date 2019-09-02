@@ -29,6 +29,10 @@ export class AreaPlantComponent implements OnInit {
     ps: 10,
     plant_code: '',
     plant_name: '',
+    sort: {
+      field: '',
+      order: ''
+    }
   }
   pages: STPage = {
     total: '', // 分页显示多少条数据，字符串型
@@ -57,8 +61,8 @@ export class AreaPlantComponent implements OnInit {
         },
       ]
     },
-    { title: '工厂编号', index: 'plant_code' },
-    { title: '工厂名称', index: 'plant_name' },
+    { title: '工厂编号', index: 'plant_code', sort: true },
+    { title: '工厂名称', index: 'plant_name', sort: true },
   ];
 
   ngOnInit() {
@@ -94,8 +98,9 @@ export class AreaPlantComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-        this.q.sort = e.sort.column;
-
+        this.q.sort.field = e.sort.column.indexKey;
+        this.q.sort.order = e.sort.value;
+        this.getData();
         break;
     }
   }
@@ -130,7 +135,7 @@ export class AreaPlantComponent implements OnInit {
 
     this.q.export = true;
     this.http
-      .get('/dd/getPlantPager', this.q)
+      .post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
