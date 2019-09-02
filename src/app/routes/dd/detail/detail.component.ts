@@ -4,14 +4,14 @@ import { Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 
 @Component({
-  selector: 'app-dd-sheetlist-edit',
-  templateUrl: './edit.component.html',
+  selector: 'app-dd-detail',
+  templateUrl: './detail.component.html',
 })
-export class ExtrasPoiEditComponent implements OnInit {
+export class DdDetailComponent implements OnInit {
   i: any;
   cat: string[] = ['美食', '美食,粤菜', '美食,粤菜,湛江菜'];
 
-  constructor(private modal: NzModalRef, public msgSrv: NzMessageService, public http: _HttpClient) {}
+  constructor(private modal: NzModalRef, public msgSrv: NzMessageService, public http: _HttpClient) { }
 
   ngOnInit() {
     if (this.i.id > 0) {
@@ -21,9 +21,9 @@ export class ExtrasPoiEditComponent implements OnInit {
 
   save() {
     // this.http.get('/pois').subscribe(() => {
-      // this.msgSrv.success('保存成功，只是模拟，实际未变更');
-      // this.modal.close(true);
-      // this.close();
+    // this.msgSrv.success('保存成功，只是模拟，实际未变更');
+    // this.modal.close(true);
+    // this.close();
     // });
   }
 

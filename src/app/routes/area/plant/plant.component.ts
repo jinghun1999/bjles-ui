@@ -41,7 +41,7 @@ export class AreaPlantComponent implements OnInit {
     {
       title: '',
       buttons: [
-        // { text: '查看', click: (item: any) => `/form/${item.id}` },
+        { text: '修改', click: (item: any) => `/form/${item.id}` },
         // { text: '编辑', type: 'static', component: FormEditComponent, click: 'reload' },
       ]
     }

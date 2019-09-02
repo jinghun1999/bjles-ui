@@ -6,7 +6,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { CacheService } from '@delon/cache';
-import { ExtrasPoiEditComponent } from './edit/edit.component';
+import { DdDetailComponent } from '../detail/detail.component';
 
 @Component({
   selector: 'app-dd-sheetlist',
@@ -17,22 +17,22 @@ export class DdSheetlistComponent implements OnInit {
   q: any = {
     pi: 1,
     ps: 10,
-    export:false,
-    plant:'',
-    workshop:'',
+    export: false,
+    plant: '',
+    workshop: '',
     publish_time: '',
     sorter: '',
-    asc:''
+    asc: ''
   };
   form_query: FormGroup;
   size = 'small';
   nzmd = '8';
   nzsm = '24';
   data: any[] = [];
-  dataAction:any[] = [];
+  dataAction: any[] = [];
   dataCDRunSheetType: any[] = [];
   dataCDSheetStatus: any[] = [];
-  dataPrints:any[]=[];
+  dataPrints: any[] = [];
   pre_lists = [];
   sub_workshops = [];
   loading = false;
@@ -46,28 +46,24 @@ export class DdSheetlistComponent implements OnInit {
         {
           text: '查看',
           type: 'modal',
-          component: ExtrasPoiEditComponent,
+          component: DdDetailComponent,
           paramName: 'i',
           click: () => this.msg.info('回调，重新发起列表刷新'),
-        },
-      {
-          text: '查看',
-          click: (item: any) => this.msg.success(`查看${item.runsheet_id}`),
-        },
+        }
       ],
     },
-    { title: '工厂', index: 'plant',sort:true },
-    { title: '车间', index: 'workshop',sort:true },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
     {
       title: '单号',
-      index: 'runsheet_code',sort:true
+      index: 'runsheet_code', sort: true
     },
     {
       title: '发布时间',
       index: 'publish_time',
       sort: true,
     },
-    { title: '供应商名称', index: 'supplier_name',sort:true },
+    { title: '供应商名称', index: 'supplier_name', sort: true },
   ];
   selectedRows: STData[] = [];
   expandForm = false;
@@ -96,18 +92,18 @@ export class DdSheetlistComponent implements OnInit {
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
 
-    this.http.get('/system/getplants').subscribe((res: any)=>{
+    this.http.get('/system/getplants').subscribe((res: any) => {
       this.loading = false;
-      if(res.successful){
+      if (res.successful) {
         this.pre_lists = res.data;
         this.sub_workshops = res.data[0].children;
         // this.q.plant=res.data[0].value;
         // this.q.workshop=this.sub_workshops[0].value;
-      }else{
+      } else {
         this.msg.error(res.message);
         this.loading = false;
       }
@@ -120,7 +116,7 @@ export class DdSheetlistComponent implements OnInit {
       this.dataCDSheetStatus = res.data;
     });
 
-    this.http.get('/System/GetActions?actionPath='+this.actionPath).subscribe(res => {
+    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
       this.dataAction = res.data;
     });
 
@@ -128,17 +124,17 @@ export class DdSheetlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    if (this.q.workshop==='' || this.q.workshop===undefined) {
-      this.q.workshop='';
-      this.sub_workshops.forEach(p=>{
-        this.q.workshop+=p.value+",";
+    if (this.q.workshop === '' || this.q.workshop === undefined) {
+      this.q.workshop = '';
+      this.sub_workshops.forEach(p => {
+        this.q.workshop += p.value + ",";
       });
     }
     else
-      this.q.workshop=this.q.workshop.toString();
-    if (this.q.publish_time !=='' && this.q.publish_time !== undefined && this.q.publish_time.length>0) {
-      for(let j = 0,len = this.q.publish_time.length; j < len; j++){
-        this.q.publish_time[j]=this.q.publish_time[j].toLocaleDateString();
+      this.q.workshop = this.q.workshop.toString();
+    if (this.q.publish_time !== '' && this.q.publish_time !== undefined && this.q.publish_time.length > 0) {
+      for (let j = 0, len = this.q.publish_time.length; j < len; j++) {
+        this.q.publish_time[j] = this.q.publish_time[j].toLocaleDateString();
         // this.q.publish_time[j]=this.q.publish_time[j].toLocaleString();
       }
     }
@@ -154,7 +150,7 @@ export class DdSheetlistComponent implements OnInit {
         } else {
           this.msg.error(res.message);
           this.loading = false;
-      }
+        }
       }, (err: any) => this.msg.error('系统异常'));
   }
 
@@ -181,58 +177,57 @@ export class DdSheetlistComponent implements OnInit {
         this.q.asc = e.sort.value;
         this.getData();
         break;
-      }
+    }
 
   }
 
-  toolBarOnClick(e:any){
+  toolBarOnClick(e: any) {
     // tslint:disable-next-line:no-debugger
     // debugger;
     switch (e.action_name) {
       case 'Search':
         this.search();
         break;
-        case 'Export':
-          this.export();
-          break;
-        case 'ManualClose':
-          // 手工关单
-          this.manualClose();
-          break;
-        case 'HideOrExpand':
-          this.hideOrExpand();
-          break;
-        case 'StopRefresh':
-          // 开始/暂停刷新
-          break;
-        case 'Print':
-          this.print();
-          break;
+      case 'Export':
+        this.export();
+        break;
+      case 'ManualClose':
+        // 手工关单
+        this.manualClose();
+        break;
+      case 'HideOrExpand':
+        this.hideOrExpand();
+        break;
+      case 'StopRefresh':
+        // 开始/暂停刷新
+        break;
+      case 'Print':
+        this.print();
+        break;
     }
-
   }
 
   reset() {
     // wait form reset updated finished
-    setTimeout(()=>{});
+    setTimeout(() => { });
     // setTimeout(() => this.getData());
   }
 
-  search(){
+  search() {
     this.getData();
   }
 
   plantChange(value: string): void {
-    const l = this.pre_lists.find(p=>p.value === value);
+    const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
     this.q.workshop.setValue(l.children[0].value);
   }
 
   print() {
-    if (this.selectedRows.length===0){
+    if (this.selectedRows.length === 0) {
       this.msg.error('请选择要打印的记录')
       return false;
-    } else{
+    } else {
       this.loading = true;
       this.http
         .post('/dd/RunsheetPrint', this.selectedRows)
@@ -243,48 +238,48 @@ export class DdSheetlistComponent implements OnInit {
             this.dataPrints = res.data.data;
             this.msg.success(res.data.msg);
 
-            this.dataPrints.forEach(p=>{
+            this.dataPrints.forEach(p => {
 
               window.open(p.print_file, '_blank')
             });
 
           } else {
             this.msg.error(res.message);
-        }
+          }
         }, (err: any) => this.msg.error('系统异常'));
     }
     this.st.clearCheck();
   }
 
-  hideOrExpand(){
+  hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
-  manualClose(){
+  manualClose() {
     let msg = "";
-    if (this.selectedRows.length === 0){
+    if (this.selectedRows.length === 0) {
       this.msg.error('请选择需要关单的记录！')
       return false;
-    } else{
+    } else {
       this.loading = true;
 
       let str_runsheet_code = "";
-      let str_runsheet_ids="";
-      for(let j = 0,len = this.selectedRows.length; j < len; j++){
-        if (this.selectedRows[j].runsheet_code==="6"){
-          str_runsheet_code+=this.selectedRows[j].runsheet_code+","
+      let str_runsheet_ids = "";
+      for (let j = 0, len = this.selectedRows.length; j < len; j++) {
+        if (this.selectedRows[j].runsheet_code === "6") {
+          str_runsheet_code += this.selectedRows[j].runsheet_code + ","
         }
-        else{
-          str_runsheet_ids+=this.selectedRows[j].runsheet_id+",";
+        else {
+          str_runsheet_ids += this.selectedRows[j].runsheet_id + ",";
         }
 
       }
-      if (str_runsheet_code!=="")
-        msg = "单号【"+str_runsheet_code+"】的类型不允许手工关单";
+      if (str_runsheet_code !== "")
+        msg = "单号【" + str_runsheet_code + "】的类型不允许手工关单";
 
 
-        if (str_runsheet_ids!=="")
-          this.http
+      if (str_runsheet_ids !== "")
+        this.http
           .post('/dd/ManualClose', str_runsheet_ids)
           .pipe(tap(() => (this.loading = false)))
           .subscribe(res => {
@@ -293,41 +288,41 @@ export class DdSheetlistComponent implements OnInit {
               this.msg.success(res.data.msg);
             } else {
               this.msg.error(res.message);
-          }
+            }
           }, (err: any) => this.msg.error('系统异常'));
     }
     this.st.clearCheck();
   }
 
-  export(){
-    if (this.st.total===0){
+  export() {
+    if (this.st.total === 0) {
       this.msg.error('请输入条件，查询出数据方可导出数据！')
       return false;
     }
 
-    this.q.export=true;
+    this.q.export = true;
     this.http
       .get('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
-          this.st.export(res.data.rows, {callback:this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
         } else {
           this.msg.error(res.message);
           this.loading = false;
-      }
+        }
       }, (err: any) => this.msg.error('系统异常'));
 
-    this.q.export=false;
+    this.q.export = false;
 
   }
-  d_callback(e:any){
+  d_callback(e: any) {
     // debugger;
-    for(let j = 65,len = 65+26; j < len; j++){
-      let tmpTitle=eval("e.Sheets.sheet1."+String.fromCharCode(j)+"1");
-      if (tmpTitle===undefined)
+    for (let j = 65, len = 65 + 26; j < len; j++) {
+      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
+      if (tmpTitle === undefined)
         break;
-        tmpTitle.v = tmpTitle.v.text;
+      tmpTitle.v = tmpTitle.v.text;
     }
   }
 }
