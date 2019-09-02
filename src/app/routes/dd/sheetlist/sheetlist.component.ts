@@ -21,8 +21,10 @@ export class DdSheetlistComponent implements OnInit {
     plant: '',
     workshop: '',
     publish_time: '',
-    sorter: '',
-    asc: ''
+    sort: {
+      field: '',
+      order: ''
+    }
   };
   form_query: FormGroup;
   size = 'small';
@@ -173,8 +175,8 @@ export class DdSheetlistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-        this.q.sorter = e.sort.column.indexKey;
-        this.q.asc = e.sort.value;
+        this.q.sort.field = e.sort.column.indexKey;
+        this.q.sort.order = e.sort.value;
         this.getData();
         break;
     }
@@ -319,6 +321,7 @@ export class DdSheetlistComponent implements OnInit {
   d_callback(e: any) {
     // debugger;
     for (let j = 65, len = 65 + 26; j < len; j++) {
+      // tslint:disable-next-line: no-eval
       const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
       if (tmpTitle === undefined)
         break;
