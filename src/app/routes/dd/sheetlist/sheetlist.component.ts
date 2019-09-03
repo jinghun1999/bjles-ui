@@ -45,7 +45,7 @@ export class DdSheetlistComponent implements OnInit {
           text: '查看',
           type: 'modal',
           component: DdDetailComponent,
-          click: (_record, modal) => {},
+          click: (_record, modal) => { },
         },
       ],
     },
@@ -89,7 +89,7 @@ export class DdSheetlistComponent implements OnInit {
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.http.get('/system/getplants').subscribe(
@@ -174,7 +174,6 @@ export class DdSheetlistComponent implements OnInit {
       case 'pi':
         this.q.page.pi = e.pi;
         this.getData();
-        this.msg.success('已经选择了另一个页码' + e.pi.toString());
         break;
       case 'ps':
         this.q.page.ps = e.ps;
@@ -216,7 +215,7 @@ export class DdSheetlistComponent implements OnInit {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => {});
+    setTimeout(() => { });
     // setTimeout(() => this.getData());
   }
 
