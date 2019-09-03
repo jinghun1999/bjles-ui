@@ -7,6 +7,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 // import { HttpHeaders } from '@angular/common/http';
 import { AreaPlantEditComponent } from './edit/edit.component';
+import { PageInfo, SortInfo } from 'src/app/model';
 
 @Component({
   selector: 'app-area-plant',
@@ -25,14 +26,10 @@ export class AreaPlantComponent implements OnInit {
   dataAction = [];
   selectedRows: STData[] = [];
   q: any = {
-    pi: 1,
-    ps: 10,
+    page: new PageInfo(),
+    sort: new SortInfo(),
     plant_code: '',
     plant_name: '',
-    sort: {
-      field: '',
-      order: ''
-    }
   }
   pages: STPage = {
     total: '', // 分页显示多少条数据，字符串型
@@ -72,12 +69,11 @@ export class AreaPlantComponent implements OnInit {
   }
   getData() {
     this.loading = true;
-    this.http.get('/area/getPlantPager', this.q)
+    this.http.post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         this.data = res.data.rows;
         this.st.total = res.data.total;
-        // this.cdr.detectChanges();
       });
   }
   stChange(e: STChange) {
@@ -89,12 +85,11 @@ export class AreaPlantComponent implements OnInit {
         this.getData();
         break;
       case 'pi':
-        this.q.pi = e.pi;
+        this.q.page.pi = e.pi;
         this.getData();
-        // this.msg.success('已经选择了另一个页码' + e.pi.toString());
         break;
       case 'ps':
-        this.q.ps = e.ps;
+        this.q.page.ps = e.ps;
         this.getData();
         break;
       case 'sort':
@@ -129,7 +124,7 @@ export class AreaPlantComponent implements OnInit {
     });*/
     // this.exportService.export('/area/getPlantExport', this.q, 'plant-list');
     if (this.st.total === 0) {
-      this.msg.error('请输入条件，查询出数据方可导出数据！')
+      this.msg.error('请查询后再导出')
       return false;
     }
 
