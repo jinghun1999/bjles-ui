@@ -103,6 +103,9 @@ export class AreaPlantComponent implements OnInit {
 
   toolBarOnClick(e: any) {
     switch (e.action_name) {
+      case 'Add':
+        this.add();
+        break;
       case 'Export':
         this.export();
         break;
@@ -155,12 +158,12 @@ export class AreaPlantComponent implements OnInit {
     }
   }
 
-
-  add(tpl: TemplateRef<{}>) {
+  add() {
     this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
+
   delete() {
     if (this.selectedRows.length === 0) {
       this.msg.error('请先选择要操作的数据');
