@@ -41,9 +41,9 @@ export class AreaPlantComponent implements OnInit {
 
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'runsheet_id', type: 'checkbox' },
+    { title: '', index: 'runsheet_id', type: 'checkbox', exported: false },
     {
-      title: '',
+      title: '操作',
       buttons: [
         {
           text: '修改',
@@ -56,7 +56,8 @@ export class AreaPlantComponent implements OnInit {
 
           }
         },
-      ]
+      ],
+      exported: false
     },
     { title: '工厂编号', index: 'plant_code', sort: true },
     { title: '工厂名称', index: 'plant_name', sort: true },
@@ -134,7 +135,7 @@ export class AreaPlantComponent implements OnInit {
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'plant.xlsx', sheetname: 'sheet1' });
         } else {
           this.msg.error(res.message);
           this.loading = false;
