@@ -25,6 +25,7 @@ export class AreaPlantComponent implements OnInit {
   data: [] = [];
   dataAction = [];
   selectedRows: STData[] = [];
+  showSearch = true;
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -103,18 +104,20 @@ export class AreaPlantComponent implements OnInit {
 
   toolBarOnClick(e: any) {
     switch (e.action_name) {
-      case 'Add':
+      case 'Create':
         this.add();
         break;
       case 'Export':
         this.export();
         break;
       case 'Delete':
-        // 手工关单
         this.delete();
         break;
       case 'Search':
         this.getData();
+        break;
+      case 'HideOrExpand':
+        this.showSearch = !this.showSearch;
         break;
     }
   }
