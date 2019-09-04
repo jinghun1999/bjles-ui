@@ -1,16 +1,15 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
-import { STColumn, STComponent, STPage, STChange, STData } from '@delon/abc';
+import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { tap } from 'rxjs/operators';
-import { AreaPlantEditComponent } from './edit/edit.component';
 import { PageInfo, SortInfo } from 'src/app/model';
+import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-area-plant',
-  templateUrl: './plant.component.html',
+  selector: 'app-area-workshop',
+  templateUrl: './workshop.component.html',
 })
-export class AreaPlantComponent implements OnInit {
+export class AreaWorkshopComponent implements OnInit {
   constructor(private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
@@ -47,7 +46,7 @@ export class AreaPlantComponent implements OnInit {
           icon: 'edit',
           type: 'modal',
           modal: {
-            component: AreaPlantEditComponent,
+            component: null,
           },
           click: (_record, modal) => {
 
@@ -69,7 +68,7 @@ export class AreaPlantComponent implements OnInit {
     this.loading = true;
     this.http.post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
-      .subscribe(res => {
+      .subscribe((res: any) => {
         this.data = res.data.rows;
         this.st.total = res.data.total;
       });
@@ -130,7 +129,7 @@ export class AreaPlantComponent implements OnInit {
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'plant.xlsx', sheetname: 'sheet1' });
+          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'workshop.xlsx', sheetname: 'sheet1' });
         } else {
           this.msg.error(res.message);
           this.loading = false;
@@ -150,7 +149,7 @@ export class AreaPlantComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(null, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
@@ -163,7 +162,7 @@ export class AreaPlantComponent implements OnInit {
       this.modalSrv.confirm({
         nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
         nzOnOk: () => {
-          this.http.post('/area/deletePlant', this.selectedRows).subscribe((res: any) => {
+          this.http.post('/area/deleteWorkshop', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
               this.msg.success('删除成功');
               this.getData();
