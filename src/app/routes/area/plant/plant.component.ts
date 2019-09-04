@@ -25,6 +25,7 @@ export class AreaPlantComponent implements OnInit {
   data: [] = [];
   dataAction = [];
   selectedRows: STData[] = [];
+  showSearch = true;
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -41,9 +42,9 @@ export class AreaPlantComponent implements OnInit {
 
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'runsheet_id', type: 'checkbox' },
+    { title: '', index: 'runsheet_id', type: 'checkbox', exported: false },
     {
-      title: '',
+      title: '操作',
       buttons: [
         {
           text: '修改',
@@ -56,7 +57,8 @@ export class AreaPlantComponent implements OnInit {
 
           }
         },
-      ]
+      ],
+      exported: false
     },
     { title: '工厂编号', index: 'plant_code', sort: true },
     { title: '工厂名称', index: 'plant_name', sort: true },
@@ -102,15 +104,20 @@ export class AreaPlantComponent implements OnInit {
 
   toolBarOnClick(e: any) {
     switch (e.action_name) {
+      case 'Create':
+        this.add();
+        break;
       case 'Export':
         this.export();
         break;
       case 'Delete':
-        // 手工关单
         this.delete();
         break;
       case 'Search':
         this.getData();
+        break;
+      case 'HideOrExpand':
+        this.showSearch = !this.showSearch;
         break;
     }
   }
@@ -134,7 +141,7 @@ export class AreaPlantComponent implements OnInit {
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'plant.xlsx', sheetname: 'sheet1' });
         } else {
           this.msg.error(res.message);
           this.loading = false;
@@ -154,12 +161,12 @@ export class AreaPlantComponent implements OnInit {
     }
   }
 
-
-  add(tpl: TemplateRef<{}>) {
+  add() {
     this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
+
   delete() {
     if (this.selectedRows.length === 0) {
       this.msg.error('请先选择要操作的数据');

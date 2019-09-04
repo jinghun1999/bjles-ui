@@ -1,11 +1,7 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-
-  </ng-template>
-</page-header>
+<page-header></page-header>
 <nz-card nzBordered="false">
   <form nz-form [nzLayout]="'inline'" class="search__form">
-    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }" *ngIf="showSearch">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
           <nz-form-label nzFor="no">工厂编号</nz-form-label>
@@ -35,19 +31,3 @@
   <st #st [columns]="columns" [data]="data" [loading]="loading" (change)="stChange($event)" [page]="pages">
   </st>
 </nz-card>
-
-
-<ng-template #modalContent>
-  <nz-form-item>
-    <nz-form-label nzFor="plant">工厂编号</nz-form-label>
-    <nz-form-control>
-      <input nz-input [(ngModel)]="plant.plant_code" name="plant.code" placeholder="请输入工厂编号" id="plant" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label nzFor="name">工厂名称</nz-form-label>
-    <nz-form-control>
-      <input nz-input [(ngModel)]="plant.plant_name" name="plant.name" placeholder="请输入工厂名称" id="name" />
-    </nz-form-control>
-  </nz-form-item>
-</ng-template>
