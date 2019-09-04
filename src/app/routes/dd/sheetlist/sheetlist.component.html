@@ -1,7 +1,6 @@
-<page-header [title]="'物料单查询'"></page-header>
-<nz-card [nzBordered]="false">
+<nz-card [nzBordered]="false" [nzTitle]="'物料单查询'">
   <form nz-form [nzLayout]="'inline'" class="search__form">
-    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+    <div nz-row>
 
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
@@ -20,23 +19,26 @@
           <nz-form-label ngFor="workshop">车间</nz-form-label>
           <nz-form-control nzErrorTip="请选择车间">
             <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              nzMode="multiple" nzShowSearch="true" nzAllowClear (ngModelChange)="workshopChange($event)">
               <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
-
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label>零件号</nz-form-label>
-          <nz-form-control nzErrorTip="请输入零件号">
-            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
-              placeholder="请输入零件号" />
+          <nz-form-label ngFor="supplier_code">供应商</nz-form-label>
+          <nz-form-control nzErrorTip="请选择供应商">
+            <nz-select [(ngModel)]="q.supplier_code" [nzSize]="size" name="supplier_code" id="supplier_code"
+              [nzPlaceHolder]="'请选择'" nzMode="multiple" nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_suppliers" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
+
       <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="expected_arrival_time">预期到货时间</nz-form-label>
@@ -57,6 +59,15 @@
           </nz-form-control>
         </nz-form-item>
       </div>
+      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="publish_time">发布时间</nz-form-label>
+          <nz-form-control>
+            <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear
+              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="runsheet_type">物料单类型</nz-form-label>
@@ -71,13 +82,24 @@
       </div>
       <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="publish_time">物料单发布时间</nz-form-label>
+          <nz-form-label nzFor="actual_arrival_time">实际到货时间</nz-form-label>
           <nz-form-control>
-            <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear
-              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"></nz-range-picker>
+            <nz-range-picker [(ngModel)]="q.actual_arrival_time" name="actual_arrival_time" id="actual_arrival_time"
+              nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label>零件号</nz-form-label>
+          <nz-form-control nzErrorTip="请输入零件号">
+            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
+              placeholder="请输入零件号" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label nzFor="sheet_status">物料单状态</nz-form-label>
@@ -90,21 +112,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="actual_arrival_time">实际到货时间</nz-form-label>
-          <nz-form-control>
-            <nz-range-picker [(ngModel)]="q.actual_arrival_time" name="actual_arrival_time" id="actual_arrival_time"
-              nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
-            </nz-range-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
       <div nz-col [nzSpan]="24" [class.text-right]="true">
         <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
           {{ i.action_name_cn }}
         </button>
-        <button nz-button type="reset" (click)="reset()" class="mx-sm" *ngIf="expandForm">重置</button>
       </div>
     </div>
   </form>

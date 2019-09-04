@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo } from 'src/app/model';
-import { Common } from 'src/app/common/common';
+import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
   selector: 'app-dd-sheetlist',
@@ -14,14 +14,15 @@ import { Common } from 'src/app/common/common';
 })
 export class DdSheetlistComponent implements OnInit {
   actionPath = 'DDManagement/RunSheetList.aspx';
-  today = new Date();
+  today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: '',
+    supplier_code: '',
     publish_time: [],
-    expected_arrival_time: [this.today, this.today],
+    expected_arrival_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   size = 'small';
   data: any[] = [];
@@ -31,6 +32,7 @@ export class DdSheetlistComponent implements OnInit {
   dataPrints: any[] = [];
   pre_lists = [];
   sub_workshops = [];
+  sub_suppliers = [];
   loading = false;
   @ViewChild('st', { static: false })
   st: STComponent;
@@ -93,48 +95,38 @@ export class DdSheetlistComponent implements OnInit {
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
+    private capi: CommonApiService,
+    private cfun: CommonFunctionService,
   ) {}
 
   ngOnInit() {
-    this.http.get('/system/getplants').subscribe(
+    this.loading = true;
+
+    this.capi.getPlant().subscribe(
       (res: any) => {
-        this.loading = false;
-        if (res.successful) {
-          this.pre_lists = res.data;
-          this.sub_workshops = res.data[0].children;
-          this.q.plant = res.data[0].value;
+        this.pre_lists = res;
+        if (this.pre_lists.length > 0) {
+          this.sub_workshops = this.pre_lists[0].children;
+          this.q.plant = this.pre_lists[0].value;
           this.plantChange(this.q.plant);
-          // this.q.workshop=this.sub_workshops[0].value;
-        } else {
-          this.msg.error(res.message);
-          this.loading = false;
         }
       },
       (err: any) => this.msg.error('获取不到工厂车间信息！！'),
     );
 
-    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_type&orderName=').subscribe(
-      res => {
-        if (res.successful) this.dataCDRunSheetType = res.data;
-        else this.msg.error(res.message);
-      },
-      (err: any) => this.msg.error('获取不到物料单类型信息！！'),
-    );
-    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_status&orderName=').subscribe(
-      res => {
-        if (res.successful) this.dataCDSheetStatus = res.data;
-        else this.msg.error(res.message);
-      },
-      (err: any) => this.msg.error('获取不到物料单状态信息！！'),
-    );
+    this.capi.getCodeDetailInfo('dd_plansheet_type', '').subscribe((res: any) => {
+      this.dataCDRunSheetType = res;
+    });
+    this.capi.getCodeDetailInfo('dd_plansheet_status', '').subscribe((res: any) => {
+      this.dataCDSheetStatus = res;
+    });
 
-    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(
-      res => {
-        if (res.successful) this.dataAction = res.data;
-        else this.msg.error(res.message);
-      },
-      (err: any) => this.msg.error('获取不到权限信息！！'),
-    );
+    // toolBar
+    this.capi.getActions(this.actionPath).subscribe((res: any) => {
+      this.dataAction = res;
+    });
+
+    this.loading = false;
   }
 
   getData() {
@@ -145,9 +137,9 @@ export class DdSheetlistComponent implements OnInit {
         this.q.workshop += p.value + ',';
       });
     } else this.q.workshop = this.q.workshop.toString();
-    this.q.publish_time = Common.getSelectDate(this.q.publish_time);
-    this.q.expected_arrival_time = Common.getSelectDate(this.q.expected_arrival_time);
-    this.q.actual_arrival_time = Common.getSelectDate(this.q.actual_arrival_time);
+    this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
+    this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
+    this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
 
     this.http
       .post('/dd/GetRunsheetPager', this.q)
@@ -234,6 +226,14 @@ export class DdSheetlistComponent implements OnInit {
     this.sub_workshops = l.children;
     this.q.workshop = '';
   }
+  workshopChange(value: string): void {
+    this.loading = true;
+    this.capi.GetSupplier(this.q.plant, value).subscribe((res: any) => {
+      this.sub_suppliers = res;
+    });
+
+    this.q.supplier_code = '';
+  }
 
   print() {
     if (this.selectedRows.length === 0) {
@@ -318,7 +318,7 @@ export class DdSheetlistComponent implements OnInit {
         res => {
           if (res.successful) {
             this.st.export(res.data.rows, {
-              callback: Common.callbackOfExport,
+              callback: this.cfun.callbackOfExport,
               filename: 'result.xlsx',
               sheetname: 'sheet1',
             });
