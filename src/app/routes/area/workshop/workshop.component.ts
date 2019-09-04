@@ -4,6 +4,7 @@ import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo } from 'src/app/model';
 import { tap } from 'rxjs/operators';
+import { CommonApiService } from '@core';
 
 @Component({
   selector: 'app-area-workshop',
@@ -13,10 +14,11 @@ export class AreaWorkshopComponent implements OnInit {
   constructor(private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
-    private model: ModalHelper, ) { }
+    private model: ModalHelper,
+    private capi: CommonApiService, ) { }
   actionPath = 'AreaManagement/PlantList.aspx';
   loading = false;
-  plant: any = {};
+  plant = [];
   data: [] = [];
   dataAction = [];
   selectedRows: STData[] = [];
@@ -60,6 +62,7 @@ export class AreaWorkshopComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.capi.getPlant().subscribe((res: any) => { this.plant = res; });
     this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
       this.dataAction = res.data;
     });
