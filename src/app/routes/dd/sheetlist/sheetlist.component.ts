@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, TemplateRef } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
-import { SFSchema } from '@delon/form';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo } from 'src/app/model';
+import { Common } from 'src/app/common/common';
 
 @Component({
   selector: 'app-dd-sheetlist',
@@ -15,17 +14,16 @@ import { PageInfo, SortInfo } from 'src/app/model';
 })
 export class DdSheetlistComponent implements OnInit {
   actionPath = 'DDManagement/RunSheetList.aspx';
+  today = new Date();
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: '',
-    publish_time: '',
+    publish_time: [],
+    expected_arrival_time: [this.today, this.today],
   };
-  form_query: FormGroup;
   size = 'small';
-  nzmd = '8';
-  nzsm = '24';
   data: any[] = [];
   dataAction: any[] = [];
   dataCDRunSheetType: any[] = [];
@@ -34,37 +32,51 @@ export class DdSheetlistComponent implements OnInit {
   pre_lists = [];
   sub_workshops = [];
   loading = false;
-  @ViewChild('st', { static: true })
+  @ViewChild('st', { static: false })
   st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'runsheet_id', type: 'checkbox' },
+    { title: '', index: 'runsheet_id', type: 'checkbox', width: 50, exported: false },
     {
       title: '操作',
+      width: 60,
       buttons: [
         {
           text: '查看',
           type: 'modal',
-          component: DdDetailComponent,
-          click: (_record, modal) => { },
+          modal: {
+            size: 'xl',
+            component: DdDetailComponent,
+          },
         },
       ],
     },
-    { title: '工厂', index: 'plant', sort: true },
-    { title: '车间', index: 'workshop', sort: true },
-    {
-      title: '单号',
-      index: 'runsheet_code',
-      sort: true,
-    },
-    {
-      title: '发布时间',
-      index: 'publish_time',
-      sort: true,
-    },
-    { title: '供应商名称', index: 'supplier_name', sort: true },
+    { width: 320, title: '单号', index: 'runsheet_code', sort: true },
+    { width: 120, title: '发布时间', index: 'publish_time', type: 'date', sort: true },
+    { width: 120, title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
+    { width: 120, title: '供应商发货时间	', index: 'supplier_sendat', type: 'date', sort: true },
+    { width: 120, title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
+    { width: 100, title: '工厂', index: 'plant', sort: true },
+    { width: 100, title: '车间', index: 'workshop', sort: true },
+    { width: 120, title: '供应商代码', index: 'supplier_code', sort: true },
+    { width: 320, title: '供应商名称', index: 'supplier_name', sort: true },
+    { width: 320, title: '物料单类型', index: 'runsheet_type_name', sort: true },
+    { width: 120, title: '拉动类型', index: 'part_type_name', sort: true },
+    { width: 320, title: '物料单状态', index: 'sheet_status_name', sort: true },
+    { width: 320, title: '车间物料单编号', index: 'workshop_runsheet_code', sort: true },
+    { width: 80, title: '车间流水号', index: 'workshop_sn', sort: true },
+    { width: 80, title: '供应商流水号', index: 'supplier_sn', sort: true },
+    { width: 80, title: '物料单页序号', index: 'page_order', sort: true },
+    { width: 130, title: 'Dock编号', index: 'dock_code', sort: true },
+    { width: 80, title: '配送路线代码', index: 'route_code', sort: true },
+    { width: 120, title: '卸货时间(分)', index: 'unloading_time', sort: true },
+    { width: 120, title: '收料', index: 'receiver_name', sort: true },
+    { width: 120, title: '重做标志', index: 'redo_flag_name', sort: true },
+    { width: 120, title: '重做标志', index: 'mq_status_name', sort: true },
+    { width: 80, title: '出入库单状态', index: 'sheet_process_status_name', sort: true },
+    { width: 120, title: '打印状态', index: 'print_status_name', sort: true },
+    { width: 120, title: '任务单编号', index: 'task_no', sort: true },
   ];
   selectedRows: STData[] = [];
-  expandForm = false;
   pages: STPage = {
     total: '', // 分页显示多少条数据，字符串型
     show: true, // 显示分页
@@ -72,16 +84,8 @@ export class DdSheetlistComponent implements OnInit {
     showSize: true,
     pageSizes: [10, 30, 50, 100],
   };
-  url = `/user`;
-  searchSchema: SFSchema = {
-    properties: {
-      no: {
-        type: 'string',
-        title: '编号',
-      },
-    },
-  };
-  description: any;
+  scroll = { x: '3500px', y: '300px' };
+  expandForm = true;
 
   constructor(
     private http: _HttpClient,
@@ -89,7 +93,7 @@ export class DdSheetlistComponent implements OnInit {
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.http.get('/system/getplants').subscribe(
@@ -98,26 +102,39 @@ export class DdSheetlistComponent implements OnInit {
         if (res.successful) {
           this.pre_lists = res.data;
           this.sub_workshops = res.data[0].children;
-          // this.q.plant=res.data[0].value;
+          this.q.plant = res.data[0].value;
+          this.plantChange(this.q.plant);
           // this.q.workshop=this.sub_workshops[0].value;
         } else {
           this.msg.error(res.message);
           this.loading = false;
         }
       },
-      (err: any) => this.msg.error('系统异常'),
+      (err: any) => this.msg.error('获取不到工厂车间信息！！'),
     );
 
-    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_type&orderName=').subscribe(res => {
-      this.dataCDRunSheetType = res.data;
-    });
-    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_status&orderName=').subscribe(res => {
-      this.dataCDSheetStatus = res.data;
-    });
+    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_type&orderName=').subscribe(
+      res => {
+        if (res.successful) this.dataCDRunSheetType = res.data;
+        else this.msg.error(res.message);
+      },
+      (err: any) => this.msg.error('获取不到物料单类型信息！！'),
+    );
+    this.http.get('/Area/GetCodeDetail?codeName=dd_plansheet_status&orderName=').subscribe(
+      res => {
+        if (res.successful) this.dataCDSheetStatus = res.data;
+        else this.msg.error(res.message);
+      },
+      (err: any) => this.msg.error('获取不到物料单状态信息！！'),
+    );
 
-    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
-      this.dataAction = res.data;
-    });
+    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(
+      res => {
+        if (res.successful) this.dataAction = res.data;
+        else this.msg.error(res.message);
+      },
+      (err: any) => this.msg.error('获取不到权限信息！！'),
+    );
   }
 
   getData() {
@@ -128,12 +145,9 @@ export class DdSheetlistComponent implements OnInit {
         this.q.workshop += p.value + ',';
       });
     } else this.q.workshop = this.q.workshop.toString();
-    if (this.q.publish_time !== '' && this.q.publish_time !== undefined && this.q.publish_time.length > 0) {
-      for (let j = 0, len = this.q.publish_time.length; j < len; j++) {
-        this.q.publish_time[j] = this.q.publish_time[j].toLocaleDateString();
-        // this.q.publish_time[j]=this.q.publish_time[j].toLocaleString();
-      }
-    }
+    this.q.publish_time = Common.getSelectDate(this.q.publish_time);
+    this.q.expected_arrival_time = Common.getSelectDate(this.q.expected_arrival_time);
+    this.q.actual_arrival_time = Common.getSelectDate(this.q.actual_arrival_time);
 
     this.http
       .post('/dd/GetRunsheetPager', this.q)
@@ -184,6 +198,7 @@ export class DdSheetlistComponent implements OnInit {
     switch (e.action_name) {
       case 'Search':
         this.search();
+        this.expandForm = false;
         break;
       case 'Export':
         this.export();
@@ -206,7 +221,7 @@ export class DdSheetlistComponent implements OnInit {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => { });
+    setTimeout(() => {});
     // setTimeout(() => this.getData());
   }
 
@@ -217,7 +232,7 @@ export class DdSheetlistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop.setValue(l.children[0].value);
+    this.q.workshop = '';
   }
 
   print() {
@@ -297,12 +312,16 @@ export class DdSheetlistComponent implements OnInit {
 
     this.q.page.export = true;
     this.http
-      .get('/dd/GetRunsheetPager', this.q)
+      .post('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
-            this.st.export(res.data.rows, { callback: this.d_callback, filename: 'result.xlsx', sheetname: 'sheet1' });
+            this.st.export(res.data.rows, {
+              callback: Common.callbackOfExport,
+              filename: 'result.xlsx',
+              sheetname: 'sheet1',
+            });
           } else {
             this.msg.error(res.message);
             this.loading = false;
@@ -312,14 +331,5 @@ export class DdSheetlistComponent implements OnInit {
       );
 
     this.q.page.export = false;
-  }
-  d_callback(e: any) {
-    // debugger;
-    for (let j = 65, len = 65 + 26; j < len; j++) {
-      // tslint:disable-next-line: no-eval
-      const tmpTitle = eval('e.Sheets.sheet1.' + String.fromCharCode(j) + '1');
-      if (tmpTitle === undefined) break;
-      tmpTitle.v = tmpTitle.v.text;
-    }
   }
 }
