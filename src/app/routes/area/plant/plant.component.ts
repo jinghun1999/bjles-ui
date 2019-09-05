@@ -5,6 +5,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { AreaPlantEditComponent } from './edit/edit.component';
 import { PageInfo, SortInfo } from 'src/app/model';
+import { CommonApiService } from '@core';
 
 @Component({
   selector: 'app-area-plant',
@@ -14,12 +15,12 @@ export class AreaPlantComponent implements OnInit {
   constructor(private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
-    private model: ModalHelper, ) { }
-  actionPath = 'AreaManagement/PlantList.aspx';
+    private model: ModalHelper,
+    private capi: CommonApiService, ) { }
   loading = false;
   plant: any = {};
   data: [] = [];
-  dataAction = [];
+  actions = [];
   selectedRows: STData[] = [];
   showSearch = true;
   q: any = {
@@ -61,9 +62,7 @@ export class AreaPlantComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
-      this.dataAction = res.data;
-    });
+    this.capi.getActions('AreaManagement/PlantList.aspx').subscribe((res: any) => { this.actions = res });
   }
   getData() {
     this.loading = true;

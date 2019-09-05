@@ -16,11 +16,10 @@ export class AreaWorkshopComponent implements OnInit {
     private modalSrv: NzModalService,
     private model: ModalHelper,
     private capi: CommonApiService, ) { }
-  actionPath = 'AreaManagement/PlantList.aspx';
   loading = false;
   plant = [];
   data: [] = [];
-  dataAction = [];
+  actions = [];
   selectedRows: STData[] = [];
   showSearch = true;
   q: any = {
@@ -63,9 +62,7 @@ export class AreaWorkshopComponent implements OnInit {
 
   ngOnInit() {
     this.capi.getPlant().subscribe((res: any) => { this.plant = res; });
-    this.http.get('/System/GetActions?actionPath=' + this.actionPath).subscribe(res => {
-      this.dataAction = res.data;
-    });
+    this.capi.getActions('AreaManagement/WorkshopList.aspx').subscribe((res: any) => { this.actions = res });
   }
   getData() {
     this.loading = true;
