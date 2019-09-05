@@ -7,3 +7,8 @@ export class SortInfo {
   field = '';
   order = '';
 }
+
+export class ItemData {
+  last_workshop = '';
+  data = [];
+}
