@@ -11,11 +11,18 @@ export class CommonApiService {
 
   getPlant() {
     return new Observable(observe => {
-      this.http.get('/System/GetPlants').subscribe((res: any) => {
-        observe.next(res.data);
-        // 如果有错误，通过 error() 方法将错误返回
-        // observe.error(res.message);
-      });
+      const cache_name = 'GetPlants';
+      const cache_data = this.cache.getNone(cache_name);
+      if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
+        this.http.get('/System/GetPlants').subscribe((res: any) => {
+          this.cache.set(cache_name, res.data, { type: 's', expire: 500 });
+          observe.next(res.data);
+          // 如果有错误，通过 error() 方法将错误返回
+          // observe.error(res.message);
+        });
+      } else {
+        observe.next(cache_data);
+      }
     });
   }
 
@@ -24,7 +31,7 @@ export class CommonApiService {
       const cache_data = this.cache.getNone(e);
       if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
         this.http.get('/Area/GetCodeDetail?codeName=' + e + '&orderName=' + order).subscribe((res: any) => {
-          this.cache.set(e, res.data);
+          this.cache.set(e, res.data, { type: 's', expire: 500 });
           observe.next(res.data);
           // 如果有错误，通过 error() 方法将错误返回
           // observe.error(res.message);
@@ -49,13 +56,13 @@ export class CommonApiService {
     return new Observable(observe => {
       let url = '';
       switch (type) {
-        case 'sub_routes':
+        case 'route_code':
           url = '/Area/GetRoute?plant=' + plant + '&workshop=' + workshop;
           break;
-        case 'sub_docks':
+        case 'dock_code':
           url = '/Area/GetDock?plant=' + plant + '&workshop=' + workshop;
           break;
-        case 'sub_suppliers':
+        case 'supplier_code':
           url = '/Supplier/GetSuppliers?plant=' + plant + '&workshop=' + workshop;
           break;
       }

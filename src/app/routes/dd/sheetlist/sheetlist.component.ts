@@ -19,9 +19,10 @@ export class DdSheetlistComponent implements OnInit {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
-    workshop: '',
-    supplier_code: '',
-    dock_code: '',
+    workshop: [],
+    supplier_code: [],
+    dock_code: [],
+    route_code: [],
     publish_time: [],
     expected_arrival_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
@@ -31,12 +32,15 @@ export class DdSheetlistComponent implements OnInit {
   dataPrints: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_suppliers = new ItemData();
-  sub_docks = new ItemData();
-  sub_routes = new ItemData();
+  sub_supplier_code = new ItemData();
+  sub_dock_code = new ItemData();
+  sub_route_code = new ItemData();
   sub_dd_plansheet_type = new ItemData();
   sub_dd_plansheet_status = new ItemData();
   sub_wm_SheetProcessStatus = new ItemData();
+  sub_jis_runsheet_PrintStatus = new ItemData();
+  sub_tk_task_HasTask = new ItemData();
+
   sub_part_type = new ItemData();
   tmpData = [];
 
@@ -131,12 +135,12 @@ export class DdSheetlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    if (this.q.workshop === '' || this.q.workshop === undefined) {
-      this.q.workshop = '';
-      this.sub_workshops.forEach(p => {
-        this.q.workshop += p.value + ',';
-      });
-    } else this.q.workshop = this.q.workshop.toString();
+    let tmp_workshops = this.sub_workshops.map(p => p.value);
+
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+
     this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
     this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
     this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
@@ -157,6 +161,7 @@ export class DdSheetlistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
+    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
   }
 
   stChange(e: STChange) {
@@ -229,10 +234,10 @@ export class DdSheetlistComponent implements OnInit {
 
   getListItems(value: any, type: any): void {
     // tslint:disable-next-line: no-eval
-    let tmp_data = eval('this.' + type);
+    let tmp_data = eval('this.sub_' + type);
 
     if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
-      if (this.q.workshop.length > 1) {
+      if (this.q.workshop.length > 0) {
         this.loading = true;
         this.capi.getListItems(type, this.q.plant, this.q.workshop.toString()).subscribe(
           (res: any) => {
@@ -243,13 +248,15 @@ export class DdSheetlistComponent implements OnInit {
         this.loading = false;
         tmp_data.last_workshop = this.q.workshop.toString();
       } else {
-        tmp_data = new ItemData();
+        tmp_data.data = [];
+        tmp_data.last_workshop = '';
       }
-      this.q.route_code = '';
+      eval('this.q.' + type + ' =  [];');
     }
   }
 
   getCodeDetails(value: any, type: any) {
+    // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);
     if (value) {
       // tslint:disable-next-line: no-eval

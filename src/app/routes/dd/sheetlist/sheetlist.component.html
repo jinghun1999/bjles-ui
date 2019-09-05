@@ -31,9 +31,9 @@
           <nz-form-label ngFor="supplier_code">供应商</nz-form-label>
           <nz-form-control nzErrorTip="请选择供应商">
             <nz-select [(ngModel)]="q.supplier_code" [nzSize]="size" name="supplier_code" id="supplier_code"
-              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'sub_suppliers')" nzMode="multiple"
+              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'supplier_code')" nzMode="multiple"
               nzShowSearch="true" nzAllowClear [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_suppliers.data" [nzLabel]="option.itemText"
+              <nz-option *ngFor="let option of sub_supplier_code.data" [nzLabel]="option.itemText"
                 [nzValue]="option.itemValue">
               </nz-option>
             </nz-select>
@@ -108,22 +108,9 @@
           <nz-form-label ngFor="dock_code">Dock编号</nz-form-label>
           <nz-form-control nzErrorTip="请选择Dock编号">
             <nz-select [(ngModel)]="q.dock_code" [nzSize]="size" name="dock_code" id="dock_code" [nzPlaceHolder]="'请选择'"
-              (nzOpenChange)="getListItems($event,'sub_docks')" nzMode="multiple" nzShowSearch="true" nzAllowClear
+              (nzOpenChange)="getListItems($event,'dock_code')" nzMode="multiple" nzShowSearch="true" nzAllowClear
               [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_docks.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label ngFor="dock_code">配送路线</nz-form-label>
-          <nz-form-control nzErrorTip="请选择配送路线">
-            <nz-select [(ngModel)]="q.route_code" [nzSize]="size" name="route_code" id="route_code"
-              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'sub_routes')" nzMode="multiple"
-              nzShowSearch="true" nzAllowClear [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_routes.data" [nzLabel]="option.ItemText"
+              <nz-option *ngFor="let option of sub_dock_code.data" [nzLabel]="option.ItemText"
                 [nzValue]="option.ItemValue">
               </nz-option>
             </nz-select>
@@ -132,10 +119,24 @@
       </div>
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
-          <nz-form-label nzFor="Sheet_process_status">任务单状态</nz-form-label>
+          <nz-form-label ngFor="route_code">配送路线</nz-form-label>
+          <nz-form-control nzErrorTip="请选择配送路线">
+            <nz-select [(ngModel)]="q.route_code" [nzSize]="size" name="route_code" id="route_code"
+              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'route_code')" nzMode="multiple"
+              nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_route_code.data" [nzLabel]="option.ItemText"
+                [nzValue]="option.ItemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="sheet_process_status">任务单状态</nz-form-label>
           <nz-form-control>
-            <nz-select [(ngModel)]="q.Sheet_process_status" [nzSize]="size" name="Sheet_process_status"
-              id="Sheet_process_status" (nzOpenChange)="getCodeDetails($event,'wm_SheetProcessStatus')"
+            <nz-select [(ngModel)]="q.sheet_process_status" [nzSize]="size" name="sheet_process_status"
+              id="sheet_process_status" (nzOpenChange)="getCodeDetails($event,'wm_SheetProcessStatus')"
               [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear>
               <nz-option *ngFor="let i of sub_wm_SheetProcessStatus.data;" [nzLabel]="i.Value_cdescription"
                 [nzValue]="i.Code_value">
@@ -181,6 +182,34 @@
           </nz-form-control>
         </nz-form-item>
       </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="print_status">打印状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="q.print_status" [nzSize]="size" name="print_status" id="print_status"
+              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'jis_runsheet_PrintStatus')"
+              [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_jis_runsheet_PrintStatus.data;" [nzLabel]="i.Value_cdescription"
+                [nzValue]="i.Code_value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+        <nz-form-item>
+          <nz-form-label nzFor="has_task">是否已分配任务</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="q.has_task" [nzSize]="size" name="has_task" id="has_task" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getCodeDetails($event,'tk_task_HasTask')" [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_tk_task_HasTask.data;" [nzLabel]="i.Value_cdescription"
+                [nzValue]="i.Code_value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
       <div nz-col [nzSpan]="24" [class.text-right]="true">
         <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
           {{ i.action_name_cn }}
