@@ -5,7 +5,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
-import { PageInfo, SortInfo } from 'src/app/model';
+import { PageInfo, SortInfo, ItemData } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
@@ -19,20 +19,31 @@ export class DdSheetlistComponent implements OnInit {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
-    workshop: '',
-    supplier_code: '',
+    workshop: [],
+    supplier_code: [],
+    dock_code: [],
+    route_code: [],
     publish_time: [],
     expected_arrival_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   size = 'small';
   data: any[] = [];
   dataAction: any[] = [];
-  dataCDRunSheetType: any[] = [];
-  dataCDSheetStatus: any[] = [];
   dataPrints: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_suppliers = [];
+  sub_supplier_code = new ItemData();
+  sub_dock_code = new ItemData();
+  sub_route_code = new ItemData();
+  sub_dd_plansheet_type = new ItemData();
+  sub_dd_plansheet_status = new ItemData();
+  sub_wm_SheetProcessStatus = new ItemData();
+  sub_jis_runsheet_PrintStatus = new ItemData();
+  sub_tk_task_HasTask = new ItemData();
+
+  sub_part_type = new ItemData();
+  tmpData = [];
+
   loading = false;
   @ViewChild('st', { static: false })
   st: STComponent;
@@ -114,13 +125,6 @@ export class DdSheetlistComponent implements OnInit {
       (err: any) => this.msg.error('获取不到工厂车间信息！！'),
     );
 
-    this.capi.getCodeDetailInfo('dd_plansheet_type', '').subscribe((res: any) => {
-      this.dataCDRunSheetType = res;
-    });
-    this.capi.getCodeDetailInfo('dd_plansheet_status', '').subscribe((res: any) => {
-      this.dataCDSheetStatus = res;
-    });
-
     // toolBar
     this.capi.getActions(this.actionPath).subscribe((res: any) => {
       this.dataAction = res;
@@ -131,12 +135,12 @@ export class DdSheetlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    if (this.q.workshop === '' || this.q.workshop === undefined) {
-      this.q.workshop = '';
-      this.sub_workshops.forEach(p => {
-        this.q.workshop += p.value + ',';
-      });
-    } else this.q.workshop = this.q.workshop.toString();
+    let tmp_workshops = this.sub_workshops.map(p => p.value);
+
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+
     this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
     this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
     this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
@@ -157,6 +161,7 @@ export class DdSheetlistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
+    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
   }
 
   stChange(e: STChange) {
@@ -226,13 +231,40 @@ export class DdSheetlistComponent implements OnInit {
     this.sub_workshops = l.children;
     this.q.workshop = '';
   }
-  workshopChange(value: string): void {
-    this.loading = true;
-    this.capi.GetSupplier(this.q.plant, value).subscribe((res: any) => {
-      this.sub_suppliers = res;
-    });
 
-    this.q.supplier_code = '';
+  getListItems(value: any, type: any): void {
+    // tslint:disable-next-line: no-eval
+    let tmp_data = eval('this.sub_' + type);
+
+    if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
+      if (this.q.workshop.length > 0) {
+        this.loading = true;
+        this.capi.getListItems(type, this.q.plant, this.q.workshop.toString()).subscribe(
+          (res: any) => {
+            tmp_data.data = res;
+          },
+          (err: any) => this.msg.error('获取数据失败!'),
+        );
+        this.loading = false;
+        tmp_data.last_workshop = this.q.workshop.toString();
+      } else {
+        tmp_data.data = [];
+        tmp_data.last_workshop = '';
+      }
+      eval('this.q.' + type + ' =  [];');
+    }
+  }
+
+  getCodeDetails(value: any, type: any) {
+    // tslint:disable-next-line: no-eval
+    const tmp_data = eval('this.sub_' + type);
+    if (value) {
+      // tslint:disable-next-line: no-eval
+      if (tmp_data.data.length === 0)
+        this.capi.getCodeDetailInfo(type, '').subscribe((res: any) => {
+          tmp_data.data = res;
+        });
+    }
   }
 
   print() {
