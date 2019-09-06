@@ -42,11 +42,9 @@ export class DdSheetlistComponent implements OnInit {
   sub_tk_task_HasTask = new ItemData();
 
   sub_part_type = new ItemData();
-  tmpData = [];
 
   loading = false;
-  @ViewChild('st', { static: false })
-  st: STComponent;
+  @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'runsheet_id', type: 'checkbox', width: 50, exported: false },
     {
@@ -135,7 +133,7 @@ export class DdSheetlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    let tmp_workshops = this.sub_workshops.map(p => p.value);
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
 
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
@@ -234,7 +232,7 @@ export class DdSheetlistComponent implements OnInit {
 
   getListItems(value: any, type: any): void {
     // tslint:disable-next-line: no-eval
-    let tmp_data = eval('this.sub_' + type);
+    const tmp_data = eval('this.sub_' + type);
 
     if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
       if (this.q.workshop.length > 0) {

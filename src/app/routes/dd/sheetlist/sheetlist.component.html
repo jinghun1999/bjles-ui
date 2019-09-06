@@ -26,6 +26,7 @@
           </nz-form-control>
         </nz-form-item>
       </div>
+
       <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
         <nz-form-item>
           <nz-form-label ngFor="supplier_code">供应商</nz-form-label>
@@ -210,7 +211,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col [nzSpan]="24" [class.text-right]="true">
+      <div nz-col [nzSpan]="24" [class.text-right]="false">
         <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
           {{ i.action_name_cn }}
         </button>
@@ -227,8 +228,8 @@
     </nz-alert>
   </div>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" virtualScroll [scroll]="scroll" [data]="data" [loading]="loading"
-      (change)="stChange($event)" [page]="pages">
+    <st #st [columns]="columns" [size]="size" virtualScroll="true" [scroll]="scroll" virtualItemSize="q.ps"
+      [loading]="loading" (change)="stChange($event)" [page]="pages" [data]="data">
     </st>
   </ng-container>
 </nz-card>
