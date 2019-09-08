@@ -4,17 +4,17 @@
     <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }" *ngIf="showSearch">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
-          <nz-form-label nzFor="no">工厂编号</nz-form-label>
+          <nz-form-label nzFor="no">工厂</nz-form-label>
           <nz-form-control>
-            <input nz-input [(ngModel)]="q.plant_code" name="no" nzSize="small" placeholder="工厂编号" id="no" />
+            <input nz-input [(ngModel)]="q.plant" name="no" nzSize="small" placeholder="工厂" id="no" />
           </nz-form-control>
         </nz-form-item>
       </div>
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item>
-          <nz-form-label nzFor="na">工厂名称</nz-form-label>
+          <nz-form-label nzFor="na">车间</nz-form-label>
           <nz-form-control>
-            <input nz-input [(ngModel)]="q.plant_name" name="na" nzSize="small" placeholder="工厂名称" id="na" />
+            <input nz-input [(ngModel)]="q.workshop" name="na" nzSize="small" placeholder="车间" id="na" />
           </nz-form-control>
         </nz-form-item>
       </div>

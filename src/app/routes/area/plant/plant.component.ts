@@ -39,7 +39,7 @@ export class AreaPlantComponent implements OnInit {
 
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'runsheet_id', type: 'checkbox', exported: false },
+    { title: '', index: 'plant_code', type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
@@ -123,7 +123,7 @@ export class AreaPlantComponent implements OnInit {
       return false;
     }
 
-    this.q.export = true;
+    this.q.page.export = true;
     this.http
       .post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -136,7 +136,7 @@ export class AreaPlantComponent implements OnInit {
         }
       }, (err: any) => this.msg.error('系统异常'));
 
-    this.q.export = false;
+    this.q.page.export = false;
   }
   d_callback(e: any) {
     for (let j = 65, len = 65 + 26; j < len; j++) {
