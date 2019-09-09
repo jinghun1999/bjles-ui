@@ -4,12 +4,14 @@ import { AreaRoutingModule } from './area-routing.module';
 import { AreaPlantComponent } from './plant/plant.component';
 import { AreaPlantEditComponent } from './plant/edit/edit.component';
 import { AreaWorkshopComponent } from './workshop/workshop.component';
+import { AreaWorkshopEditComponent } from './workshop/edit/edit.component';
 
 const COMPONENTS = [
   AreaPlantComponent,
   AreaWorkshopComponent];
 const COMPONENTS_NOROUNT = [
-  AreaPlantEditComponent];
+  AreaPlantEditComponent,
+  AreaWorkshopEditComponent];
 
 @NgModule({
   imports: [

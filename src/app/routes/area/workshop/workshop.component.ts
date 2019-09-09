@@ -5,6 +5,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { CommonApiService } from '@core';
+import { AreaWorkshopEditComponent } from './edit/edit.component';
 
 @Component({
   selector: 'app-area-workshop',
@@ -25,8 +26,8 @@ export class AreaWorkshopComponent implements OnInit {
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
-    plant_code: '',
-    plant_name: '',
+    plant: '',
+    workshop: '',
   }
   pages: STPage = {
     total: '', // 分页显示多少条数据，字符串型
@@ -38,7 +39,7 @@ export class AreaWorkshopComponent implements OnInit {
 
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'runsheet_id', type: 'checkbox', exported: false },
+    { title: '', index: 'workshop', type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
@@ -47,7 +48,7 @@ export class AreaWorkshopComponent implements OnInit {
           icon: 'edit',
           type: 'modal',
           modal: {
-            component: null,
+            component: AreaWorkshopEditComponent,
           },
           click: (_record, modal) => {
 
@@ -56,8 +57,12 @@ export class AreaWorkshopComponent implements OnInit {
       ],
       exported: false
     },
-    { title: '工厂编号', index: 'plant_code', sort: true },
-    { title: '工厂名称', index: 'plant_name', sort: true },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
+    { title: '车间或库区名称', index: 'workshop_name', sort: true },
+    { title: '车间或库区类型', index: 'workshop_type_name', sort: true },
+    { title: '车间时间调整类型', index: 'workschedule_type_name', sort: true },
+    { title: '业务类型', index: 'workshop_due_name', sort: true },
   ];
 
   ngOnInit() {
@@ -66,7 +71,7 @@ export class AreaWorkshopComponent implements OnInit {
   }
   getData() {
     this.loading = true;
-    this.http.post('/area/postPlantPager', this.q)
+    this.http.post('/area/postWorkshopPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe((res: any) => {
         this.data = res.data.rows;
@@ -123,9 +128,9 @@ export class AreaWorkshopComponent implements OnInit {
       return false;
     }
 
-    this.q.export = true;
+    this.q.page.export = true;
     this.http
-      .post('/area/postPlantPager', this.q)
+      .post('/area/postWorkshopPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
@@ -135,8 +140,7 @@ export class AreaWorkshopComponent implements OnInit {
           this.loading = false;
         }
       }, (err: any) => this.msg.error('系统异常'));
-
-    this.q.export = false;
+    this.q.page.export = false;
   }
   d_callback(e: any) {
     for (let j = 65, len = 65 + 26; j < len; j++) {
@@ -149,7 +153,7 @@ export class AreaWorkshopComponent implements OnInit {
   }
 
   add() {
-    this.model.create(null, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaWorkshopEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
