@@ -1,11 +1,11 @@
-<nz-card [nzBordered]="false" [nzTitle]="'物料单查询'">
-  <form nz-form [nzLayout]="'inline'" class="search__form">
-    <div nz-row>
-
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="plant">工厂</nz-form-label>
-          <nz-form-control nzErrorTip="请选择工厂">
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
             <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
               (ngModelChange)="plantChange($event)">
               <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
@@ -14,12 +14,12 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label ngFor="workshop">车间</nz-form-label>
-          <nz-form-control nzErrorTip="请选择车间">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
             <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              nzMode="multiple" nzShowSearch="true" nzAllowClear [nzMaxTagCount]="1" style="width: 100%">
               <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
               </nz-option>
             </nz-select>
@@ -27,13 +27,13 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label ngFor="supplier_code">供应商</nz-form-label>
-          <nz-form-control nzErrorTip="请选择供应商">
-            <nz-select [(ngModel)]="q.supplier_code" [nzSize]="size" name="supplier_code" id="supplier_code"
-              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'supplier_code')" nzMode="multiple"
-              nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="supplier_code">供应商</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择供应商">
+            <nz-select [(ngModel)]="q.supplier_code" [nzSize]="size" [nzMaxTagCount]="1" name="supplier_code"
+              id="supplier_code" [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'supplier_code')"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear [nzLoading]="loading">
               <nz-option *ngFor="let option of sub_supplier_code.data" [nzLabel]="option.itemText"
                 [nzValue]="option.itemValue">
               </nz-option>
@@ -42,10 +42,10 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="expected_arrival_time">预期到货时间</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="16" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4" nzFor="expected_arrival_time">预期到货时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
             <nz-range-picker [(ngModel)]="q.expected_arrival_time" name="expected_arrival_time"
               id="expected_arrival_time" nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }"
               nzFormat="yyyy-MM-dd HH:mm"></nz-range-picker>
@@ -53,48 +53,48 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="runsheet_code">物料单号</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="runsheet_code">物料单号</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <input nz-input [(ngModel)]="q.runsheet_code" [nzSize]="size" name="runsheet_code" placeholder="请输入"
               id="runsheet_code" />
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="publish_time">发布时间</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="16" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4" nzFor="publish_time">发布时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
             <nz-range-picker [(ngModel)]="q.publish_time" name="publish_time" id="publish_time" nzAllowClear
               [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"></nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label>零件号</nz-form-label>
-          <nz-form-control nzErrorTip="请输入零件号">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件号">
             <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
               placeholder="请输入零件号" />
           </nz-form-control>
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="16" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="actual_arrival_time">实际到货时间</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="16" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4" nzFor="actual_arrival_time">实际到货时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
             <nz-range-picker [(ngModel)]="q.actual_arrival_time" name="actual_arrival_time" id="actual_arrival_time"
               nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
             </nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="runsheet_type">物料单类型</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="runsheet_type">物料单类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.runsheet_type" [nzSize]="size" name="runsheet_type" id="runsheet_type"
               [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'dd_plansheet_type')" [nzShowSearch]="true"
               nzAllowClear>
@@ -104,10 +104,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label ngFor="dock_code">Dock编号</nz-form-label>
-          <nz-form-control nzErrorTip="请选择Dock编号">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="dock_code">Dock编号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择Dock编号">
             <nz-select [(ngModel)]="q.dock_code" [nzSize]="size" name="dock_code" id="dock_code" [nzPlaceHolder]="'请选择'"
               (nzOpenChange)="getListItems($event,'dock_code')" nzMode="multiple" nzShowSearch="true" nzAllowClear
               [nzLoading]="loading">
@@ -118,10 +118,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label ngFor="route_code">配送路线</nz-form-label>
-          <nz-form-control nzErrorTip="请选择配送路线">
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="route_code">配送路线</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择配送路线">
             <nz-select [(ngModel)]="q.route_code" [nzSize]="size" name="route_code" id="route_code"
               [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'route_code')" nzMode="multiple"
               nzShowSearch="true" nzAllowClear [nzLoading]="loading">
@@ -132,10 +132,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="sheet_process_status">任务单状态</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="sheet_process_status">任务单状态</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.sheet_process_status" [nzSize]="size" name="sheet_process_status"
               id="sheet_process_status" (nzOpenChange)="getCodeDetails($event,'wm_SheetProcessStatus')"
               [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear>
@@ -146,10 +146,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="part_type">拉动类型</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="part_type">拉动类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.part_type" [nzSize]="size" name="part_type" id="part_type" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_type')" nzAllowClear>
               <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.Value_cdescription"
@@ -160,10 +160,10 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="sheet_status">物料单状态</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="sheet_status">物料单状态</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.sheet_status" [nzSize]="size" name="sheet_status" id="sheet_status"
               [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'dd_plansheet_status')"
               [nzShowSearch]="true" nzAllowClear>
@@ -174,19 +174,18 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="is_show_blank">是否显示空白物料单</nz-form-label>
-          <nz-form-control>
-            <input nz-input [(ngModel)]="q.is_show_blank" name="is_show_blank" id="is_show_blank" [nzSize]="size"
-              placeholder="请输入零件号" type="checkbox" />
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="is_show_blank">显示空白物料单</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <label nz-checkbox [(ngModel)]="q.is_show_blank" name="is_show_blank" id="is_show_blank"></label>
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="print_status">打印状态</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="print_status">打印状态</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.print_status" [nzSize]="size" name="print_status" id="print_status"
               [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'jis_runsheet_PrintStatus')"
               [nzShowSearch]="true" nzAllowClear>
@@ -197,10 +196,10 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
-        <nz-form-item>
-          <nz-form-label nzFor="has_task">是否已分配任务</nz-form-label>
-          <nz-form-control>
+      <div nz-col [nzSpan]="8" *ngIf="expandForm">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="has_task">是否已分配任务</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.has_task" [nzSize]="size" name="has_task" id="has_task" [nzPlaceHolder]="'请选择'"
               (nzOpenChange)="getCodeDetails($event,'tk_task_HasTask')" [nzShowSearch]="true" nzAllowClear>
               <nz-option *ngFor="let i of sub_tk_task_HasTask.data;" [nzLabel]="i.Value_cdescription"
@@ -210,25 +209,15 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-
-      <div nz-col [nzSpan]="24" [class.text-right]="false">
-        <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
-          {{ i.action_name_cn }}
-        </button>
-      </div>
+    </div>
+    <div>
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
     </div>
   </form>
-  <div class="my-md" *ngIf="st.total < 0">
-    <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
-      <ng-template #message>
-        已选择
-        <strong class="text-primary">{{ selectedRows.length }}</strong> 项
-        <a *ngIf="selectedRows.length > 0" (click)="st.clearCheck()" class="ml-lg">清空</a>
-      </ng-template>
-    </nz-alert>
-  </div>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" virtualScroll="true" [scroll]="scroll" virtualItemSize="q.ps"
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '3500px'}" virtualItemSize="q.ps"
       [loading]="loading" (change)="stChange($event)" [page]="pages" [data]="data">
     </st>
   </ng-container>

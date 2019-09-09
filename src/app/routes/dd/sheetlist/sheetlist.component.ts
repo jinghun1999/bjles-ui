@@ -61,14 +61,14 @@ export class DdSheetlistComponent implements OnInit {
         },
       ],
     },
-    { width: 320, title: '单号', index: 'runsheet_code', sort: true },
-    { width: 120, title: '发布时间', index: 'publish_time', type: 'date', sort: true },
-    { width: 120, title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
-    { width: 120, title: '供应商发货时间	', index: 'supplier_sendat', type: 'date', sort: true },
-    { width: 120, title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
+    { width: 230, title: '单号', index: 'runsheet_code', sort: true },
     { width: 100, title: '工厂', index: 'plant', sort: true },
     { width: 100, title: '车间', index: 'workshop', sort: true },
     { width: 120, title: '供应商代码', index: 'supplier_code', sort: true },
+    { width: 150, title: '发布时间', index: 'publish_time', type: 'date', sort: true },
+    { width: 150, title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
+    { width: 150, title: '供应商发货时间	', index: 'supplier_sendat', type: 'date', sort: true },
+    { width: 150, title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
     { width: 320, title: '供应商名称', index: 'supplier_name', sort: true },
     { width: 320, title: '物料单类型', index: 'runsheet_type_name', sort: true },
     { width: 120, title: '拉动类型', index: 'part_type_name', sort: true },
@@ -95,7 +95,7 @@ export class DdSheetlistComponent implements OnInit {
     showSize: true,
     pageSizes: [10, 30, 50, 100],
   };
-  scroll = { x: '3500px', y: '300px' };
+
   expandForm = true;
 
   constructor(
@@ -106,7 +106,7 @@ export class DdSheetlistComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -216,7 +216,7 @@ export class DdSheetlistComponent implements OnInit {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => {});
+    setTimeout(() => { });
     // setTimeout(() => this.getData());
   }
 
