@@ -15,7 +15,7 @@ const COMPONENTS = [
 const COMPONENTS_NOROUNT = [
   AreaPlantEditComponent,
   AreaWorkshopEditComponent,
-  AreaRouteEditComponent];
+  AreaRouteEditComponent,];
 
 @NgModule({
   imports: [

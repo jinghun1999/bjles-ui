@@ -51,7 +51,9 @@ export class AreaRouteComponent implements OnInit {
             component: AreaRouteEditComponent,
           },
           click: (_record, modal) => {
-
+            if (modal) {
+              this.getData();
+            }
           }
         },
       ],
@@ -59,10 +61,9 @@ export class AreaRouteComponent implements OnInit {
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '配送路线代码', index: 'workshop_name', sort: true },
-    { title: '配送路线名称', index: 'workshop_type_name', sort: true },
-    { title: '配送路线类型', index: 'workschedule_type_name', sort: true },
-    { title: '业务类型', index: 'workshop_due_name', sort: true },
+    { title: '配送路线代码', index: 'route', sort: true },
+    { title: '配送路线名称', index: 'route_name', sort: true },
+    { title: '配送路线类型', index: 'route_type_text', sort: true },
   ];
 
   ngOnInit() {
@@ -166,7 +167,7 @@ export class AreaRouteComponent implements OnInit {
       this.modalSrv.confirm({
         nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
         nzOnOk: () => {
-          this.http.post('/area/postDeleteRoute', this.selectedRows).subscribe((res: any) => {
+          this.http.post('/area/deleteRoute', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
               this.msg.success('删除成功');
               this.getData();

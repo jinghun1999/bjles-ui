@@ -1,14 +1,48 @@
 <div class="modal-header">
-  <div class="modal-title">查看 {{ record.id }} 信息</div>
+  <div class="modal-title">编辑线路信息</div>
 </div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<div sv-container *ngIf="i">
-  <sv label="姓名">{{ i.owner }}</sv>
-  <sv label="会员卡号">32943898021309809423</sv>
-  <sv label="身份证">3321944288191034921</sv>
-  <sv label="联系方式">18112345678</sv>
-  <sv label="联系地址">曲丽丽 18100000000 浙江省杭州市西湖区黄姑山路工专路交叉路口</sv>
-</div>
-<div class="modal-footer">
-  <button nz-button type="button" (click)="close()">关闭</button>
-</div>
+<nz-spin *ngIf="loading" class="modal-spin"></nz-spin>
+<form nz-form #f="ngForm" (ngSubmit)="save()" *ngIf="!loading">
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)">
+        <nz-option *ngFor="let p of plants" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop" nzRequired>车间</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="车间不能为空">
+      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required>
+        <option value="">请选择</option>
+        <nz-option *ngFor="let p of workshops" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route" nzRequired>线路代码</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="线路代码不能为空">
+      <input nz-input [(ngModel)]="record.route" id="route" name='route' required />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route_name" nzRequired>线路名称</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="线路名称不能为空">
+      <input nz-input [(ngModel)]="record.route_name" id="route_name" name='route_name' required />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route_type" nzRequired>线路类型</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择线路类型">
+      <nz-select [(ngModel)]="record.route_type" name="route_type" id="route_type" required>
+        <nz-option *ngFor="let p of codes.c1" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading"
+      nzType="primary">保存</button>
+  </div>
+</form>

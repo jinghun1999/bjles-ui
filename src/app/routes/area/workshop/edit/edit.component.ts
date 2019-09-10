@@ -11,6 +11,7 @@ import { CommonApiService } from '@core';
 export class AreaWorkshopEditComponent implements OnInit {
   record: any = {};
   i: any;
+  loading = true;
   plants = [];
   codes = {
     c1: [],
@@ -38,9 +39,12 @@ export class AreaWorkshopEditComponent implements OnInit {
     );
 
     this.capi.getCodes('workshop_type,workshop_workschedule_type,workshop_due').subscribe((res: any) => {
+      this.loading = false;
       this.codes = res;
       if (this.record.plant) {
-        this.record.workshop_due = 1;
+        this.record.workshop_type = this.record.workshop_type.toString();
+        this.record.workschedule_type = this.record.workschedule_type.toString();
+        this.record.workshop_due = this.record.workshop_due.toString();
       }
       // this.cdr.markForCheck();
     });
