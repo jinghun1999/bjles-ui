@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <div class="modal-title">编辑线路信息</div>
+  <div class="modal-title">编辑位置信息</div>
 </div>
 <nz-spin *ngIf="loading" class="modal-spin"></nz-spin>
 <form nz-form #f="ngForm" (ngSubmit)="save()" *ngIf="!loading">
@@ -21,21 +21,15 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route" nzRequired>线路代码</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="线路代码不能为空">
-      <input nz-input [(ngModel)]="record.route" id="route" name='route' required />
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loc" nzRequired>位置</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="位置不能为空">
+      <input nz-input [(ngModel)]="record.loc" id="loc" name='loc' required />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route_name" nzRequired>线路名称</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="线路名称不能为空">
-      <input nz-input [(ngModel)]="record.route_name" id="route_name" name='route_name' required />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route_type" nzRequired>线路类型</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择线路类型">
-      <nz-select [(ngModel)]="record.route_type" name="route_type" id="route_type" required>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loc_t" nzRequired>线路类型</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择位置类型">
+      <nz-select [(ngModel)]="record.loc_type" name="loc_t" id="loc_t" required>
         <nz-option *ngFor="let p of codes.c1" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>
       </nz-select>
     </nz-form-control>
