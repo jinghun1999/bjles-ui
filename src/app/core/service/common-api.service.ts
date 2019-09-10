@@ -33,7 +33,7 @@ export class CommonApiService {
     });
   }
 
-  getCodeDetailInfo(e: any, order: any, p_type: any = '1') {
+  getCodeDetailInfo(e: any, order: any, p_type: any = 'string') {
     return new Observable(observe => {
       const key = e + p_type;
       const cache_data = this.cache.getNone(key);
