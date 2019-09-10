@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange, XlsxService } from '@delon/abc';
 import { PartPartlistEditComponent } from './edit/edit.component';
+import { PartPartlistViewComponent } from './view/view.component';
 import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-part-partlist',
@@ -25,6 +25,7 @@ export class PartPartlistComponent implements OnInit {
         {
           text: '查看',
           type: 'modal',
+          click: 'reload',
           modal: {
             size: 'xl',
             component: PartPartlistEditComponent,
@@ -168,7 +169,15 @@ export class PartPartlistComponent implements OnInit {
         break;
       case 'Import':
         this.import();
-        this.search();
+        break;
+      case 'Change':
+        this.Change();
+        break;
+      case 'Delete':
+        this.Delete();
+        break;
+      case 'Display':
+        this.noUsePartList();
         break;
     }
   }
@@ -192,10 +201,65 @@ export class PartPartlistComponent implements OnInit {
         .subscribe(
           res => {
             this.msg.success(res.data);
+            this.st.reload();
           },
           (err: any) => this.msg.error('系统异常'),
         );
     });
+  }
+
+  Change() {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择需要的零件！');
+      return false;
+    } else {
+      this.loading = true;
+
+      this.http
+        .post('/part/ChangePartStatus', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
+    this.st.clearCheck();
+  }
+
+  noUsePartList() {
+    this.modal.create(PartPartlistViewComponent, {}, { size: 'xl' }).subscribe(res => {});
+  }
+
+  Delete() {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择需要删除的零件！');
+      return false;
+    } else {
+      this.loading = true;
+
+      this.http
+        .post('/part/Delete', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
+    this.st.clearCheck();
   }
 
   export() {

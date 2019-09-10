@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { SFSchema, SFUISchema } from '@delon/form';
+import { ItemData } from 'src/app/model';
+import { CommonApiService, CommonFunctionService, EnumPrivilegeCode } from '@core';
 
 @Component({
   selector: 'app-part-partlist-edit',
@@ -9,53 +10,103 @@ import { SFSchema, SFUISchema } from '@delon/form';
 })
 export class PartPartlistEditComponent implements OnInit {
   record: any = {};
-  i: any;
-  schema: SFSchema = {
-    properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
-    },
-    required: ['owner', 'callNo', 'href', 'description'],
-  };
-  ui: SFUISchema = {
-    '*': {
-      spanLabelFixed: 100,
-      grid: { span: 12 },
-    },
-    $no: {
-      widget: 'text'
-    },
-    $href: {
-      widget: 'string',
-    },
-    $description: {
-      widget: 'textarea',
-      grid: { span: 24 },
-    },
-  };
+  size = 'small';
+  pre_lists = [];
+  sub_workshops = [];
+  sub_part_type = new ItemData();
+  sub_part_state = new ItemData();
+  sub_monitor_category = new ItemData();
+  sub_ver_record = new ItemData();
+  sub_ptr_flag = new ItemData();
+  pc_all = true;
+  pc_part_type = true;
+  pc_is_direct = true;
+
+  loading = false;
 
   constructor(
     private modal: NzModalRef,
-    private msgSrv: NzMessageService,
+    public msg: NzMessageService,
     public http: _HttpClient,
+    private capi: CommonApiService,
   ) {}
 
   ngOnInit(): void {
-    if (this.record.id > 0)
-    this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
+    this.capi.getPlant().subscribe(
+      (res: any) => {
+        this.pre_lists = res;
+        if (this.pre_lists.length > 0) {
+          this.sub_workshops = this.pre_lists[0].children;
+          // this.record.plant = this.pre_lists[0].value;
+          this.plantChange(this.record.plant);
+        }
+      },
+      (err: any) => this.msg.error('获取不到工厂车间信息！！'),
+    );
+
+    this.initCodeDetail();
+    this.getPrivilegeExt();
   }
 
   save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe(res => {
-      this.msgSrv.success('保存成功');
-      this.modal.close(true);
-    });
+    this.loading = true;
+    this.http.post('/part/SaveData', this.record).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          this.msg.success(res.data);
+          this.loading = false;
+          this.modal.close(true);
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+        }
+      },
+      (err: any) => this.msg.error('保存失败!'),
+    );
   }
 
   close() {
     this.modal.destroy();
+  }
+  plantChange(value: string): void {
+    const l = this.pre_lists.find(p => p.value === value);
+    this.sub_workshops = l.children;
+    // this.record.workshop = '';
+  }
+
+  initCodeDetail() {
+    this.capi.getCodeDetailInfo('part_type', '', '2').subscribe((res: any) => {
+      this.sub_part_type.data = res;
+    });
+    this.capi.getCodeDetailInfo('monitor_category', '', '2').subscribe((res: any) => {
+      this.sub_monitor_category.data = res;
+    });
+    this.capi.getCodeDetailInfo('ver_record', '', '2').subscribe((res: any) => {
+      this.sub_ver_record.data = res;
+    });
+    this.capi.getCodeDetailInfo('part_state', '', '2').subscribe((res: any) => {
+      this.sub_part_state.data = res;
+    });
+    this.capi.getCodeDetailInfo('ptr_flag', '', '2').subscribe((res: any) => {
+      this.sub_ptr_flag.data = res;
+    });
+  }
+
+  getPrivilegeExt() {
+    this.http
+      .get('/System/GetPrivilegeExt?PrivilegeCode=' + EnumPrivilegeCode.PartManageIsDirectOnly)
+      .subscribe((res: any) => {
+        this.pc_is_direct = res.data;
+        this.http
+          .get('/System/GetPrivilegeExt?PrivilegeCode=' + EnumPrivilegeCode.PartManagePullTypeOnly)
+          .subscribe((res1: any) => {
+            this.pc_part_type = res.data;
+            if (this.pc_is_direct || this.pc_part_type) this.pc_all = false;
+            else {
+              this.pc_is_direct = true;
+              this.pc_part_type = true;
+            }
+          });
+      });
   }
 }

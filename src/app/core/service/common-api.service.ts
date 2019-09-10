@@ -26,16 +26,19 @@ export class CommonApiService {
     });
   }
 
-  getCodeDetailInfo(e: any, order: any) {
+  getCodeDetailInfo(e: any, order: any, p_type: any = '1') {
     return new Observable(observe => {
-      const cache_data = this.cache.getNone(e);
+      const key = e + p_type;
+      const cache_data = this.cache.getNone(key);
       if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
-        this.http.get('/Area/GetCodeDetail?codeName=' + e + '&orderName=' + order).subscribe((res: any) => {
-          this.cache.set(e, res.data, { type: 's', expire: 500 });
-          observe.next(res.data);
-          // 如果有错误，通过 error() 方法将错误返回
-          // observe.error(res.message);
-        });
+        this.http
+          .get('/Area/GetCodeDetail?codeName=' + e + '&pType=' + p_type + '&orderName=' + order)
+          .subscribe((res: any) => {
+            this.cache.set(key, res.data, { type: 's', expire: 500 });
+            observe.next(res.data);
+            // 如果有错误，通过 error() 方法将错误返回
+            // observe.error(res.message);
+          });
       } else {
         observe.next(cache_data);
       }
