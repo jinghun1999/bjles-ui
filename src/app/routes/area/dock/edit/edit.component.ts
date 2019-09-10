@@ -4,18 +4,15 @@ import { _HttpClient } from '@delon/theme';
 import { CommonApiService } from '@core';
 
 @Component({
-  selector: 'app-area-route-edit',
+  selector: 'app-area-dock-edit',
   templateUrl: './edit.component.html',
 })
-export class AreaRouteEditComponent implements OnInit {
+export class AreaDockEditComponent implements OnInit {
   record: any = {};
   i: any;
   loading = true;
   plants = [];
   workshops = [];
-  codes = {
-    c1: [],
-  }
 
   constructor(
     private modal: NzModalRef,
@@ -28,19 +25,12 @@ export class AreaRouteEditComponent implements OnInit {
   ngOnInit(): void {
     this.capi.getPlant().subscribe((res: any) => {
       this.plants = res;
-    });
-
-    this.capi.getCodes('route_type,').subscribe((res: any) => {
       this.loading = false;
-      this.codes = res;
-      if (this.record.plant) {
-        this.record.route_type = this.record.route_type.toString();
-        this.plantChange(this.record.plant);
-      }
+      this.plantChange(this.record.plant);
     });
   }
   save() {
-    this.http.post('/area/postRoute', this.record).subscribe((res: any) => {
+    this.http.post('/area/postDock', this.record).subscribe((res: any) => {
       if (res.successful) {
         this.msg.success('保存成功');
         this.modal.close(true);

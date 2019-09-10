@@ -5,13 +5,13 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { CommonApiService } from '@core';
-import { AreaRouteEditComponent } from './edit/edit.component';
+import { AreaDockEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-area-route',
-  templateUrl: './route.component.html',
+  selector: 'app-area-dock',
+  templateUrl: './dock.component.html',
 })
-export class AreaRouteComponent implements OnInit {
+export class AreaDockComponent implements OnInit {
   constructor(private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
@@ -28,14 +28,9 @@ export class AreaRouteComponent implements OnInit {
     sort: new SortInfo(),
     plant: '',
     workshop: '',
+    dock: '',
   }
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
-  };
+  pages: STPage = { total: '', show: true, front: false, showSize: true, pageSizes: [10, 30, 50, 100] };
 
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
@@ -48,7 +43,7 @@ export class AreaRouteComponent implements OnInit {
           icon: 'edit',
           type: 'modal',
           modal: {
-            component: AreaRouteEditComponent,
+            component: AreaDockEditComponent,
           },
           click: (_record, modal) => {
             if (modal) {
@@ -61,18 +56,17 @@ export class AreaRouteComponent implements OnInit {
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '配送路线代码', index: 'route', sort: true },
-    { title: '配送路线名称', index: 'route_name', sort: true },
-    { title: '配送路线类型', index: 'route_type_text', sort: true },
+    { title: 'Dock编号', index: 'dock', sort: true },
+    { title: 'Dock名称', index: 'dock_name', sort: true },
   ];
 
   ngOnInit() {
     this.capi.getPlant().subscribe((res: any) => { this.plant = res; });
-    this.capi.getActions('AreaManagement/RouteList.aspx').subscribe((res: any) => { this.actions = res });
+    this.capi.getActions('AreaManagement/DockList.aspx').subscribe((res: any) => { this.actions = res });
   }
   getData() {
     this.loading = true;
-    this.http.post('/area/postRoutePager', this.q)
+    this.http.post('/area/postDockPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe((res: any) => {
         this.data = res.data.rows;
@@ -131,7 +125,7 @@ export class AreaRouteComponent implements OnInit {
 
     this.q.page.export = true;
     this.http
-      .post('/area/postRoutePager', this.q)
+      .post('/area/postDockPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         if (res.successful) {
@@ -154,7 +148,7 @@ export class AreaRouteComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaRouteEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaDockEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
@@ -167,7 +161,7 @@ export class AreaRouteComponent implements OnInit {
       this.modalSrv.confirm({
         nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
         nzOnOk: () => {
-          this.http.post('/area/deleteRoute', this.selectedRows).subscribe((res: any) => {
+          this.http.post('/area/deleteDock', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
               this.msg.success('删除成功');
               this.getData();

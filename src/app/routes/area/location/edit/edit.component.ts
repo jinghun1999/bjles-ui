@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { CommonApiService } from '@core';
 
 @Component({
-  selector: 'app-area-workshop-edit',
+  selector: 'app-area-location-edit',
   templateUrl: './edit.component.html',
 })
-export class AreaWorkshopEditComponent implements OnInit {
+export class AreaLocationEditComponent implements OnInit {
   record: any = {};
   i: any;
   loading = true;
   plants = [];
+  workshops = [];
   codes = {
     c1: [],
-    c2: [],
-    c3: []
   }
 
   constructor(
@@ -27,25 +26,19 @@ export class AreaWorkshopEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.capi.getPlant().subscribe(
-      (res: any) => {
-        this.plants = res;
-      },
-      (err: any) => this.msg.error('获取不到工厂车间信息'),
-    );
+    this.capi.getPlant().subscribe((res: any) => { this.plants = res; });
 
-    this.capi.getCodes('workshop_type,workshop_workschedule_type,workshop_due').subscribe((res: any) => {
+    this.capi.getCodes('loc_type,').subscribe((res: any) => {
       this.loading = false;
       this.codes = res;
       if (this.record.plant) {
-        this.record.workshop_type = this.record.workshop_type.toString();
-        this.record.workschedule_type = this.record.workschedule_type.toString();
-        this.record.workshop_due = this.record.workshop_due.toString();
+        this.record.loc_type = this.record.loc_type.toString();
+        this.plantChange(this.record.plant);
       }
     });
   }
   save() {
-    this.http.post('/area/postWorkshop', this.record).subscribe((res: any) => {
+    this.http.post('/area/postLocation', this.record).subscribe((res: any) => {
       if (res.successful) {
         this.msg.success('保存成功');
         this.modal.close(true);
@@ -57,5 +50,9 @@ export class AreaWorkshopEditComponent implements OnInit {
   }
   close() {
     this.modal.destroy();
+  }
+  plantChange(v: string) {
+    const l = this.plants.find(p => p.value === v);
+    this.workshops = l.children;
   }
 }

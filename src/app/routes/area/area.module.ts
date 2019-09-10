@@ -7,15 +7,23 @@ import { AreaWorkshopComponent } from './workshop/workshop.component';
 import { AreaWorkshopEditComponent } from './workshop/edit/edit.component';
 import { AreaRouteComponent } from './route/route.component';
 import { AreaRouteEditComponent } from './route/edit/edit.component';
+import { AreaLocationComponent } from './location/location.component';
+import { AreaLocationEditComponent } from './location/edit/edit.component';
+import { AreaDockComponent } from './dock/dock.component';
+import { AreaDockEditComponent } from './dock/edit/edit.component';
 
 const COMPONENTS = [
   AreaPlantComponent,
   AreaWorkshopComponent,
-  AreaRouteComponent];
+  AreaRouteComponent,
+  AreaLocationComponent,
+  AreaDockComponent];
 const COMPONENTS_NOROUNT = [
   AreaPlantEditComponent,
   AreaWorkshopEditComponent,
-  AreaRouteEditComponent];
+  AreaRouteEditComponent,
+  AreaLocationEditComponent,
+  AreaDockEditComponent];
 
 @NgModule({
   imports: [

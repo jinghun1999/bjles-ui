@@ -1,7 +1,8 @@
 <div class="modal-header">
-  <div class="modal-title">编辑车间{{record.workshop}}</div>
+  <div class="modal-title">编辑车间信息</div>
 </div>
-<form nz-form #f="ngForm" (ngSubmit)="save()">
+<nz-spin *ngIf="loading" class="modal-spin"></nz-spin>
+<form nz-form #f="ngForm" (ngSubmit)="save()" *ngIf="!loading">
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -18,13 +19,13 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop_name" nzRequired>车间或库区名称</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="名称不能为空">
       <input nz-input [(ngModel)]="record.workshop_name" id="workshop_name" name='workshop_name' required />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop_type" nzRequired>车间或库区类型</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择类型">
       <nz-select [(ngModel)]="record.workshop_type" name="workshop_type" id="workshop_type" required>
         <option value="">请选择</option>
         <nz-option *ngFor="let p of codes.c1" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>
@@ -33,7 +34,7 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workschedule_type" nzRequired>车间时间调整类型</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择调整类型">
       <nz-select [(ngModel)]="record.workschedule_type" name="workschedule_type" id="workschedule_type" required>
         <nz-option *ngFor="let p of codes.c2" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>
       </nz-select>
@@ -41,7 +42,7 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop_due" nzRequired>业务类型</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择业务类型">
       <nz-select [(ngModel)]="record.workshop_due" name="workshop_due" id="workshop_due" required>
         <nz-option *ngFor="let p of codes.c3" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>
       </nz-select>
