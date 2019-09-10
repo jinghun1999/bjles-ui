@@ -5,12 +5,14 @@ import { PartPartlistComponent } from './partlist/partlist.component';
 import { PartPartcardlistComponent } from './partcardlist/partcardlist.component';
 import { PartPartlistEditComponent } from './partlist/edit/edit.component';
 import { PartPartlistViewComponent } from './partlist/view/view.component';
+import { PartPartcardlistEditComponent } from './partcardlist/edit/edit.component';
 
 const COMPONENTS = [PartPartcardlistComponent, PartPartlistComponent];
 const COMPONENTS_NOROUNT = [
   
   PartPartlistEditComponent,
-  PartPartlistViewComponent];
+  PartPartlistViewComponent,
+  PartPartcardlistEditComponent];
 
 @NgModule({
   imports: [SharedModule, PartRoutingModule],

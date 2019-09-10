@@ -50,7 +50,7 @@ export class PartPartlistEditComponent implements OnInit {
 
   save(value: any) {
     this.loading = true;
-    this.http.post('/part/SaveData', this.record).subscribe(
+    this.http.post('/part/PartSaveData', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -75,19 +75,19 @@ export class PartPartlistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    this.capi.getCodeDetailInfo('part_type', '', '2').subscribe((res: any) => {
+    this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
       this.sub_part_type.data = res;
     });
-    this.capi.getCodeDetailInfo('monitor_category', '', '2').subscribe((res: any) => {
+    this.capi.getCodeDetailInfo('monitor_category', '', 'int').subscribe((res: any) => {
       this.sub_monitor_category.data = res;
     });
-    this.capi.getCodeDetailInfo('ver_record', '', '2').subscribe((res: any) => {
+    this.capi.getCodeDetailInfo('ver_record', '', 'int').subscribe((res: any) => {
       this.sub_ver_record.data = res;
     });
-    this.capi.getCodeDetailInfo('part_state', '', '2').subscribe((res: any) => {
+    this.capi.getCodeDetailInfo('part_state', '', 'int').subscribe((res: any) => {
       this.sub_part_state.data = res;
     });
-    this.capi.getCodeDetailInfo('ptr_flag', '', '2').subscribe((res: any) => {
+    this.capi.getCodeDetailInfo('ptr_flag', '', 'int').subscribe((res: any) => {
       this.sub_ptr_flag.data = res;
     });
   }

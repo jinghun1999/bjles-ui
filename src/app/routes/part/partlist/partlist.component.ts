@@ -245,7 +245,7 @@ export class PartPartlistComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/part/Delete', this.selectedRows)
+        .post('/part/PartDelete', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
