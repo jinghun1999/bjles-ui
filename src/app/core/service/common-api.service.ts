@@ -7,7 +7,7 @@ import { CacheService } from '@delon/cache';
   providedIn: 'root',
 })
 export class CommonApiService {
-  constructor(private http: HttpClient, public cache: CacheService) { }
+  constructor(private http: HttpClient, public cache: CacheService) {}
 
   getPlant() {
     return new Observable(observe => {
@@ -39,7 +39,7 @@ export class CommonApiService {
       const cache_data = this.cache.getNone(key);
       if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
         this.http
-          .get('/Area/GetCodeDetail?codeName=' + e + '&pType=' + p_type + '&orderName=' + order)
+          .get('/System/GetCodeDetail?codeName=' + e + '&pType=' + p_type + '&orderName=' + order)
           .subscribe((res: any) => {
             this.cache.set(key, res.data, { type: 's', expire: 500 });
             observe.next(res.data);
