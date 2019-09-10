@@ -1,0 +1,9 @@
+<nz-card [nzBordered]="false" [nzTitle]="'显示不用零件'" nzSize="size">
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading">
+    </st>
+  </ng-container>
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="close()">关闭</button>
+  </div>
+</nz-card>

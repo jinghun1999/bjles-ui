@@ -1,10 +1,111 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
+  <div class="modal-title">
+    {{ record.part_no === '' && record.plant === '' && record.workhsop === '' ? '添加' : '编辑' }}-零件管理）
+  </div>
 </div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
+<form #f="ngForm" (ngSubmit)="save()" nz-form>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.part_no" name="part_no" maxlength="8" disabled="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件中文名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!pc_all" [(ngModel)]="record.part_cname" name="part_cname"
+        maxlength="50" required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件英文名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!pc_all" [(ngModel)]="record.part_ename" name="part_ename"
+        maxlength="50" required />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.plant" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" nzDisabled="true">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.workshop" [nzSize]="size" name="workshop" id="workshop" nzShowSearch="true"
+        nzAllowClear="false" nzDisabled="true">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">拉动类型</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.part_type" [nzSize]="size" name="part_type" id="part_type" [nzShowSearch]="true"
+        nzAllowClear="false" [nzDisabled]="!pc_part_type">
+        <nz-option *ngFor="let i of sub_part_type.data" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件活动状态</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.part_state" [nzSize]="size" name="part_state" id="part_state" [nzShowSearch]="true"
+        nzAllowClear="false" [nzDisabled]="!pc_all">
+        <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">监控类别</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.moditor_category" [nzSize]="size" name="moditor_category" id="moditor_category"
+        [nzShowSearch]="true" nzAllowClear="false" [nzDisabled]="!pc_all">
+        <nz-option *ngFor="let i of sub_monitor_category.data;" [nzLabel]="i.Value_cdescription"
+          [nzValue]="i.Code_value">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">旧零件号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.oldpart_no" name="oldpart_no" disabled="true" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">直供标识</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.is_direct" [nzSize]="size" name="is_direct" id="is_direct" [nzShowSearch]="true"
+        nzAllowClear="false" [nzDisabled]="!pc_is_direct">
+        <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">可选件</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!pc_all" [(ngModel)]="record.options" name="options" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">删除标识</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.part_flag" [disabled]="false" [nzSize]="size" name="part_flag" id="part_flag"
+        nzAllowClear nzDisabled="true">
+        <nz-option nzValue="X" nzLabel="X"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">PTR标志</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.ptr_flag" [nzSize]="size" name="ptr_flag" id="ptr_flag" [nzShowSearch]="true"
+        nzAllowClear="false" [nzDisabled]="!pc_all">
+        <nz-option *ngFor="let i of sub_ptr_flag.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车型</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.car_model" name="car_model" disabled="true" />
+    </nz-form-control>
+  </nz-form-item>
   <div class="modal-footer">
     <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
   </div>
-</sf>
+</form>
