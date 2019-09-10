@@ -148,7 +148,7 @@ export class AreaDockComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaDockEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaDockEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }

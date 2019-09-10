@@ -149,7 +149,7 @@ export class AreaPlantComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaPlantEditComponent, { plant_code: null, plant_name: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaPlantEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }

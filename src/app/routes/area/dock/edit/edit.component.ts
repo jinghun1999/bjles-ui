@@ -26,6 +26,7 @@ export class AreaDockEditComponent implements OnInit {
     this.capi.getPlant().subscribe((res: any) => {
       this.plants = res;
       this.loading = false;
+      this.record.plant = res[0].value;
       this.plantChange(this.record.plant);
     });
   }

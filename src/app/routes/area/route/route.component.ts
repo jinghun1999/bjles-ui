@@ -154,7 +154,7 @@ export class AreaRouteComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaRouteEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaRouteEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }

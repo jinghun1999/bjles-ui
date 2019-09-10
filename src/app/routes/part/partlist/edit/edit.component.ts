@@ -29,7 +29,7 @@ export class PartPartlistEditComponent implements OnInit {
     public msg: NzMessageService,
     public http: _HttpClient,
     private capi: CommonApiService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.capi.getPlant().subscribe(
@@ -48,7 +48,7 @@ export class PartPartlistEditComponent implements OnInit {
     this.getPrivilegeExt();
   }
 
-  save(value: any) {
+  save() {
     this.loading = true;
     this.http.post('/part/SaveData', this.record).subscribe(
       (res: any) => {

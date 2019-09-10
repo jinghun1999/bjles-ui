@@ -5,8 +5,8 @@
 <form nz-form #f="ngForm" (ngSubmit)="save()" *ngIf="!loading">
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="record.plant" name="plant" id="plant">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择工厂">
+      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" [nzDisabled]="!record.add">
         <nz-option *ngFor="let p of plants" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -14,7 +14,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop" nzRequired>车间</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="车间不能为空">
-      <input nz-input [(ngModel)]="record.workshop" name="workshop" id="workshop" required />
+      <input nz-input [(ngModel)]="record.workshop" name="workshop" id="workshop" required [disabled]="!record.add" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

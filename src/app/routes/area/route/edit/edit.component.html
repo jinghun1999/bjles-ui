@@ -6,7 +6,8 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)">
+      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)"
+        [nzDisabled]="!record.add">
         <nz-option *ngFor="let p of plants" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -14,7 +15,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop" nzRequired>车间</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择车间">
-      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required>
+      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required [nzDisabled]="!record.add">
         <option value="">请选择</option>
         <nz-option *ngFor="let p of workshops" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
@@ -23,7 +24,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="route" nzRequired>线路代码</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="线路代码不能为空">
-      <input nz-input [(ngModel)]="record.route" id="route" name='route' required />
+      <input nz-input [(ngModel)]="record.route" id="route" name='route' required [disabled]="!record.add" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

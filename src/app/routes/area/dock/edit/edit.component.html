@@ -6,7 +6,8 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)">
+      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)"
+        [nzDisabled]="!record.add">
         <nz-option *ngFor="let p of plants" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -14,7 +15,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop" nzRequired>车间</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择车间">
-      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required>
+      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required [nzDisabled]="!record.add">
         <option value="">请选择</option>
         <nz-option *ngFor="let p of workshops" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
@@ -23,11 +24,11 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="d" nzRequired>Dock</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入dock">
-      <input nz-input [(ngModel)]="record.dock" id="d" name='d' required />
+      <input nz-input [(ngModel)]="record.dock" id="d" name='d' required [disabled]="!record.add" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dn" nzRequired>Dock</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dn" nzRequired>Dock名称</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入dock名称">
       <input nz-input [(ngModel)]="record.dock_name" id="dn" name='dn' required />
     </nz-form-control>

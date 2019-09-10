@@ -5,7 +5,7 @@
   <nz-form-item class="mb-sm">
     <nz-form-label nzSpan="4">工厂编号</nz-form-label>
     <nz-form-control nzSpan="8">
-      <input nz-input [(ngModel)]="record.plant_code" name="c" maxlength="4" required />
+      <input nz-input [(ngModel)]="record.plant_code" name="c" maxlength="4" required [disabled]="!record.add" />
     </nz-form-control>
     <nz-form-label nzSpan="4">工厂名称</nz-form-label>
     <nz-form-control nzSpan="8">

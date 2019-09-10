@@ -5,8 +5,9 @@
 <form nz-form #f="ngForm" (ngSubmit)="save()" *ngIf="!loading">
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="plant">工厂</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" (ngModelChange)="plantChange($event)">
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择工厂">
+      <nz-select [(ngModel)]="record.plant" name="plant" id="plant" required (ngModelChange)="plantChange($event)"
+        [nzDisabled]="!record.add">
         <nz-option *ngFor="let p of plants" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -14,7 +15,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workshop" nzRequired>车间</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择车间">
-      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required>
+      <nz-select [(ngModel)]="record.workshop" name="workshop" id="workshop" required [nzDisabled]="!record.add">
         <option value="">请选择</option>
         <nz-option *ngFor="let p of workshops" [nzLabel]="p.text" [nzValue]="p.value"></nz-option>
       </nz-select>
@@ -23,11 +24,11 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loc" nzRequired>位置</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="位置不能为空">
-      <input nz-input [(ngModel)]="record.loc" id="loc" name='loc' required />
+      <input nz-input [(ngModel)]="record.loc" id="loc" name='loc' required [disabled]="!record.add" />
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loc_t" nzRequired>线路类型</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loc_t" nzRequired>位置类型</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择位置类型">
       <nz-select [(ngModel)]="record.loc_type" name="loc_t" id="loc_t" required>
         <nz-option *ngFor="let p of codes.c1" [nzLabel]="p.text" [nzValue]="p.val"></nz-option>

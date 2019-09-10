@@ -153,7 +153,7 @@ export class AreaLocationComponent implements OnInit {
   }
 
   add() {
-    this.model.create(AreaLocationEditComponent, { plant: null, workshop: null }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaLocationEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
       this.getData();
     });
   }
