@@ -249,6 +249,7 @@ export class DdSheetlistComponent implements OnInit {
         tmp_data.data = [];
         tmp_data.last_workshop = '';
       }
+      // tslint:disable-next-line: no-eval
       eval('this.q.' + type + ' =  [];');
     }
   }

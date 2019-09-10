@@ -1,5 +1,4 @@
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STWidthMode } from '@delon/abc';
@@ -14,7 +13,7 @@ export class DdDetailComponent implements OnInit {
     public msgSrv: NzMessageService,
     public http: _HttpClient,
     public msg: NzMessageService,
-  ) {}
+  ) { }
   size: 'small';
   record: any = {};
   i: any;

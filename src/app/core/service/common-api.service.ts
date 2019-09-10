@@ -7,7 +7,7 @@ import { CacheService } from '@delon/cache';
   providedIn: 'root',
 })
 export class CommonApiService {
-  constructor(private http: HttpClient, public cache: CacheService) {}
+  constructor(private http: HttpClient, public cache: CacheService) { }
 
   getPlant() {
     return new Observable(observe => {
@@ -23,6 +23,13 @@ export class CommonApiService {
       } else {
         observe.next(cache_data);
       }
+    });
+  }
+  getCodes(codes: string) {
+    return new Observable(observe => {
+      this.http.get('/system/getCodeEnums?codes=' + codes).subscribe((res: any) => {
+        observe.next(res.data);
+      });
     });
   }
 
