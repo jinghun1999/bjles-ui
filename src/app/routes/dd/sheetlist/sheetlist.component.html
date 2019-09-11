@@ -190,7 +190,7 @@
       </div>
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="has_task">是否已分配任务</nz-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="has_task">分配任务</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.has_task" [nzSize]="size" name="has_task" id="has_task" [nzPlaceHolder]="'请选择'"
               (nzOpenChange)="getCodeDetails($event,'tk_task_HasTask')" [nzShowSearch]="true" nzAllowClear>
@@ -203,14 +203,14 @@
       </div>
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="is_show_blank">显示空白物料单</nz-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="is_show_blank">显示空白单</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <label nz-checkbox [(ngModel)]="q.is_show_blank" name="is_show_blank" id="is_show_blank"></label>
           </nz-form-control>
         </nz-form-item>
       </div>
     </div>
-    <div>
+    <div class="search-buttons">
       <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
         {{ i.action_name_cn }}
       </button>
