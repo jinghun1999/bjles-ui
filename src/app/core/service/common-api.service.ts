@@ -7,7 +7,7 @@ import { CacheService } from '@delon/cache';
   providedIn: 'root',
 })
 export class CommonApiService {
-  constructor(private http: HttpClient, public cache: CacheService) {}
+  constructor(private http: HttpClient, public cache: CacheService) { }
 
   getPlant() {
     return new Observable(observe => {
@@ -39,7 +39,7 @@ export class CommonApiService {
       const cache_data = this.cache.getNone(key);
       if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
         this.http
-          .get('/System/GetCodeDetail?codeName=' + e + '&pType=' + p_type + '&orderName=' + order)
+          .get('/system/getCodeDetail?codeName=' + e + '&pType=' + p_type + '&orderName=' + order)
           .subscribe((res: any) => {
             this.cache.set(key, res.data, { type: 's', expire: 500 });
             observe.next(res.data);
@@ -54,7 +54,7 @@ export class CommonApiService {
 
   getActions(actionPath: any) {
     return new Observable(observe => {
-      this.http.get('/System/GetActions?actionPath=' + actionPath).subscribe((res: any) => {
+      this.http.get('/system/getActions?actionPath=' + actionPath).subscribe((res: any) => {
         observe.next(res.data);
         // 如果有错误，通过 error() 方法将错误返回
         // observe.error(res.message);
@@ -62,28 +62,23 @@ export class CommonApiService {
     });
   }
 
-  getListItems(type: any, plant: any, workshop: any) {
+  getListItems(type: string, plant: string, workshop: string) {
+    let url = '';
+    switch (type) {
+      case 'route_code':
+        url = '/area/getRoute';
+        break;
+      case 'dock_code':
+      case 'dock':
+        url = '/area/getDock';
+        break;
+      case 'supplier_code':
+        url = '/supplier/getSuppliers';
+        break;
+    }
     return new Observable(observe => {
-      let url = '';
-      switch (type) {
-        case 'route_code':
-          url = '/Area/GetRoute?plant=' + plant + '&workshop=' + workshop;
-          break;
-        case 'dock_code':
-          url = '/Area/GetDock?plant=' + plant + '&workshop=' + workshop;
-          break;
-        case 'supplier_code':
-          url = '/Supplier/GetSuppliers?plant=' + plant + '&workshop=' + workshop;
-          break;
-        case 'dock':
-          url = '/Area/GetDock?plant=' + plant + '&workshop=' + workshop;
-          break;
-      }
-
-      this.http.get(url).subscribe((res: any) => {
+      this.http.get(url + `?plant=${plant}&workshop=${workshop}`).subscribe((res: any) => {
         observe.next(res.data);
-        // 如果有错误，通过 error() 方法将错误返回
-        // observe.error(res.message);
       });
     });
   }
