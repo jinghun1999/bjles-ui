@@ -62,7 +62,7 @@ export class CommonApiService {
     });
   }
 
-  getListItems(type: string, plant: string, workshop: string) {
+  getListItems(type: string, plant: string, workshop: string, supplier: string = null) {
     let url = '';
     switch (type) {
       case 'route_code':
@@ -73,11 +73,19 @@ export class CommonApiService {
         url = '/area/getDock';
         break;
       case 'supplier_code':
+      case 'supplier':
         url = '/supplier/getSuppliers';
         break;
+      case 'rack':
+        url = '/jis/getRacks';
+        break;
+    }
+    let params = `?plant=${plant}&workshop=${workshop}`;
+    if (supplier) {
+      params += `&supplier=${supplier}`;
     }
     return new Observable(observe => {
-      this.http.get(url + `?plant=${plant}&workshop=${workshop}`).subscribe((res: any) => {
+      this.http.get(url + params).subscribe((res: any) => {
         observe.next(res.data);
       });
     });

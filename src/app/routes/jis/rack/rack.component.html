@@ -43,45 +43,6 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="rc">物料单号</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.runsheet_code" [nzSize]="size" name="rc" id="rc" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="16">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="4" nzFor="pbt">发布时间</nz-form-label>
-          <nz-form-control [nzSpan]="20">
-            <nz-range-picker [(ngModel)]="q.publish_time" name="pbt" id="pbt" nzAllowClear [nzSize]="size"
-              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm"></nz-range-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="pno">零件号</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="pno" id="pno" [nzSize]="size" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="16">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="4" nzFor="rct">接收时间</nz-form-label>
-          <nz-form-control [nzSpan]="20">
-            <nz-range-picker [(ngModel)]="q.receive_time" name="rct" id="rct" nzAllowClear [nzSize]="size"
-              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
-            </nz-range-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" nzFor="rack">料架</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.rack" [nzSize]="size" name="rack" id="rack" [nzPlaceHolder]="'请选择'"
@@ -95,12 +56,12 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" ngFor="dock">Dock</nz-form-label>
+          <nz-form-label [nzSpan]="8" ngFor="route">Route</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.dock" [nzSize]="size" name="dock" id="dock" [nzPlaceHolder]="'请选择'"
-              (nzOpenChange)="getListItems($event, 'dock')" nzMode="multiple" nzShowSearch="true" nzAllowClear
+            <nz-select [(ngModel)]="q.route" [nzSize]="size" name="route" id="route" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getListItems($event, 'route')" nzMode="multiple" nzShowSearch="true" nzAllowClear
               [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_dock.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+              <nz-option *ngFor="let option of sub_route.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -109,12 +70,12 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="sheet_process_status">任务单状态</nz-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="state">状态</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.sheet_process_status" [nzSize]="size" name="sheet_process_status"
-              id="sheet_process_status" (nzOpenChange)="getCodeDetails($event,'wm_SheetProcessStatus')"
-              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear>
-              <nz-option *ngFor="let i of sub_wm_SheetProcessStatus.data;" [nzLabel]="i.text" [nzValue]="i.val">
+            <nz-select [(ngModel)]="q.state" [nzSize]="size" name="state" id="state"
+              (nzOpenChange)="getCodeDetails($event,'rack_state')" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true"
+              nzAllowClear>
+              <nz-option *ngFor="let i of sub_rack_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -123,24 +84,11 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="sta">物料单状态</nz-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="seq">顺序</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.sheet_status" [nzSize]="size" name="sta" id="sta" [nzPlaceHolder]="'请选择'"
-              (nzOpenChange)="getCodeDetails($event,'dd_plansheet_status')" [nzShowSearch]="true" nzAllowClear>
-              <nz-option *ngFor="let i of sub_dd_plansheet_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" nzFor="psta">打印状态</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.print_status" [nzSize]="size" name="psta" id="psta" [nzPlaceHolder]="'请选择'"
-              (nzOpenChange)="getCodeDetails($event,'jis_runsheet_PrintStatus')" [nzShowSearch]="true" nzAllowClear>
-              <nz-option *ngFor="let i of sub_jis_runsheet_PrintStatus.data;" [nzLabel]="i.text" [nzValue]="i.val">
+            <nz-select [(ngModel)]="q.seq" [nzSize]="size" name="seq" id="seq" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getCodeDetails($event,'jis_rack_seq')" [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_rack_seq.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>

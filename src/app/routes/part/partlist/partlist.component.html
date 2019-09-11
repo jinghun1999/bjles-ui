@@ -39,8 +39,7 @@
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.part_type" [nzSize]="size" name="part_type" id="part_type" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_type')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+              <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -78,8 +77,7 @@
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.is_direct" [nzSize]="size" name="is_direct" id="is_direct" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'ver_record')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+              <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -93,8 +91,7 @@
             <nz-select [(ngModel)]="q.part_state" [nzSize]="size" name="part_state" id="part_state"
               [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_state')"
               nzAllowClear>
-              <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+              <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>

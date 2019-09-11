@@ -3,27 +3,21 @@ import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
-import { CacheService } from '@delon/cache';
-// import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
-  selector: 'app-jis-sheetlist',
-  templateUrl: './sheetlist.component.html',
+  selector: 'app-jis-rack',
+  templateUrl: './rack.component.html',
 })
-export class JisSheetlistComponent implements OnInit {
+export class JisRackComponent implements OnInit {
   constructor(
     private http: _HttpClient,
-    // private srv: CacheService,
     public msg: NzMessageService,
-    // private modalSrv: NzModalService,
     private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
   ) { }
-
-  actionPath = 'JISManagement/RunSheetList.aspx';
   today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
@@ -33,8 +27,6 @@ export class JisSheetlistComponent implements OnInit {
     supplier: [],
     dock: [],
     route: [],
-    publish_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
-    receive_time: [],
   };
   size = 'small';
   data: any[] = [];
@@ -44,15 +36,13 @@ export class JisSheetlistComponent implements OnInit {
 
   sub_workshop = [];
   sub_supplier = new ItemData();
-  sub_dock = new ItemData();
+  sub_route = new ItemData();
   sub_rack = new ItemData();
-  sub_dd_plansheet_type = new ItemData();
-  sub_dd_plansheet_status = new ItemData();
-  sub_wm_SheetProcessStatus = new ItemData();
-  sub_jis_runsheet_PrintStatus = new ItemData();
+
+  sub_rack_state = new ItemData();
+  sub_rack_seq = new ItemData();
 
   loading = false;
-
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox', exported: false },
@@ -97,23 +87,23 @@ export class JisSheetlistComponent implements OnInit {
 
   expandForm = true;
 
-
   ngOnInit() {
     this.loading = true;
-    this.capi.getPlant().subscribe((res: any) => {
-      this.pre_lists = res;
-      if (this.pre_lists.length > 0) {
-        this.sub_workshop = this.pre_lists[0].children;
-        this.q.plant = this.pre_lists[0].value;
-        this.plantChange(this.q.plant);
-      }
-    },
+
+    this.capi.getPlant().subscribe(
+      (res: any) => {
+        this.pre_lists = res;
+        if (this.pre_lists.length > 0) {
+          this.sub_workshop = this.pre_lists[0].children;
+          this.q.plant = this.pre_lists[0].value;
+          this.plantChange(this.q.plant);
+        }
+      },
       (err: any) => this.msg.error('获取查询条件出错'),
     );
 
-    this.capi.getActions(this.actionPath).subscribe((res: any) => { this.actions = res; });
-
-    this.loading = false;
+    // toolBar
+    this.capi.getActions('JISManagement/RackList.aspx').subscribe((res: any) => { this.actions = res; this.loading = false; });
   }
 
   getData() {
@@ -235,14 +225,11 @@ export class JisSheetlistComponent implements OnInit {
     eval('this.q.' + type + ' =  [];');
   }
 
-  getCodeDetails(value: any, type: any) {
+  getCodeDetails(value: any, type: string) {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);
-    if (value) {
-      if (tmp_data.data.length === 0)
-        this.capi.getCodeDetailInfo(type, '').subscribe((res: any) => {
-          tmp_data.data = res;
-        });
+    if (value && tmp_data.data.length === 0) {
+      this.capi.getCodeDetailInfo(type, '').subscribe((res: any) => { tmp_data.data = res; });
     }
   }
 

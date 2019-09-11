@@ -103,8 +103,7 @@
             <nz-select [(ngModel)]="q.card_state" [nzSize]="size" name="card_state" id="card_state"
               [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'card_state')"
               nzAllowClear>
-              <nz-option *ngFor="let i of sub_card_state.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+              <nz-option *ngFor="let i of sub_card_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -117,8 +116,7 @@
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.card_type" [nzSize]="size" name="card_type" id="card_type" [nzPlaceHolder]="'请选择'"
               [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'card_type')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_card_type.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+              <nz-option *ngFor="let i of sub_card_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>

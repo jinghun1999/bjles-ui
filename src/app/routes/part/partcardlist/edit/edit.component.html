@@ -75,14 +75,14 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.card_state" [nzSize]="size" name="card_state" id="card_state"
         [nzShowSearch]="true">
-        <nz-option *ngFor="let i of sub_card_state.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_card_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
     <nz-form-label nzSpan="2">卡片类型</nz-form-label>
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.card_type" [nzSize]="size" name="card_type" id="card_type" [nzShowSearch]="true">
-        <nz-option *ngFor="let i of sub_card_type.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_card_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>

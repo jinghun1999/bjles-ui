@@ -2,9 +2,11 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared';
 import { JisRoutingModule } from './jis-routing.module';
 import { JisSheetlistComponent } from './sheetlist/sheetlist.component';
+import { JisRackComponent } from './rack/rack.component';
 
 const COMPONENTS = [
-  JisSheetlistComponent];
+  JisSheetlistComponent,
+  JisRackComponent];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({

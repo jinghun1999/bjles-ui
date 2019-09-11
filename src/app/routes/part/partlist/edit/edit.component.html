@@ -46,7 +46,7 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.part_type" [nzSize]="size" name="part_type" id="part_type" [nzShowSearch]="true"
         nzAllowClear="false" [nzDisabled]="!pc_part_type">
-        <nz-option *ngFor="let i of sub_part_type.data" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_part_type.data" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
@@ -56,7 +56,7 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.part_state" [nzSize]="size" name="part_state" id="part_state" [nzShowSearch]="true"
         nzAllowClear="false" [nzDisabled]="!pc_all">
-        <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
@@ -64,8 +64,7 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.moditor_category" [nzSize]="size" name="moditor_category" id="moditor_category"
         [nzShowSearch]="true" nzAllowClear="false" [nzDisabled]="!pc_all">
-        <nz-option *ngFor="let i of sub_monitor_category.data;" [nzLabel]="i.Value_cdescription"
-          [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_monitor_category.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
@@ -79,7 +78,7 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.is_direct" [nzSize]="size" name="is_direct" id="is_direct" [nzShowSearch]="true"
         nzAllowClear="false" [nzDisabled]="!pc_is_direct">
-        <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
@@ -100,7 +99,7 @@
     <nz-form-control nzSpan="5">
       <nz-select [(ngModel)]="record.ptr_flag" [nzSize]="size" name="ptr_flag" id="ptr_flag" [nzShowSearch]="true"
         nzAllowClear="false" [nzDisabled]="!pc_all">
-        <nz-option *ngFor="let i of sub_ptr_flag.data;" [nzLabel]="i.Value_cdescription" [nzValue]="i.Code_value">
+        <nz-option *ngFor="let i of sub_ptr_flag.data;" [nzLabel]="i.text" [nzValue]="i.val">
         </nz-option>
       </nz-select>
     </nz-form-control>
