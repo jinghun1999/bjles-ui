@@ -10,6 +10,7 @@ import {
   ArrowDownOutline,
   BookOutline,
   CloudOutline,
+  CompassOutline,
   CopyrightOutline,
   CustomerServiceOutline,
   DashboardOutline,
@@ -32,6 +33,7 @@ import {
   MenuFoldOutline,
   MenuUnfoldOutline,
   MessageOutline,
+  OrderedListOutline,
   PayCircleOutline,
   PieChartOutline,
   PrinterOutline,
@@ -50,7 +52,9 @@ import {
   UsbOutline,
   UserOutline,
   WeiboCircleOutline,
-  CompassOutline,
+
+  SlidersOutline,
+  ContainerOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS_AUTO = [
@@ -61,6 +65,7 @@ export const ICONS_AUTO = [
   BookOutline,
   CloudOutline,
   CopyrightOutline,
+  CompassOutline,
   CustomerServiceOutline,
   DashboardOutline,
   DatabaseOutline,
@@ -82,6 +87,7 @@ export const ICONS_AUTO = [
   MenuFoldOutline,
   MenuUnfoldOutline,
   MessageOutline,
+  OrderedListOutline,
   PayCircleOutline,
   PieChartOutline,
   PrinterOutline,
@@ -100,5 +106,7 @@ export const ICONS_AUTO = [
   UsbOutline,
   UserOutline,
   WeiboCircleOutline,
-  CompassOutline,
+
+  SlidersOutline,
+  ContainerOutline,
 ];

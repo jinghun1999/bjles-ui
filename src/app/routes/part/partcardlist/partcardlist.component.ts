@@ -16,10 +16,9 @@ export class PartPartcardlistComponent implements OnInit {
   searchPath = '/part/GetPartCardPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['plant', 'workshop', 'part_no'], type: 'checkbox', width: 40, exported: false },
+    { title: '', index: ['plant', 'workshop', 'part_no'], type: 'checkbox', exported: false },
     {
       title: '操作',
-      width: 60,
       buttons: [
         {
           text: '编辑',
@@ -32,27 +31,27 @@ export class PartPartcardlistComponent implements OnInit {
         },
       ],
     },
-    { width: 80, title: '工厂', index: 'plant', sort: true },
-    { width: 80, title: '车间', index: 'workshop', sort: true },
-    { width: 100, title: '卡号', index: 'card_no', sort: true },
-    { width: 100, title: '零件号', index: 'part_no', sort: true },
-    { width: 180, title: '零件名称', index: 'part_cname', sort: true },
-    { width: 120, title: '工位地址', index: 'uloc', sort: true },
-    { width: 180, title: '车型', index: 'CarModel', sort: true },
-    { width: 120, title: '车型具体配置', index: 'VehicleConfig', sort: true },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
+    { title: '卡号', index: 'card_no', sort: true },
+    { title: '零件号', index: 'part_no', sort: true },
+    { title: '零件名称', index: 'part_cname', sort: true },
+    { title: '工位地址', index: 'uloc', sort: true },
+    { title: '车型', index: 'CarModel', sort: true },
+    { title: '车型具体配置', index: 'VehicleConfig', sort: true },
 
-    { width: 100, title: '最大存量', index: 'MaxPiece', sort: true },
-    { width: 100, title: '最小存量	', index: 'MinPiece', sort: true },
-    { width: 60, title: '占列', index: 'Column', sort: true },
-    { width: 60, title: '堆高', index: 'HeapHeight', sort: true },
-    { width: 100, title: '包装类型', index: 'store_packing', sort: true },
-    { width: 100, title: '包装数量', index: 'packing_qty', sort: true },
-    { width: 120, title: '库位地址', index: 'dloc', sort: true },
-    { width: 80, title: '配送路线代码', index: 'route_code', sort: true },
-    { width: 100, title: '卡片状态', index: 'card_state_name', sort: true },
-    { width: 100, title: '卡片类型', index: 'card_type_name', sort: true },
-    { width: 80, title: '零件活动状态', index: 'part_state_name', sort: true },
-    { width: 60, title: '删除标识', index: 'Flag', sort: true },
+    { title: '最大存量', index: 'MaxPiece', sort: true },
+    { title: '最小存量	', index: 'MinPiece', sort: true },
+    { title: '占列', index: 'Column', sort: true },
+    { title: '堆高', index: 'HeapHeight', sort: true },
+    { title: '包装类型', index: 'store_packing', sort: true },
+    { title: '包装数量', index: 'packing_qty', sort: true },
+    { title: '库位地址', index: 'dloc', sort: true },
+    { title: '配送路线代码', index: 'route_code', sort: true },
+    { title: '卡片状态', index: 'card_state_name', sort: true },
+    { title: '卡片类型', index: 'card_type_name', sort: true },
+    { title: '零件活动状态', index: 'part_state_name', sort: true },
+    { title: '删除标识', index: 'Flag', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = {
@@ -89,7 +88,7 @@ export class PartPartcardlistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
