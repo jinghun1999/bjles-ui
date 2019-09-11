@@ -50,11 +50,7 @@ export class AreaLocationComponent implements OnInit {
           modal: {
             component: AreaLocationEditComponent,
           },
-          click: (_record, modal) => {
-            if (modal) {
-              this.getData();
-            }
-          }
+          click: 'reload'
         },
       ],
       exported: false

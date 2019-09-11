@@ -50,9 +50,7 @@ export class AreaWorkshopComponent implements OnInit {
           modal: {
             component: AreaWorkshopEditComponent,
           },
-          click: (_record, modal) => {
-
-          }
+          click: 'reload'
         },
       ],
       exported: false

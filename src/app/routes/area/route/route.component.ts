@@ -50,11 +50,7 @@ export class AreaRouteComponent implements OnInit {
           modal: {
             component: AreaRouteEditComponent,
           },
-          click: (_record, modal) => {
-            if (modal) {
-              this.getData();
-            }
-          }
+          click: 'reload'
         },
       ],
       exported: false

@@ -45,11 +45,7 @@ export class AreaDockComponent implements OnInit {
           modal: {
             component: AreaDockEditComponent,
           },
-          click: (_record, modal) => {
-            if (modal) {
-              this.getData();
-            }
-          }
+          click: 'reload'
         },
       ],
       exported: false

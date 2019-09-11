@@ -50,9 +50,7 @@ export class AreaPlantComponent implements OnInit {
           modal: {
             component: AreaPlantEditComponent,
           },
-          click: (_record, modal) => {
-
-          }
+          click: 'reload'
         },
       ],
       exported: false
