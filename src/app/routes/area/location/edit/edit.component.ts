@@ -32,7 +32,7 @@ export class AreaLocationEditComponent implements OnInit {
       this.loading = false;
       this.codes = res;
       if (this.record.plant) {
-        this.record.loc_type = this.record.loc_type.toString();
+        this.record.loc_type = this.record.loc_type + '';
         this.plantChange(this.record.plant);
       }
     });

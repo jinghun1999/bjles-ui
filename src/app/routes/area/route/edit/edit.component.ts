@@ -34,7 +34,7 @@ export class AreaRouteEditComponent implements OnInit {
       this.loading = false;
       this.codes = res;
       if (this.record.plant) {
-        this.record.route_type = this.record.route_type.toString();
+        this.record.route_type = this.record.route_type + '';
         this.plantChange(this.record.plant);
       }
     });

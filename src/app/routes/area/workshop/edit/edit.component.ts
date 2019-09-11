@@ -38,9 +38,9 @@ export class AreaWorkshopEditComponent implements OnInit {
       this.loading = false;
       this.codes = res;
       if (this.record.plant) {
-        this.record.workshop_type = this.record.workshop_type.toString();
-        this.record.workschedule_type = this.record.workschedule_type.toString();
-        this.record.workshop_due = this.record.workshop_due.toString();
+        this.record.workshop_type = this.record.workshop_type + '';
+        this.record.workschedule_type = this.record.workschedule_type + '';
+        this.record.workshop_due = this.record.workshop_due + '';
       }
     });
   }
