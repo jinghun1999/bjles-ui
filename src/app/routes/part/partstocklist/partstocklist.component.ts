@@ -5,20 +5,21 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { PartPartcardlistEditComponent } from './edit/edit.component';
+import { PartPartstocklistEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-part-partlist',
-  templateUrl: './partcardlist.component.html',
+  selector: 'app-part-partstocklist',
+  templateUrl: './partstocklist.component.html',
 })
-export class PartPartcardlistComponent implements OnInit {
-  actionPath = 'PartManagement/PartCardList.aspx';
-  searchPath = '/part/GetPartCardPager';
+export class PartPartstocklistComponent implements OnInit {
+  actionPath = 'PartManagement/PartStockList.aspx';
+  searchPath = '/part/GetPartStockPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['plant', 'workshop', 'card_no'], type: 'checkbox', exported: false },
+    { title: '', index: ['partstock_id'], type: 'checkbox', width: 40, exported: false },
     {
       title: '操作',
+      width: 60,
       buttons: [
         {
           text: '编辑',
@@ -26,31 +27,33 @@ export class PartPartcardlistComponent implements OnInit {
           click: 'reload',
           modal: {
             size: 'xl',
-            component: PartPartcardlistEditComponent,
+            component: PartPartstocklistEditComponent,
           },
         },
       ],
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '卡号', index: 'card_no', sort: true },
     { title: '零件号', index: 'part_no', sort: true },
     { title: '零件名称', index: 'part_cname', sort: true },
-    { title: '工位地址', index: 'uloc', sort: true },
-    { title: '车型', index: 'CarModel', sort: true },
-    { title: '车型具体配置', index: 'VehicleConfig', sort: true },
+    { title: '库位地址', index: 'dloc', sort: true },
+    { title: 'Dock编号', index: 'dock', sort: true },
 
-    { title: '最大存量', index: 'MaxPiece', sort: true },
-    { title: '最小存量	', index: 'MinPiece', sort: true },
+    { title: '最大库存（箱）', index: 'max_storage', sort: true },
+    { title: '最小库存（箱）', index: 'min_storage', sort: true },
     { title: '占列', index: 'Column', sort: true },
     { title: '堆高', index: 'HeapHeight', sort: true },
+    { title: '摆放方向', index: 'Orientation', sort: true },
     { title: '包装类型', index: 'store_packing', sort: true },
     { title: '包装数量', index: 'packing_qty', sort: true },
-    { title: '库位地址', index: 'dloc', sort: true },
-    { title: '配送路线代码', index: 'route_code', sort: true },
-    { title: '卡片状态', index: 'card_state_name', sort: true },
-    { title: '卡片类型', index: 'card_type_name', sort: true },
-    { title: '零件活动状态', index: 'part_state_name', sort: true },
+
+    { title: '当前箱数', index: 'current_storage', sort: true },
+    { title: '当前件数', index: 'current_parts', sort: true },
+    { title: '散件数量', index: 'current_fragpart_count', sort: true },
+    { title: '封存箱数', index: 'lock_storage', sort: true },
+    { title: '封存件数', index: 'lock_parts', sort: true },
+    { title: '翻包前地址', index: 'pre_rploc', sort: true },
+
     { title: '删除标识', index: 'Flag', sort: true },
   ];
   selectedRows: STData[] = [];
@@ -70,14 +73,14 @@ export class PartPartcardlistComponent implements OnInit {
     sort: new SortInfo(),
     plant: '',
     workshop: [],
+    dock: [],
   };
   data: any[] = [];
   data_import: any;
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_card_type = new ItemData();
-  sub_card_state = new ItemData();
+  sub_dock = new ItemData();
 
   constructor(
     private http: _HttpClient,
@@ -269,5 +272,29 @@ export class PartPartcardlistComponent implements OnInit {
         (err: any) => this.msg.error('系统异常'),
       );
     if (tmp_workshops === this.q.workshop) this.q.workshop = [];
+  }
+
+  getListItems(value: any, type: any): void {
+    // tslint:disable-next-line: no-eval
+    const tmp_data = eval('this.sub_' + type);
+
+    if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
+      if (this.q.workshop.length > 0) {
+        this.loading = true;
+        this.capi.getListItems(type, this.q.plant, this.q.workshop.toString()).subscribe(
+          (res: any) => {
+            tmp_data.data = res;
+          },
+          (err: any) => this.msg.error('获取数据失败!'),
+        );
+        this.loading = false;
+        tmp_data.last_workshop = this.q.workshop.toString();
+      } else {
+        tmp_data.data = [];
+        tmp_data.last_workshop = '';
+      }
+      // tslint:disable-next-line: no-eval
+      eval('this.q.' + type + ' =  [];');
+    }
   }
 }

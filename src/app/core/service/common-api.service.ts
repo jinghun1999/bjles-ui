@@ -75,6 +75,9 @@ export class CommonApiService {
         case 'supplier_code':
           url = '/Supplier/GetSuppliers?plant=' + plant + '&workshop=' + workshop;
           break;
+        case 'dock':
+          url = '/Area/GetDock?plant=' + plant + '&workshop=' + workshop;
+          break;
       }
 
       this.http.get(url).subscribe((res: any) => {

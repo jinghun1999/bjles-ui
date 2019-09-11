@@ -3,20 +3,34 @@ import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { ItemData } from 'src/app/model';
 import { CommonApiService } from '@core';
+import { STColumn, STComponent } from '@delon/abc';
 
 @Component({
-  selector: 'app-part-partcardlist-edit',
+  selector: 'app-part-partstocklist-edit',
   templateUrl: './edit.component.html',
 })
-export class PartPartcardlistEditComponent implements OnInit {
+export class PartPartstocklistEditComponent implements OnInit {
   record: any = {};
 
   size = 'small';
   pre_lists = [];
   sub_workshops = [];
-  sub_route_code = new ItemData();
-  sub_card_type = new ItemData();
-  sub_card_state = new ItemData();
+  sub_dock = new ItemData();
+  data = [];
+  @ViewChild('st', { static: false }) st: STComponent;
+  columns: STColumn[] = [
+    { title: '编号', index: 'Id', sort: true },
+    { title: '零件号', index: 'PartNo', sort: true },
+    { title: '零件名称', index: 'part_cname', sort: true },
+    { title: '供应商', index: 'SupplierId', sort: true },
+    { title: '工厂', index: 'Plant', sort: true },
+    { title: '车间', index: 'Workshop', sort: true },
+
+    { title: '库位编号', index: 'Dloc', sort: true },
+    { title: '当前箱数', index: 'CurrentStorage', sort: true },
+    { title: '当前件数', index: 'CurrentParts', sort: true },
+    { title: '翻包前地址', index: 'PreRploc', sort: true },
+  ];
 
   pc_all = true;
 
@@ -43,12 +57,28 @@ export class PartPartcardlistEditComponent implements OnInit {
     );
 
     this.initCodeDetail();
-    this.getListItems(true, 'route_code');
+    this.getListItems(true, 'dock');
+    this.GetPartStockSupplierPageList();
+  }
+  GetPartStockSupplierPageList() {
+    this.loading = true;
+    this.http.post('/part/GetPartStockSupplierPageList', this.record).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          this.data = res.data;
+          this.loading = false;
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+        }
+      },
+      (err: any) => this.msg.error('保存失败!'),
+    );
   }
 
   save() {
     this.loading = true;
-    this.http.post('/part/PartCardSaveData', this.record).subscribe(
+    this.http.post('/part/PartStockSaveData', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -73,12 +103,12 @@ export class PartPartcardlistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    this.capi.getCodeDetailInfo('card_type', '', 'int').subscribe((res: any) => {
-      this.sub_card_type.data = res;
-    });
-    this.capi.getCodeDetailInfo('card_state', '', 'int').subscribe((res: any) => {
-      this.sub_card_state.data = res;
-    });
+    // this.capi.getCodeDetailInfo('card_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_card_type.data = res;
+    // });
+    // this.capi.getCodeDetailInfo('card_state', '', 'int').subscribe((res: any) => {
+    //   this.sub_card_state.data = res;
+    // });
   }
 
   getListItems(value: any, type: any): void {

@@ -17,7 +17,7 @@ export class PartPartlistComponent implements OnInit {
   searchPath = '/part/GetPartPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['plant', 'workshop', 'part_no'], type: 'checkbox', width: 50, exported: false },
+    { title: '', index: ['plant', 'workshop', 'part_no'], type: 'checkbox', exported: false },
     {
       title: '操作',
       width: 60,
@@ -33,21 +33,21 @@ export class PartPartlistComponent implements OnInit {
         },
       ],
     },
-    { width: 80, title: '工厂', index: 'plant', sort: true },
-    { width: 80, title: '车间', index: 'workshop', sort: true },
-    { width: 120, title: '零件号', index: 'part_no', sort: true },
-    { width: 180, title: '零件名称', index: 'part_cname', sort: true },
-    { width: 120, title: '拉动类型', index: 'part_type_name', sort: true },
-    { width: 120, title: '零件活动状态', index: 'part_state_name', sort: true },
-    { width: 120, title: '是否是直供件', index: 'is_direct_name', sort: true },
-    { width: 100, title: '包装类型', index: 'store_packing', sort: true },
-    { width: 100, title: '包装数量', index: 'packing_qty', sort: true },
-    { width: 180, title: '车型', index: 'car_model', sort: true },
-    { width: 100, title: '包装长(mm)', index: 'x', sort: true },
-    { width: 100, title: '包装宽(mm)', index: 'y', sort: true },
-    { width: 100, title: '包装高(mm)', index: 'z', sort: true },
-    { width: 100, title: '旧零件号', index: 'oldpart_no', sort: true },
-    { width: 100, title: '删除标识', index: 'part_flag', sort: true },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
+    { title: '零件号', index: 'part_no', sort: true },
+    { title: '零件名称', index: 'part_cname', sort: true },
+    { title: '拉动类型', index: 'part_type_name', sort: true },
+    { title: '零件活动状态', index: 'part_state_name', sort: true },
+    { title: '是否是直供件', index: 'is_direct_name', sort: true },
+    { title: '包装类型', index: 'store_packing', sort: true },
+    { title: '包装数量', index: 'packing_qty', sort: true },
+    { title: '车型', index: 'car_model', sort: true },
+    { title: '包装长(mm)', index: 'x', sort: true },
+    { title: '包装宽(mm)', index: 'y', sort: true },
+    { title: '包装高(mm)', index: 'z', sort: true },
+    { title: '旧零件号', index: 'oldpart_no', sort: true },
+    { title: '删除标识', index: 'part_flag', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = {
@@ -57,7 +57,6 @@ export class PartPartlistComponent implements OnInit {
     showSize: true,
     pageSizes: [10, 30, 50, 100],
   };
-  scroll = { x: '2000px', y: '380px' };
   expandForm = true;
   loading: boolean;
 

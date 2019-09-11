@@ -6,13 +6,17 @@ import { PartPartcardlistComponent } from './partcardlist/partcardlist.component
 import { PartPartlistEditComponent } from './partlist/edit/edit.component';
 import { PartPartlistViewComponent } from './partlist/view/view.component';
 import { PartPartcardlistEditComponent } from './partcardlist/edit/edit.component';
+import { PartPartstocklistComponent } from './partstocklist/partstocklist.component';
+import { PartPartstocklistEditComponent } from './partstocklist/edit/edit.component';
 
-const COMPONENTS = [PartPartcardlistComponent, PartPartlistComponent];
+const COMPONENTS = [PartPartcardlistComponent, PartPartlistComponent, PartPartstocklistComponent];
 const COMPONENTS_NOROUNT = [
-  
   PartPartlistEditComponent,
   PartPartlistViewComponent,
-  PartPartcardlistEditComponent];
+  PartPartcardlistEditComponent,
+
+  PartPartstocklistEditComponent,
+];
 
 @NgModule({
   imports: [SharedModule, PartRoutingModule],

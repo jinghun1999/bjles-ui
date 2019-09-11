@@ -3,7 +3,14 @@
     {{ record.part_no === '' && record.plant === '' && record.workhsop === '' ? '添加' : '编辑' }}-零件管理
   </div>
 </div>
-<form #f="ngForm" (ngSubmit)="save()" nz-form>
+<form #f="ngForm" nz-form>
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button (click)="save()" [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading"
+      [nzType]="'primary'">
+      保存
+    </button>
+  </div>
   <nz-form-item class="mb-sm">
     <nz-form-label nzSpan="2">零件号</nz-form-label>
     <nz-form-control nzSpan="5">
@@ -122,10 +129,4 @@
     </nz-form-control>
   </nz-form-item>
 
-  <div class="modal-footer">
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
-      保存
-    </button>
-  </div>
 </form>
