@@ -146,12 +146,10 @@
       </div>
     </div>
 
-    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
-      <div nz-col [nzSpan]="24" [class.text-right]="false">
-        <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
-          {{ i.action_name_cn }}
-        </button>
-      </div>
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
     </div>
   </form>
   <ng-container>

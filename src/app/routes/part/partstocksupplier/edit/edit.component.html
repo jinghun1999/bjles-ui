@@ -1,0 +1,122 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ record === [] || record === undefined ? '添加' : '编辑' }}-零件库存管理
+  </div>
+</div>
+<form #f="ngForm" nz-form>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.part_no" name="part_no" maxlength="8" disabled="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件中文名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [readonly]="true" [(ngModel)]="record.part_cname" name="part_cname" maxlength="50"
+        required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件英文名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [readonly]="true" [(ngModel)]="record.part_ename" name="part_ename" maxlength="50"
+        required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.plant" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" nzDisabled="!pc_all">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.workshop" [nzSize]="size" name="workshop" id="workshop" nzShowSearch="true"
+        nzAllowClear="false" nzDisabled="!pc_all">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">库位编号*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.dloc" name="dloc" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">供应商代码</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier" name="supplier" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier_name" name="supplier_name" />
+    </nz-form-control>
+    <nz-form-label [nzSpan]="2">Dock编号*</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择Dock编号*">
+      <nz-select [(ngModel)]="record.dock" [nzSize]="size" name="dock" id="dock" [nzPlaceHolder]="'请选择'"
+        nzShowSearch="true" [nzLoading]="loading">
+        <nz-option *ngFor="let option of sub_dock.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">包装数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [readonly]="true" [(ngModel)]="record.packing_qty" name="packing_qty" [nzSize]="size" required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">当前箱数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [readonly]="true" [(ngModel)]="record.current_storage" name="current_storage" [nzSize]="size"
+        required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">当前件数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [readonly]="true" [(ngModel)]="record.current_parts" name="current_parts" [nzSize]="size"
+        required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">封存箱数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.lock_storage" name="lock_storage" [readonly]="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">封存件数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.lock_parts" name="lock_parts" [readonly]="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">散件数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.current_fragpart_count" name="current_fragpart_count" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">最小库存（箱）</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.min_storage" name="min_storage" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">最大库存（箱）</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.max_storage" name="max_storage" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">最小批次</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.Min_parts" name="Min_parts" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">卸货时间（分）</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.unloading_time" name="unloading_time" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">翻包前地址</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.pre_rploc" name="pre_rploc" />
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

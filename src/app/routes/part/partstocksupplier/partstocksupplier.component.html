@@ -3,47 +3,6 @@
     <div nz-row [nzGutter]="24" *ngIf="expandForm">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件号">
-            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
-              placeholder="请输入" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col nzMd="8" nzSm="24">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件名称</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件名称">
-            <input nz-input [(ngModel)]="q.part_cname" name="part_cname" id="part_cname" [nzSize]="size"
-              placeholder="请输入" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col nzMd="8" nzSm="24">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">删除标识</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.Flag" [nzSize]="size" name="Flag" id="Flag" [nzPlaceHolder]="'请选择'" nzAllowClear>
-              <nz-option nzValue="X" nzLabel="X"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col nzMd="8" nzSm="24">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">翻包前地址</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入翻包前地址">
-            <input nz-input [(ngModel)]="q.pre_rploc" name="pre_rploc" id="pre_rploc" [nzSize]="size"
-              placeholder="请输入" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col nzMd="8" nzSm="24">
-        <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">工厂</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
             <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
@@ -63,6 +22,54 @@
               <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
               </nz-option>
             </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件号">
+            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入供应商代码">
+            <input nz-input [(ngModel)]="q.supplier" name="supplier" id="supplier" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">供应商名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入供应商">
+            <input nz-input [(ngModel)]="q.supplier_name" name="supplier_name" id="supplier_name" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">零件名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件名称">
+            <input nz-input [(ngModel)]="q.part_cname" name="part_cname" id="part_cname" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">翻包前地址</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入翻包前地址">
+            <input nz-input [(ngModel)]="q.pre_rploc" name="pre_rploc" id="pre_rploc" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>

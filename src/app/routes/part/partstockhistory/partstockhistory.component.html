@@ -1,6 +1,6 @@
-<nz-card [nzBordered]="false" [nzTitle]="'零件管理'" nzSize="size">
+<nz-card [nzBordered]="false" [nzTitle]="'零件库存(历史)'" nzSize="size">
   <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
-    <div nz-row *ngIf="expandForm">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">零件号</nz-form-label>
@@ -25,8 +25,7 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">删除标识</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.part_flag" [nzSize]="size" name="part_flag" id="part_flag" [nzPlaceHolder]="'请选择'"
-              nzAllowClear>
+            <nz-select [(ngModel)]="q.Flag" [nzSize]="size" name="Flag" id="Flag" [nzPlaceHolder]="'请选择'" nzAllowClear>
               <nz-option nzValue="X" nzLabel="X"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -35,14 +34,10 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">拉动类型</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.part_type" [nzSize]="size" name="part_type" id="part_type" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_type')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
-              </nz-option>
-            </nz-select>
+          <nz-form-label [nzSpan]="8">翻包前地址</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入翻包前地址">
+            <input nz-input [(ngModel)]="q.pre_rploc" name="pre_rploc" id="pre_rploc" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -74,41 +69,50 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">直供标识</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.is_direct" [nzSize]="size" name="is_direct" id="is_direct" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'ver_record')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_ver_record.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
+          <nz-form-label [nzSpan]="8">Dock编号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择Dock编号">
+            <nz-select [(ngModel)]="q.dock" [nzSize]="size" name="dock" id="dock" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getListItems($event,'dock')" nzMode="multiple" nzShowSearch="true" nzAllowClear
+              [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_dock.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
 
+
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件活动状态</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.part_state" [nzSize]="size" name="part_state" id="part_state"
-              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_state')"
-              nzAllowClear>
-              <nz-option *ngFor="let i of sub_part_state.data;" [nzLabel]="i.Value_cdescription"
-                [nzValue]="i.Code_value">
-              </nz-option>
-            </nz-select>
+          <nz-form-label [nzSpan]="8">库位地址</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入库位地址">
+            <input nz-input [(ngModel)]="q.dloc" name="dloc" id="dloc" [nzSize]="size" placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
+          <nz-form-label [nzSpan]="8">包装类型</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入包装类型">
+            <input nz-input [(ngModel)]="q.store_packing" name="store_packing" id="store_packing" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4" nzFor="Synchronization_time">历史时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.Synchronization_time" name="Synchronization_time" id="Synchronization_time"
+              nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
     </div>
     <div class="search-buttons">
       <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
@@ -120,7 +124,7 @@
 
   <ng-container>
     <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
-      [page]="pages" virtualItemSize="q.ps" [scroll]="{x: '3000px'}">
+      [page]="pages" virtualItemSize="q.ps" [scroll]="{ x: '3500px'}">
     </st>
   </ng-container>
 </nz-card>
