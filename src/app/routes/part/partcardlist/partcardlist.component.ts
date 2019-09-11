@@ -61,7 +61,6 @@ export class PartPartcardlistComponent implements OnInit {
     showSize: true,
     pageSizes: [10, 30, 50, 100],
   };
-  scroll = { x: '4000px', y: '380px' };
   expandForm = true;
   loading: boolean;
 
