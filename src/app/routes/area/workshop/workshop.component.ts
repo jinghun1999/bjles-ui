@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { PageInfo, SortInfo } from 'src/app/model';
+import { PageInfo, SortInfo,  PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { CommonApiService } from '@core';
 import { AreaWorkshopEditComponent } from './edit/edit.component';
@@ -29,14 +29,7 @@ export class AreaWorkshopComponent implements OnInit {
     plant: '',
     workshop: '',
   }
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
-  };
-
+pages: STPage = new PagerConfig();
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'workshop', type: 'checkbox', exported: false },

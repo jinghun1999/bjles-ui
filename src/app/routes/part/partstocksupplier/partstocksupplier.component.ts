@@ -3,7 +3,7 @@ import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange, XlsxService } from '@delon/abc';
 import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
-import { PageInfo, SortInfo, ItemData } from 'src/app/model';
+import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { PartPartstocksupplierEditComponent } from './edit/edit.component';
 
@@ -53,14 +53,7 @@ export class PartPartstocksupplierComponent implements OnInit {
     { title: '翻包前地址', index: 'pre_rploc', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
-  };
-  expandForm = true;
+pages: STPage = new PagerConfig();  expandForm = true;
   loading: boolean;
 
   size = 'small';

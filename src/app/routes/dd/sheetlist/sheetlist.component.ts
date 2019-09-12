@@ -5,7 +5,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
-import { PageInfo, SortInfo, ItemData } from 'src/app/model';
+import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
@@ -87,14 +87,7 @@ export class DdSheetlistComponent implements OnInit {
     { title: '任务单编号', index: 'task_no', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
-  };
-
+pages: STPage = new PagerConfig();
   expandForm = true;
 
   constructor(

@@ -5,7 +5,7 @@ import { PartPartlistEditComponent } from './edit/edit.component';
 import { PartPartlistViewComponent } from './view/view.component';
 import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
-import { PageInfo, SortInfo, ItemData } from 'src/app/model';
+import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -50,14 +50,7 @@ export class PartPartlistComponent implements OnInit {
     { title: '删除标识', index: 'part_flag', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
-  };
-  expandForm = true;
+pages: STPage = new PagerConfig();  expandForm = true;
   loading: boolean;
 
   size = 'small';

@@ -4,7 +4,7 @@ import { STColumn, STComponent, STPage, STChange, STData } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { AreaPlantEditComponent } from './edit/edit.component';
-import { PageInfo, SortInfo } from 'src/app/model';
+import { PageInfo, SortInfo,  PagerConfig } from 'src/app/model';
 import { CommonApiService } from '@core';
 
 @Component({
@@ -12,11 +12,13 @@ import { CommonApiService } from '@core';
   templateUrl: './plant.component.html',
 })
 export class AreaPlantComponent implements OnInit {
-  constructor(private http: _HttpClient,
+  constructor(
+    private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private model: ModalHelper,
-    private capi: CommonApiService, ) { }
+    private capi: CommonApiService,
+  ) {}
   loading = false;
   plant: any = {};
   data: [] = [];
@@ -28,15 +30,8 @@ export class AreaPlantComponent implements OnInit {
     sort: new SortInfo(),
     plant_code: '',
     plant_name: '',
-  }
-  pages: STPage = {
-    total: '', // 分页显示多少条数据，字符串型
-    show: true, // 显示分页
-    front: false, // 关闭前端分页，true是前端分页，false后端控制分页
-    showSize: true,
-    pageSizes: [10, 30, 50, 100],
   };
-
+  pages: STPage = new PagerConfig();
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'plant_code', type: 'checkbox', exported: false },
@@ -50,21 +45,24 @@ export class AreaPlantComponent implements OnInit {
           modal: {
             component: AreaPlantEditComponent,
           },
-          click: 'reload'
+          click: 'reload',
         },
       ],
-      exported: false
+      exported: false,
     },
     { title: '工厂编号', index: 'plant_code', sort: true },
     { title: '工厂名称', index: 'plant_name', sort: true },
   ];
 
   ngOnInit() {
-    this.capi.getActions('AreaManagement/PlantList.aspx').subscribe((res: any) => { this.actions = res });
+    this.capi.getActions('AreaManagement/PlantList.aspx').subscribe((res: any) => {
+      this.actions = res;
+    });
   }
   getData() {
     this.loading = true;
-    this.http.post('/area/postPlantPager', this.q)
+    this.http
+      .post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
         this.data = res.data.rows;
@@ -117,7 +115,7 @@ export class AreaPlantComponent implements OnInit {
 
   export() {
     if (this.st.total === 0) {
-      this.msg.error('请查询后再导出')
+      this.msg.error('请查询后再导出');
       return false;
     }
 
@@ -125,29 +123,31 @@ export class AreaPlantComponent implements OnInit {
     this.http
       .post('/area/postPlantPager', this.q)
       .pipe(tap(() => (this.loading = false)))
-      .subscribe(res => {
-        if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'plant.xlsx', sheetname: 'sheet1' });
-        } else {
-          this.msg.error(res.message);
-          this.loading = false;
-        }
-      }, (err: any) => this.msg.error('系统异常'));
+      .subscribe(
+        res => {
+          if (res.successful) {
+            this.st.export(res.data.rows, { callback: this.d_callback, filename: 'plant.xlsx', sheetname: 'sheet1' });
+          } else {
+            this.msg.error(res.message);
+            this.loading = false;
+          }
+        },
+        (err: any) => this.msg.error('系统异常'),
+      );
 
     this.q.page.export = false;
   }
   d_callback(e: any) {
     for (let j = 65, len = 65 + 26; j < len; j++) {
       // tslint:disable-next-line: no-eval
-      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
-      if (tmpTitle === undefined)
-        break;
+      const tmpTitle = eval('e.Sheets.sheet1.' + String.fromCharCode(j) + '1');
+      if (tmpTitle === undefined) break;
       tmpTitle.v = tmpTitle.v.text;
     }
   }
 
   add() {
-    this.model.create(AreaPlantEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaPlantEditComponent, { record: { add: true } }, { size: 'md' }).subscribe(res => {
       this.getData();
     });
   }
@@ -158,7 +158,9 @@ export class AreaPlantComponent implements OnInit {
       return false;
     } else {
       this.modalSrv.confirm({
-        nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
+        nzTitle: '删除提示',
+        nzContent: '删除后不可恢复，确认删除吗？',
+        nzOkType: 'danger',
         nzOnOk: () => {
           this.http.post('/area/deletePlant', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
