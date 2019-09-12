@@ -31,6 +31,7 @@ const routes: Routes = [
       { path: 'dd', loadChildren: () => import('./dd/dd.module').then(m => m.DdModule) },
       { path: 'jis', loadChildren: () => import('./jis/jis.module').then(m => m.JisModule) },
       { path: 'part', loadChildren: () => import('./part/part.module').then(m => m.PartModule) },
+      { path: 'bom', loadChildren: () => import('./bom/bom.module').then(m => m.BomModule) },
     ],
   },
   // 全屏布局
@@ -71,4 +72,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class RouteRoutingModule { }
+export class RouteRoutingModule {}

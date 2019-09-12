@@ -1,0 +1,85 @@
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">VSN</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入VSN">
+            <input nz-input [(ngModel)]="q.VSN" name="VSN" id="VSN" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">下放日期</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.TransactionDate" name="TransactionDate" id="TransactionDate" nzAllowClear
+              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">是否生效</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.ValidFlag" [nzSize]="size" name="ValidFlag" id="ValidFlag" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'IfTrueFalse')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_IfTrueFalse.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">生效日期</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.ValidatedDate" name="ValidatedDate" id="ValidatedDate" nzAllowClear
+              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">是否手工生效</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.IsManual" [nzSize]="size" name="IsManual" id="IsManual" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'IfTrueFalse')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_IfTrueFalse.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">手工生效操作员</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入工位地址">
+            <input nz-input [(ngModel)]="q.UserName" name="UserName" id="UserName" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages" [scroll]="{x: '2000px'}">
+    </st>
+  </ng-container>
+</nz-card>

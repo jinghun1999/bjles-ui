@@ -1,10 +1,10 @@
 <page-header></page-header>
-<nz-card [nzBordered]="false" [nzTitle]="'零件供应商库存(历史)'" nzSize="size">
+<nz-card nzBordered="false">
   <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
     <div nz-row [nzGutter]="24" *ngIf="expandForm">
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">工厂</nz-form-label>
+          <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
             <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
               (ngModelChange)="plantChange($event)">
@@ -16,7 +16,7 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">车间</nz-form-label>
+          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
             <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
               nzMode="multiple" nzShowSearch="true" nzAllowClear>
@@ -29,54 +29,63 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件号">
-            <input nz-input maxlength="8" [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size"
-              placeholder="请输入" />
+          <nz-form-label [nzSpan]="8">VSN</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入VSN">
+            <input nz-input [(ngModel)]="q.VSN" name="VSN" id="VSN" [nzSize]="size" placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入供应商代码">
-            <input nz-input [(ngModel)]="q.supplier" name="supplier" id="supplier" [nzSize]="size" placeholder="请输入" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-      <div nz-col nzMd="8" nzSm="24">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">供应商名称</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入供应商">
-            <input nz-input [(ngModel)]="q.supplier_name" name="supplier_name" id="supplier_name" [nzSize]="size"
-              placeholder="请输入" />
+          <nz-form-label [nzSpan]="8">VIN/EUN</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入VIN">
+            <input nz-input [(ngModel)]="q.VIN" name="VIN" id="VIN" [nzSize]="size" placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件名称</nz-form-label>
+          <nz-form-label [nzSpan]="8">Plan ID</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件名称">
-            <input nz-input [(ngModel)]="q.part_cname" name="part_cname" id="part_cname" [nzSize]="size"
-              placeholder="请输入" />
+            <input nz-input [(ngModel)]="q.PlanID" name="PlanID" id="PlanID" [nzSize]="size" placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">CSN</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入CSN">
+            <input nz-input [(ngModel)]="q.CSN" name="CSN" id="CSN" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">上线时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.EntryTime" name="EntryTime" id="EntryTime" nzAllowClear [nzSize]="size"
+              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
 
     </div>
+
     <div class="search-buttons">
       <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
         {{ i.action_name_cn }}
       </button>
     </div>
-
   </form>
-
   <ng-container>
     <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
-      [page]="pages" virtualItemSize="q.ps" [scroll]="{ x: '1500px'}">
+      [page]="pages" [scroll]="{x: '2000px'}">
     </st>
   </ng-container>
 </nz-card>

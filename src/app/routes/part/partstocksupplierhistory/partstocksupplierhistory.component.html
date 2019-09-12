@@ -1,3 +1,4 @@
+<page-header></page-header>
 <nz-card [nzBordered]="false" [nzTitle]="'零件供应商库存(历史)'" nzSize="size">
   <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
     <div nz-row [nzGutter]="24" *ngIf="expandForm">
@@ -110,8 +111,8 @@
 
       <div nz-col nzMd="8" nzSm="24">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="4" nzFor="Synchronization_time">历史时间</nz-form-label>
-          <nz-form-control [nzSpan]="20">
+          <nz-form-label [nzSpan]="8" nzFor="Synchronization_time">历史时间</nz-form-label>
+          <nz-form-control [nzSpan]="16">
             <nz-range-picker [(ngModel)]="q.Synchronization_time" name="Synchronization_time" id="Synchronization_time"
               nzAllowClear [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
             </nz-range-picker>
