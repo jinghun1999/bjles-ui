@@ -81,7 +81,7 @@ export class CommonApiService {
         break;
     }
     let params = `?plant=${plant}&workshop=${workshop}`;
-    if (supplier) {
+    if (type === 'rack' && supplier) {
       params += `&supplier=${supplier}`;
     }
     return new Observable(observe => {

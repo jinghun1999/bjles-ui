@@ -148,7 +148,7 @@
       </div>
     </div>
     <div class="search-buttons">
-      <button *ngFor="let i of actions;" nz-button type="click" (click)="toolBarOnClick(i)">
+      <button *ngFor="let i of actions;" id="btn{{i.action_name}}" nz-button type="click" (click)="toolBarOnClick(i)">
         {{ i.action_name_cn }}
       </button>
     </div>

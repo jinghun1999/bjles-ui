@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, TemplateRef } from '@angular/core';
-import { _HttpClient } from '@delon/theme';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
+import { JisRackEditComponent } from './edit/edit.component';
 
 @Component({
   selector: 'app-jis-rack',
@@ -14,9 +15,11 @@ export class JisRackComponent implements OnInit {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
-    private cdr: ChangeDetectorRef,
+    // private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
+    private model: ModalHelper,
+    private modelSrv: NzModalService,
   ) { }
   today = new Date().toLocaleDateString();
   q: any = {
@@ -25,7 +28,7 @@ export class JisRackComponent implements OnInit {
     plant: '',
     workshop: [],
     supplier: [],
-    dock: [],
+    rack: [],
     route: [],
   };
   size = 'small';
@@ -50,37 +53,35 @@ export class JisRackComponent implements OnInit {
       title: '',
       buttons: [
         {
-          text: '查看',
+          text: '编辑',
           type: 'modal',
           modal: {
             size: 'xl',
-            // component: DdDetailComponent,
+            component: JisRackEditComponent,
           },
         },
       ],
     },
-    { title: '单号', index: 'runsheet_code', sort: true },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
     { title: '料架', index: 'rack', sort: true },
     { title: '排序类型', index: 'rack_name', sort: true },
-    { title: '日计单数', index: 'sheet_sequence', sort: true },
+    { title: '状态', index: 'status_text', sort: true },
     { title: '供应商代码', index: 'supplier', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
-    { title: '发布时间', index: 'publish_time', type: 'date', sort: true },
-    { title: '供应商JIS流水号', index: 'supplier_sn', sort: true },
-    { title: '工位地址', index: 'uloc', sort: true },
+
+    { title: '排序卡号', index: 'sort_card', sort: true },
+    { title: '包装类型', index: 'pack_type', sort: true },
+    { title: '配送路线', index: 'route', sort: true },
+    { title: '上线工位', index: 'online_uloc', sort: true },
     { title: '卸货区', index: 'dock', sort: true },
 
-    { title: '预期到货时间', index: 'expected_time', type: 'date', sort: true },
-    { title: '实际到货时间', index: 'actual_time', type: 'date', sort: true },
-    { title: '开始车号', index: 'start_csn', sort: true },
-    { title: '结束车号', index: 'end_csn', sort: true },
-
-    { title: '收料人', index: 'receiver', sort: true },
-    { title: '重做标志', index: 'redo_flag', sort: true },
-    { title: '单据状态', index: 'sheet_status_text', sort: true },
-    { title: '打印状态', index: 'print_status_name', sort: true },
+    { title: '车辆累积数量', index: 'backlog_vechile_qty', sort: true },
+    { title: '累积时间(分)', index: 'backlog_time', sort: true },
+    { title: '交货时间(分)', index: 'deliver_time', sort: true },
+    { title: '顺序', index: 'seq_text', sort: true },
+    { title: '卸货时间(分)', index: 'unloading_time', sort: true },
+    { title: '零件累积数量', index: 'backlog_part_qty', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -114,22 +115,17 @@ export class JisRackComponent implements OnInit {
       this.q.workshop = tmp_workshops;
     }
 
-    this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
-    this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
-    this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
-
     this.http
-      .post('/jis/postRunsheetPager', this.q)
+      .post('/jis/postRackPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
             this.data = res.data.rows;
             this.st.total = res.data.total;
-            this.cdr.detectChanges();
+            // this.cdr.detectChanges();
           } else {
             this.msg.error(res.message);
-            this.loading = false;
           }
         },
         (err: any) => this.msg.error('系统异常'),
@@ -141,7 +137,7 @@ export class JisRackComponent implements OnInit {
     switch (e.type) {
       case 'checkbox':
         this.selectedRows = e.checkbox!;
-        this.cdr.detectChanges();
+        // this.cdr.detectChanges();
         break;
       case 'filter':
         this.getData();
@@ -164,8 +160,15 @@ export class JisRackComponent implements OnInit {
 
   toolBarOnClick(e: any) {
     switch (e.action_name) {
+      case 'Create':
+        this.add();
+        break;
+      case 'Delete':
+        this.delete();
+        break;
       case 'Search':
-        this.search();
+        this.q.page.pi = 1;
+        this.getData();
         this.expandForm = false;
         break;
       case 'Export':
@@ -174,11 +177,8 @@ export class JisRackComponent implements OnInit {
       case 'HideOrExpand':
         this.hideOrExpand();
         break;
-      case 'StopRefresh':
-        // 开始/暂停刷新
-        break;
-      case 'Print':
-        this.print();
+      case 'Import':
+        // 导入
         break;
     }
   }
@@ -187,10 +187,6 @@ export class JisRackComponent implements OnInit {
     // wait form reset updated finished
     setTimeout(() => { });
     // setTimeout(() => this.getData());
-  }
-
-  search() {
-    this.getData();
   }
 
   plantChange(value: string): void {
@@ -233,54 +229,26 @@ export class JisRackComponent implements OnInit {
     }
   }
 
-  print() {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择要打印的记录');
-      return false;
-    } else {
-      this.loading = true;
-      this.http
-        .post('/jis/postPrint', this.selectedRows)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.dataPrints = res.data.data;
-              this.msg.success(res.data.msg);
-
-              this.dataPrints.forEach(p => {
-                window.open(p.print_file, '_blank');
-              });
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    }
-    this.st.clearCheck();
-  }
-
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
   export() {
     if (this.st.total === 0) {
-      this.msg.error('请输入条件，查询出数据方可导出数据！');
-      return false;
+      this.msg.error('请先查询出数据再导出');
+      return;
     }
 
     this.q.page.export = true;
     this.http
-      .post('/jis/postRunsheetPager', this.q)
+      .post('/jis/postRackPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
             this.st.export(res.data.rows, {
               callback: this.cfun.callbackOfExport,
-              filename: 'jis.xlsx',
+              filename: 'rack.xlsx',
               sheetname: 'sheet1',
             });
           } else {
@@ -292,5 +260,30 @@ export class JisRackComponent implements OnInit {
       );
 
     this.q.page.export = false;
+  }
+
+  add() {
+    this.model.create(JisRackEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe((res) => {
+      this.getData();
+    });
+  }
+
+  delete() {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请先选择要操作的数据');
+      return false;
+    } else {
+      this.modelSrv.confirm({
+        nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
+        nzOnOk: () => {
+          this.http.post('/jis/postDeleteRack', this.selectedRows).subscribe((res: any) => {
+            if (res.successful) {
+              this.msg.success('删除成功');
+              this.getData();
+            }
+          });
+        },
+      });
+    }
   }
 }

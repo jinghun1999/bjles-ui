@@ -56,7 +56,7 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" ngFor="route">Route</nz-form-label>
+          <nz-form-label [nzSpan]="8" ngFor="route">配送线路</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.route" [nzSize]="size" name="route" id="route" [nzPlaceHolder]="'请选择'"
               (nzOpenChange)="getListItems($event, 'route')" nzMode="multiple" nzShowSearch="true" nzAllowClear
@@ -94,6 +94,23 @@
           </nz-form-control>
         </nz-form-item>
       </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="ou">上线工位</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.online_uloc" [nzSize]="size" name='ou' id='ou' />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="sc">排序卡号</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.sort_card" [nzSize]="size" name='sc' id='sc' />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
     </div>
     <div class="search-buttons">
       <button *ngFor="let i of actions;" nz-button type="click" (click)="toolBarOnClick(i)">
@@ -102,7 +119,7 @@
     </div>
   </form>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '3500px'}" virtualItemSize="q.ps" [loading]="loading"
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '2200px'}" virtualItemSize="q.ps" [loading]="loading"
       (change)="stChange($event)" [page]="pages" [data]="data">
     </st>
   </ng-container>

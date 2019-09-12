@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { format } from 'date-fns';
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
-import { CacheService } from '@delon/cache';
 // import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
@@ -12,7 +12,7 @@ import { CommonApiService, CommonFunctionService } from '@core';
   selector: 'app-jis-sheetlist',
   templateUrl: './sheetlist.component.html',
 })
-export class JisSheetlistComponent implements OnInit {
+export class JisSheetlistComponent implements OnInit, OnDestroy {
   constructor(
     private http: _HttpClient,
     // private srv: CacheService,
@@ -23,7 +23,6 @@ export class JisSheetlistComponent implements OnInit {
     private cfun: CommonFunctionService,
   ) { }
 
-  actionPath = 'JISManagement/RunSheetList.aspx';
   today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
@@ -96,7 +95,7 @@ export class JisSheetlistComponent implements OnInit {
   pages: STPage = new PagerConfig();
 
   expandForm = true;
-
+  timer;// 定时器
 
   ngOnInit() {
     this.loading = true;
@@ -111,9 +110,29 @@ export class JisSheetlistComponent implements OnInit {
       (err: any) => this.msg.error('获取查询条件出错'),
     );
 
-    this.capi.getActions(this.actionPath).subscribe((res: any) => { this.actions = res; });
+    this.capi.getActions('JISManagement/RunSheetList.aspx').subscribe((res: any) => { this.actions = res; });
 
     this.loading = false;
+  }
+  ngOnDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer);// 销毁定时器
+    }
+  }
+
+  autoRefresh() {
+    const d = document.getElementById('btnStopRefresh') as HTMLButtonElement;
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+      d.innerHTML = '点击启动自动刷新';
+    } else {
+      d.innerHTML = '已启动自动刷新';
+      this.timer = setInterval(() => {
+        this.getData();
+        d.innerHTML = `上次刷新于(${format(new Date(), 'MM-DD HH:mm:ss')})`;
+      }, 20 * 1000);
+    }
   }
 
   getData() {
@@ -185,7 +204,7 @@ export class JisSheetlistComponent implements OnInit {
         this.hideOrExpand();
         break;
       case 'StopRefresh':
-        // 开始/暂停刷新
+        this.autoRefresh();
         break;
       case 'Print':
         this.print();
