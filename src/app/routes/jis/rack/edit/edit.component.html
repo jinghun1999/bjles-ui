@@ -2,13 +2,13 @@
   <div class="modal-title">编辑料架信息</div>
 </div>
 <nz-spin *ngIf="loading" class="modal-spin"></nz-spin>
-<form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+<form nz-form [nzLayout]="'inline'" #f="ngForm">
   <div nz-row [nzGutter]="24" *ngIf="!loading">
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="plant" nzRequired>工厂</nz-form-label>
         <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
-          <nz-select [(ngModel)]="record.plant" nzSize="'small'" name="plant" id="plant"
+          <nz-select [(ngModel)]="record.plant" nzSize="small" name="plant" id="plant" [disabled]="!record.add" required
             (ngModelChange)="plantChange($event)">
             <nz-option *ngFor="let o of plants" [nzLabel]="o.text" [nzValue]="o.value"></nz-option>
           </nz-select>
@@ -18,11 +18,11 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" ngFor="wk">车间</nz-form-label>
+        <nz-form-label [nzSpan]="8" ngFor="wk" nzRequired>车间</nz-form-label>
         <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
-          <nz-select [(ngModel)]="record.workshop" nzSize="small" name="wk" id="wk" [nzPlaceHolder]="'请选择'"
-            nzShowSearch="true" [nzMaxTagCount]="1">
-            <nz-option *ngFor="let option of sub_workshop" [nzLabel]="option.text" [nzValue]="option.value">
+          <nz-select [(ngModel)]="record.workshop" nzSize="small" name="wk" id="wk" [disabled]="!record.add"
+            nzShowSearch="true" (ngModelChange)="wsChange($event)" required>
+            <nz-option *ngFor="let o of sub_workshops" [nzLabel]="o.text" [nzValue]="o.value">
             </nz-option>
           </nz-select>
         </nz-form-control>
@@ -31,11 +31,10 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" ngFor="supplier">供应商</nz-form-label>
-        <nz-form-control [nzSpan]="16">
-          <nz-select [(ngModel)]="record.supplier" nzSize="small" [nzMaxTagCount]="1" name="supplier" id="supplier"
-            [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event, 'supplier')" nzShowSearch="true"
-            [nzLoading]="loading">
+        <nz-form-label [nzSpan]="8" ngFor="sp" nzRequired>供应商</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请选择供应商">
+          <nz-select [(ngModel)]="record.supplier" nzSize="small" [disabled]="!record.add" name="sp" id="sp"
+            (nzOpenChange)="getListItems($event, 'supplier')" nzShowSearch="true" [nzLoading]="loading" required>
             <nz-option *ngFor="let o of sub_supplier.data" [nzLabel]="o.itemText" [nzValue]="o.itemValue">
             </nz-option>
           </nz-select>
@@ -45,19 +44,19 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="rack">料架</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="rack" nzRequired>料架</nz-form-label>
         <nz-form-control [nzSpan]="16" nzErrorTip="请填写料架">
-          <input nz-input [(ngModel)]="record.rack" [disabled]="!record.add" name="rack" id="rack" placeholder="请填写料架"
-            required />
+          <input nz-input [(ngModel)]="record.rack" nzSize="small" [disabled]="!record.add" name="rack" id="rack"
+            placeholder="请填写料架" required />
         </nz-form-control>
       </nz-form-item>
     </div>
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" ngFor="state">料架状态</nz-form-label>
+        <nz-form-label [nzSpan]="8" ngFor="state" nzRequired>料架状态</nz-form-label>
         <nz-form-control [nzSpan]="16" nzErrorTip="请选择料架状态">
-          <nz-select [(ngModel)]="record.route" nzSize="small" name="state" id="state">
+          <nz-select [(ngModel)]="record.status" nzSize="small" name="state" id="state" required>
             <nz-option *ngFor="let o of codes.c1" [nzLabel]="o.text" [nzValue]="o.val">
             </nz-option>
           </nz-select>
@@ -67,11 +66,10 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" ngFor="supplier">接收供应商</nz-form-label>
+        <nz-form-label [nzSpan]="8" ngFor="sp1">接收供应商</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <nz-select [(ngModel)]="record.receive_supplier" nzSize="small" [nzMaxTagCount]="1" name="supplier"
-            id="supplier" [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event, 'supplier')" nzShowSearch="true"
-            [nzLoading]="loading">
+          <nz-select [(ngModel)]="record.receive_supplier" nzSize="small" name="sp1" id="sp1"
+            (nzOpenChange)="getListItems($event, 'supplier')" nzShowSearch="true" [nzLoading]="loading">
             <nz-option *ngFor="let o of sub_supplier.data" [nzLabel]="o.itemText" [nzValue]="o.itemValue">
             </nz-option>
           </nz-select>
@@ -81,10 +79,27 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" ngFor="route">配送线路</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="sc">排序卡号</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <nz-select [(ngModel)]="record.route" nzSize="small" name="route" id="route" [nzPlaceHolder]="'请选择'"
-            (nzOpenChange)="getListItems($event, 'route')" nzShowSearch="true" [nzLoading]="loading">
+          <input nz-input [(ngModel)]="record.sort_card" disabled nzSize="small" name='sc' id='sc' />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="pt">包装类型</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input [(ngModel)]="record.pack_type" [disabled]="disabled" nzSize="small" name='pt' id='pt' />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" ngFor="route" nzRequired>配送线路</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-select [(ngModel)]="record.route" nzSize="small" name="route" id="route"
+            (nzOpenChange)="getListItems($event, 'route')" nzShowSearch="true" [nzLoading]="loading" required>
             <nz-option *ngFor="let option of sub_route.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
             </nz-option>
           </nz-select>
@@ -94,22 +109,64 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="state">状态</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="rn" nzRequired>中文名称</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入中文名称">
+          <input nz-input [(ngModel)]="record.rack_name" nzSize="small" name='rn' id='rn' required />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="bpq" nzRequired>零件累积数量</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="零件累积数量不能为空">
+          <nz-input-number [(ngModel)]="record.backlog_part_qty" [nzStep]="1" nzSize="small" name='bpq' id='bpq'
+            required></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="bvq" nzRequired>车辆累积数量</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="车辆累积数量不能为空">
+          <nz-input-number [(ngModel)]="record.backlog_vechile_qty" [nzStep]="1" nzSize="small" name='bvq' id='bvq'
+            required></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="bktme" nzRequired>累积时间(分)</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="累积时间不能为空">
+          <nz-input-number [(ngModel)]="record.backlog_time" [nzStep]="1" nzSize="small" name='bktme' id='bktme'
+            required></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="det" nzRequired>交货时间(分)</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="交货时间不能为空">
+          <nz-input-number [(ngModel)]="record.deliver_time" [nzStep]="1" nzSize="small" name='det' id='det' required>
+          </nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzSpan]="8" nzFor="unt">卸货时间(分)</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <nz-select [(ngModel)]="record.state" nzSize="small" name="state" id="state"
-            (nzOpenChange)="getCodeDetails($event,'rack_state')" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true">
-            <nz-option *ngFor="let i of sub_rack_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
-            </nz-option>
-          </nz-select>
+          <nz-input-number [(ngModel)]="record.unloading_time" [nzStep]="1" nzSize="small" name='unt' id='unt'>
+          </nz-input-number>
         </nz-form-control>
       </nz-form-item>
     </div>
 
+
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="seq">顺序</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="seq" nzRequired>顺序</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <nz-select [(ngModel)]="record.seq" nzSize="small" name="seq" id="seq" [nzPlaceHolder]="'请选择'">
+          <nz-select [(ngModel)]="record.seq" nzSize="small" name="seq" id="seq" required>
             <nz-option *ngFor="let o of codes.c2" [nzLabel]="o.text" [nzValue]="o.val">
             </nz-option>
           </nz-select>
@@ -119,26 +176,29 @@
 
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="ou">上线工位</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="ou" nzRequired>上线工位</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <input nz-input [(ngModel)]="record.online_uloc" nzSize="small" name='ou' id='ou' />
+          <input nz-input [(ngModel)]="record.online_uloc" nzSize="small" name='ou' id='ou' required />
         </nz-form-control>
       </nz-form-item>
     </div>
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
-        <nz-form-label [nzSpan]="8" nzFor="sc">排序卡号</nz-form-label>
+        <nz-form-label [nzSpan]="8" nzFor="dock" nzRequired>Dock卸货区</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <input nz-input [(ngModel)]="record.sort_card" [disabled]="disabled" nzSize="small" name='sc' id='sc' />
+          <nz-select [(ngModel)]="record.dock" (nzOpenChange)="getListItems($event, 'dock')" nzSize="small" name="dock"
+            id="dock" required>
+            <nz-option *ngFor="let o of sub_dock.data" [nzLabel]="o.ItemText" [nzValue]="o.ItemValue">
+            </nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
     </div>
+
   </div>
-</form>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
   <div class="modal-footer">
     <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save()" [disabled]="!sf.valid"
+    <button nz-button type="submit" nzType="primary" (click)="save()" [disabled]="!f.form.valid || !f.form.dirty"
       [nzLoading]="http.loading">保存</button>
   </div>
-</sf>
+</form>
