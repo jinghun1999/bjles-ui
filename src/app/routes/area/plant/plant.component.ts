@@ -4,7 +4,7 @@ import { STColumn, STComponent, STPage, STChange, STData } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { AreaPlantEditComponent } from './edit/edit.component';
-import { PageInfo, SortInfo,  PagerConfig } from 'src/app/model';
+import { PageInfo, SortInfo, PagerConfig } from 'src/app/model';
 import { CommonApiService } from '@core';
 
 @Component({
@@ -18,7 +18,7 @@ export class AreaPlantComponent implements OnInit {
     private modalSrv: NzModalService,
     private model: ModalHelper,
     private capi: CommonApiService,
-  ) {}
+  ) { }
   loading = false;
   plant: any = {};
   data: [] = [];

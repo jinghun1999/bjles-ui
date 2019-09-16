@@ -66,6 +66,7 @@ export class CommonApiService {
     let url = '';
     switch (type) {
       case 'route_code':
+      case 'route':
         url = '/area/getRoute';
         break;
       case 'dock_code':
@@ -83,6 +84,9 @@ export class CommonApiService {
     let params = `?plant=${plant}&workshop=${workshop}`;
     if (type === 'rack' && supplier) {
       params += `&supplier=${supplier}`;
+    }
+    if (!url.length) {
+      return;
     }
     return new Observable(observe => {
       this.http.get(url + params).subscribe((res: any) => {
