@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { PageInfo, SortInfo,  PagerConfig } from 'src/app/model';
+import { PageInfo, SortInfo, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { CommonApiService } from '@core';
 import { AreaRouteEditComponent } from './edit/edit.component';
@@ -12,11 +12,13 @@ import { AreaRouteEditComponent } from './edit/edit.component';
   templateUrl: './route.component.html',
 })
 export class AreaRouteComponent implements OnInit {
-  constructor(private http: _HttpClient,
+  constructor(
+    private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private model: ModalHelper,
-    private capi: CommonApiService, ) { }
+    private capi: CommonApiService,
+  ) {}
   loading = false;
   plant = [];
   data: [] = [];
@@ -28,8 +30,8 @@ export class AreaRouteComponent implements OnInit {
     sort: new SortInfo(),
     plant: '',
     workshop: '',
-  }
-pages: STPage = new PagerConfig();
+  };
+  pages: STPage = new PagerConfig();
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'route', type: 'checkbox', exported: false },
@@ -43,10 +45,10 @@ pages: STPage = new PagerConfig();
           modal: {
             component: AreaRouteEditComponent,
           },
-          click: 'reload'
+          click: 'reload',
         },
       ],
-      exported: false
+      exported: false,
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
@@ -56,12 +58,17 @@ pages: STPage = new PagerConfig();
   ];
 
   ngOnInit() {
-    this.capi.getPlant().subscribe((res: any) => { this.plant = res; });
-    this.capi.getActions('AreaManagement/RouteList.aspx').subscribe((res: any) => { this.actions = res });
+    this.capi.getPlant().subscribe((res: any) => {
+      this.plant = res;
+    });
+    this.capi.getActions('AreaManagement/RouteList.aspx').subscribe((res: any) => {
+      this.actions = res;
+    });
   }
   getData() {
     this.loading = true;
-    this.http.post('/area/postRoutePager', this.q)
+    this.http
+      .post('/area/postRoutePager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe((res: any) => {
         this.data = res.data.rows;
@@ -114,7 +121,7 @@ pages: STPage = new PagerConfig();
 
   export() {
     if (this.st.total === 0) {
-      this.msg.error('请查询后再导出')
+      this.msg.error('请查询后再导出');
       return false;
     }
 
@@ -122,28 +129,27 @@ pages: STPage = new PagerConfig();
     this.http
       .post('/area/postRoutePager', this.q)
       .pipe(tap(() => (this.loading = false)))
-      .subscribe(res => {
-        if (res.successful) {
-          this.st.export(res.data.rows, { callback: this.d_callback, filename: 'workshop.xlsx', sheetname: 'sheet1' });
-        } else {
-          this.msg.error(res.message);
-          this.loading = false;
-        }
-      }, (err: any) => this.msg.error('系统异常'));
+      .subscribe(
+        res => {
+          if (res.successful) {
+            this.st.export(res.data.rows, {
+              callback: this.d_callback,
+              filename: 'workshop.xlsx',
+              sheetname: 'sheet1',
+            });
+          } else {
+            this.msg.error(res.message);
+            this.loading = false;
+          }
+        },
+        (err: any) => this.msg.error('系统异常'),
+      );
     this.q.page.export = false;
   }
-  d_callback(e: any) {
-    for (let j = 65, len = 65 + 26; j < len; j++) {
-      // tslint:disable-next-line: no-eval
-      const tmpTitle = eval("e.Sheets.sheet1." + String.fromCharCode(j) + "1");
-      if (tmpTitle === undefined)
-        break;
-      tmpTitle.v = tmpTitle.v.text;
-    }
-  }
+  d_callback(e: any) {}
 
   add() {
-    this.model.create(AreaRouteEditComponent, { record: { add: true } }, { size: 'md' }).subscribe((res) => {
+    this.model.create(AreaRouteEditComponent, { record: { add: true } }, { size: 'md' }).subscribe(res => {
       this.getData();
     });
   }
@@ -154,7 +160,9 @@ pages: STPage = new PagerConfig();
       return false;
     } else {
       this.modalSrv.confirm({
-        nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
+        nzTitle: '删除提示',
+        nzContent: '删除后不可恢复，确认删除吗？',
+        nzOkType: 'danger',
         nzOnOk: () => {
           this.http.post('/area/deleteRoute', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
