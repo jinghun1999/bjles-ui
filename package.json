@@ -99,7 +99,8 @@
       ]
     },
     "ignore": [
-      "src/assets/*"
+      "src/assets/*",
+      "src/app/delon.module.ts"
     ]
   },
   "husky": {
