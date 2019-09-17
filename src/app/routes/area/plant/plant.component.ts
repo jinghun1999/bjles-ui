@@ -138,14 +138,7 @@ export class AreaPlantComponent implements OnInit {
     this.q.page.export = false;
   }
 
-  d_callback(e: any) {
-    for (let j = 65, len = 65 + 26; j < len; j++) {
-      // tslint:disable-next-line: no-eval
-      const tmpTitle = eval('e.Sheets.sheet1.' + String.fromCharCode(j) + '1');
-      if (tmpTitle === undefined) break;
-      tmpTitle.v = tmpTitle.v.text;
-    }
-  }
+  d_callback(e: any) { }
 
   add() {
     this.model.create(AreaPlantEditComponent, { record: { add: true } }, { size: 'md' }).subscribe(res => {
