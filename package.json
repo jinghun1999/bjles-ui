@@ -20,14 +20,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~8.2.0",
-    "@angular/common": "~8.2.0",
-    "@angular/compiler": "~8.2.0",
-    "@angular/core": "~8.2.0",
-    "@angular/forms": "~8.2.0",
-    "@angular/platform-browser": "~8.2.0",
-    "@angular/platform-browser-dynamic": "~8.2.0",
-    "@angular/router": "~8.2.0",
+    "@angular/animations": "~8.2.3",
+    "@angular/common": "~8.2.3",
+    "@angular/compiler": "~8.2.3",
+    "@angular/core": "~8.2.3",
+    "@angular/forms": "~8.2.3",
+    "@angular/platform-browser": "~8.2.3",
+    "@angular/platform-browser-dynamic": "~8.2.3",
+    "@angular/router": "~8.2.3",
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^3.5.3",
     "@antv/g2-plugin-slider": "^2.1.1",
@@ -49,10 +49,10 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.802.1",
-    "@angular/cli": "~8.2.1",
-    "@angular/compiler-cli": "~8.2.0",
-    "@angular/language-service": "~8.2.0",
+    "@angular-devkit/build-angular": "~0.803.1",
+    "@angular/cli": "~8.3.1",
+    "@angular/compiler-cli": "~8.2.3",
+    "@angular/language-service": "~8.2.3",
     "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
@@ -106,5 +106,18 @@
     "hooks": {
       "pre-commit": "npm run lint-staged"
     }
-  }
+  },
+  "description": "English | [简体中文](README-zh_CN.md)",
+  "main": "karma.conf.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jinghun1999/bjles-ui.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jinghun1999/bjles-ui/issues"
+  },
+  "homepage": "https://github.com/jinghun1999/bjles-ui#readme"
 }
