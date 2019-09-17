@@ -1,10 +1,121 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
+  <div class="modal-title">{{ record.supplier_id === '' ? '添加' : '编辑' }}-供应商管理</div>
 </div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
-  <div class="modal-footer">
+<form #f="ngForm" nz-form>
+  <div>
     <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+    <button nz-button (click)="save()" [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading"
+      [nzType]="'primary'">
+      保存
+    </button>
   </div>
-</sf>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PlantID" name="PlantID" disabled="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.WorkShopID" name="WorkShopID" disabled="true" required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PartNumber" name="PartNumber" disabled="true" required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">供应商代码</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.ShipSupplierID" name="ShipSupplierID" disabled="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商名称*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier_name" name="supplier_name" disabled="true"
+        required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">零件名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.part_cname" name="part_cname" disabled="true" required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">供应商地址*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.SupplierAddress" name="SupplierAddress" disabled="true"
+        required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">计划员*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.FollowUpID" name="FollowUpID" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">计划配比*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.ratio_name" name="ratio_name" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">停用累积数*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.DisableBacklog" name="DisableBacklog" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">是否按数量切换*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.SwitchType" [nzSize]="size" name="SwitchType" id="SwitchType"
+        [nzShowSearch]="true">
+        <nz-option *ngFor="let i of sub_supplier_switch_type.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">切换数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.SwitchAmount" name="SwitchAmount" />
+    </nz-form-control>
+
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">收货方式</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.ReceiptType" [nzSize]="size" name="ReceiptType" id="ReceiptType"
+        [nzShowSearch]="true">
+        <nz-option *ngFor="let i of sub_Supplier_receipt_type.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">是否当前拉动</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input type="checkbox" [(ngModel)]="record.IsCurrentPull" name="IsCurrentPull" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">切换需求累积数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.RequireAmount" name="RequireAmount" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">总需求累积数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.RequireAmountTotal" name="RequireAmountTotal" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">切换供货量累积数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.Amount" name="Amount" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">总供货量累积数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.AmountTotal" name="AmountTotal" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">停用状态</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input type="checkbox" [(ngModel)]="record.IsDisable" name="IsDisable" />
+    </nz-form-control>
+  </nz-form-item>
+</form>

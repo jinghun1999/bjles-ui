@@ -42,7 +42,10 @@ export class SupplierPurchasinglistComponent implements OnInit {
     { title: '供应商地址', index: 'SupplierAddress', sort: true },
     { title: '供货计划配比', index: 'ratio_name', sort: true },
     { title: '供货累积数量', index: 'Amount', sort: true },
+    { title: '总供货累积数量', index: 'AmountTotal', sort: true },
+
     { title: '需求累积数量', index: 'RequireAmount', sort: true },
+    { title: '总需求累积数量', index: 'RequireAmountTotal', sort: true },
     { title: '停用累积数量', index: 'DisableBacklog', sort: true },
     { title: '切换数量', index: 'SwitchAmount', sort: true },
     { title: '切换方式', index: 'switch_type_name', sort: true },
