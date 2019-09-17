@@ -32,6 +32,7 @@ const routes: Routes = [
       { path: 'jis', loadChildren: () => import('./jis/jis.module').then(m => m.JisModule) },
       { path: 'part', loadChildren: () => import('./part/part.module').then(m => m.PartModule) },
       { path: 'bom', loadChildren: () => import('./bom/bom.module').then(m => m.BomModule) },
+      { path: 'supplier', loadChildren: () => import('./supplier/supplier.module').then(m => m.SupplierModule) },
     ],
   },
   // 全屏布局

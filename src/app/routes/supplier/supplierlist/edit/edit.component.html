@@ -1,0 +1,97 @@
+<div class="modal-header">
+  <div class="modal-title">{{ record.supplier_id === '' ? '添加' : '编辑' }}-供应商管理</div>
+</div>
+<form #f="ngForm" nz-form>
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button (click)="save()" [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading"
+      [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">供应商代码</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier_id" name="supplier_id" disabled="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商名称*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier_name" name="supplier_name" required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商地址*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.supplier_address" name="supplier_address" required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">供应商类型*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.supplier_type" [nzSize]="size" name="supplier_type" id="supplier_type"
+        [nzShowSearch]="true">
+        <nz-option *ngFor="let i of sub_supplier_type.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">联系人*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.contact_name" name="contact_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">联系电话*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.contact_tel" name="contact_tel" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">联系传真</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.contact_fax" name="contact_fax" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">联系手机</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.contact_mobile" name="contact_mobile" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">联系邮箱</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.contact_email" name="contact_email" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">晚间联系人</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.nightcontact_name" name="nightcontact_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">晚间联系电话</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.nightcontact_tel" name="nightcontact_tel" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">晚间联系传真</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.nightcontact_fax" name="nightcontact_fax" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">晚间联系手机</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.nightcontact_mobile" name="nightcontact_mobile" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">晚间联系邮箱</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.nightcontact_email" name="nightcontact_email" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">TMS供应商</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input type="checkbox" [(ngModel)]="record.istms" name="istms" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">内部供应商</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input type="checkbox" [(ngModel)]="record.isInternal" name="isInternal" />
+    </nz-form-control>
+  </nz-form-item>
+</form>
