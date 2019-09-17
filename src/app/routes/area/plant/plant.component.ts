@@ -137,6 +137,7 @@ export class AreaPlantComponent implements OnInit {
 
     this.q.page.export = false;
   }
+
   d_callback(e: any) {
     for (let j = 65, len = 65 + 26; j < len; j++) {
       // tslint:disable-next-line: no-eval
