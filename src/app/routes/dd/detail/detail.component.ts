@@ -13,7 +13,7 @@ export class DdDetailComponent implements OnInit {
     public msgSrv: NzMessageService,
     public http: _HttpClient,
     public msg: NzMessageService,
-  ) { }
+  ) {}
   size: 'small';
   record: any = {};
   i: any;
@@ -36,11 +36,14 @@ export class DdDetailComponent implements OnInit {
     { title: '工位', index: 'uloc' },
     { title: '源库位地址', index: 'rdc_dloc' },
   ];
+  PackCountSum: any = 0;
 
   ngOnInit() {
     this.http.get('/dd/GetRunSheetDetail?runsheet_id=' + this.record.runsheet_id).subscribe(
       res => {
         this.dataDetail = res.data;
+        // tslint:disable-next-line: radix
+        this.dataDetail.forEach(p => (this.PackCountSum += parseInt(p.required_pack_count)));
       },
       (err: any) => this.msg.error('获取不到物料单明细信息！！'),
     );

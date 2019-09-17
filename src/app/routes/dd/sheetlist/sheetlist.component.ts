@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
@@ -7,12 +7,13 @@ import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-dd-sheetlist',
   templateUrl: './sheetlist.component.html',
 })
-export class DdSheetlistComponent implements OnInit {
+export class DdSheetlistComponent implements OnInit, OnDestroy {
   actionPath = 'DDManagement/RunSheetList.aspx';
   today = new Date().toLocaleDateString();
   q: any = {
@@ -55,19 +56,23 @@ export class DdSheetlistComponent implements OnInit {
           type: 'modal',
           modal: {
             size: 'xl',
+            params: (record: STData) => {
+              record.modal_name = 'sheet';
+              return record;
+            },
             component: DdDetailComponent,
           },
         },
       ],
     },
     { title: '单号', index: 'runsheet_code', sort: true },
-    { title: '工厂', index: 'plant', sort: true },
-    { title: '车间', index: 'workshop', sort: true },
-    { title: '供应商代码', index: 'supplier_code', sort: true },
     { title: '发布时间', index: 'publish_time', type: 'date', sort: true },
     { title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
     { title: '供应商发货时间	', index: 'supplier_sendat', type: 'date', sort: true },
     { title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
+    { title: '供应商代码', index: 'supplier_code', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
     { title: '物料单类型', index: 'runsheet_type_name', sort: true },
     { title: '拉动类型', index: 'part_type_name', sort: true },
@@ -81,14 +86,16 @@ export class DdSheetlistComponent implements OnInit {
     { title: '卸货时间(分)', index: 'unloading_time', sort: true },
     { title: '收料', index: 'receiver_name', sort: true },
     { title: '重做标志', index: 'redo_flag_name', sort: true },
-    { title: '重做标志', index: 'mq_status_name', sort: true },
+    { title: '通讯状态', index: 'mq_status_name', sort: true },
     { title: '出入库单状态', index: 'sheet_process_status_name', sort: true },
     { title: '打印状态', index: 'print_status_name', sort: true },
     { title: '任务单编号', index: 'task_no', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig();
   expandForm = true;
+
+  timer; // 定时器
 
   constructor(
     private http: _HttpClient,
@@ -98,7 +105,7 @@ pages: STPage = new PagerConfig();
     private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loading = true;
@@ -198,7 +205,7 @@ pages: STPage = new PagerConfig();
         this.hideOrExpand();
         break;
       case 'StopRefresh':
-        // 开始/暂停刷新
+        this.autoRefresh();
         break;
       case 'Print':
         this.print();
@@ -208,7 +215,7 @@ pages: STPage = new PagerConfig();
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => { });
+    setTimeout(() => {});
     // setTimeout(() => this.getData());
   }
 
@@ -354,5 +361,26 @@ pages: STPage = new PagerConfig();
       );
 
     this.q.page.export = false;
+  }
+
+  ngOnDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer); // 销毁定时器
+    }
+  }
+
+  autoRefresh() {
+    const d = document.getElementById('btnStopRefresh') as HTMLButtonElement;
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+      d.innerHTML = '点击启动自动刷新';
+    } else {
+      d.innerHTML = '已启动自动刷新';
+      this.timer = setInterval(() => {
+        this.getData();
+        d.innerHTML = `上次刷新于(${format(new Date(), 'MM-DD HH:mm:ss')})`;
+      }, 20 * 1000);
+    }
   }
 }

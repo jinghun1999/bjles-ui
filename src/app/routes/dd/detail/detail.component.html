@@ -4,11 +4,20 @@
     <sv label="物料单类型">{{ record.runsheet_type_name }}</sv>
     <sv label="工厂">{{ record.plant }}</sv>
     <sv label="车间">{{ record.workshop }}</sv>
+    <sv label="供应商流水号" *ngIf="record.modal_name==='sheet_part'">{{ record.supplier_sn  }}</sv>
+    <sv label="车间流水号" *ngIf="record.modal_name==='sheet_part'">{{ record.workshop_sn  }}</sv>
     <sv label="物料单发布时间">{{ record.publish_time }}</sv>
     <sv label="预期到货时间">{{ record.expected_arrival_time }}</sv>
+    <sv label="实际到货时间" *ngIf="record.modal_name==='sheet_part'">{{ record.Actual_arrival_time  }}</sv>
+    <sv label="卸货时间(分)" *ngIf="record.modal_name==='sheet_part'">{{ record.Unloading_time  }}</sv>
     <sv label="供应商代码">{{ record.supplier_code }}</sv>
     <sv label="Dock编号">{{ record.dock_code }}</sv>
-    <sv label="拉动总箱数">{{ record.route_code }}</sv>
+    <sv label="配送路线代码">{{ record.route_code }}</sv>
+    <sv label="拉动总箱数" *ngIf="record.modal_name==='sheet'">{{ this.PackCountSum }}</sv>
+
+    <sv label="拉动类型" *ngIf="record.modal_name==='sheet_part'">{{ record.part_type_name  }}</sv>
+    <sv label="收料" *ngIf="record.modal_name==='sheet_part'">{{ record.receiver_name  }}</sv>
+    <sv label="物料单页序号" *ngIf="record.modal_name==='sheet_part'">{{ record.page_order  }}</sv>
 
   </sv-container>
   <div class="text-xs my-md" style="color:black">物料单明细记录</div>

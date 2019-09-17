@@ -3,12 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { DdSheetlistComponent } from './sheetlist/sheetlist.component';
 import { DdManualComponent } from './manual/manual.component';
 import { DdSheetlistInComponent } from './sheetlist-in/sheetlist-in.component';
+import { DdSheetlistPartComponent } from './sheetlist-part/sheetlist-part.component';
 
 const routes: Routes = [
 
   { path: 'sheetlist', component: DdSheetlistComponent },
   { path: 'manual', component: DdManualComponent },
-  { path: 'sheetlist-in', component: DdSheetlistInComponent }];
+  { path: 'sheetlist-in', component: DdSheetlistInComponent },
+  { path: 'sheetlist-part', component: DdSheetlistPartComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

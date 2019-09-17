@@ -10,22 +10,19 @@ import { CommonApiService, CommonFunctionService } from '@core';
 import { format } from 'date-fns';
 
 @Component({
-  selector: 'app-dd-sheetlist-in',
-  templateUrl: './sheetlist-in.component.html',
+  selector: 'app-dd-sheetlist-part',
+  templateUrl: './sheetlist-part.component.html',
 })
-export class DdSheetlistInComponent implements OnInit, OnDestroy {
-  actionPath = 'DDManagement/RDCRunsheetlist.aspx';
+export class DdSheetlistPartComponent implements OnInit, OnDestroy {
+  actionPath = 'DDManagement/RunSheetListByPart.aspx';
   today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: [],
-    supplier_code: [],
-    dock_code: [],
     route_code: [],
     publish_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
-    RDC_type: 'RDC',
   };
   size = 'small';
   data: any[] = [];
@@ -33,15 +30,8 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
   dataPrints: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_supplier_code = new ItemData();
-  sub_dock_code = new ItemData();
   sub_route_code = new ItemData();
-  sub_dd_plansheet_type = new ItemData();
   sub_wm_SheetProcessStatus = new ItemData();
-  sub_jis_runsheet_PrintStatus = new ItemData();
-  sub_tk_task_HasTask = new ItemData();
-
-  sub_part_type = new ItemData();
 
   loading = false;
   @ViewChild('st', { static: false }) st: STComponent;
@@ -56,7 +46,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
           modal: {
             size: 'xl',
             params: (record: STData) => {
-              record.modal_name = 'sheet';
+              record.modal_name = 'sheet_part';
               return record;
             },
             component: DdDetailComponent,
@@ -66,27 +56,36 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
     },
     { title: '单号', index: 'runsheet_code', sort: true },
     { title: '配送路线代码', index: 'route_code', sort: true },
-    { title: '发布时间', index: 'publish_time', type: 'date', sort: true },
-    { title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
-    { title: '工厂', index: 'plant', sort: true },
-    { title: '车间', index: 'workshop', sort: true },
-    { title: '仓库', index: 'supplier_code', sort: true },
-    { title: 'Dock编号', index: 'dock_code', sort: true },
+    { title: '供应商代码', index: 'supplier_code', sort: true },
+    { title: '供应商名称', index: 'supplier_name', sort: true },
+    { title: '零件号', index: 'part_no', sort: true },
     { title: '物料单类型', index: 'runsheet_type_name', sort: true },
+    { title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
+    { title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
+    { title: '需求箱数', index: 'required_pack_count' },
+    { title: '需求件数', index: 'required_part_count' },
+    { title: '实际箱数', index: 'actual_pack_count' },
+    { title: '实际件数', index: 'actual_part_count' },
+    { title: '整包装数', index: 'pack_size' },
     { title: '出入库单状态', index: 'sheet_process_status_name', sort: true },
-    { title: '打印状态', index: 'print_status_name', sort: true },
-    { title: '任务单编号', index: 'task_no', sort: true },
 
+    // { title: '工厂', index: 'plant', sort: true },
+    // { title: '车间', index: 'workshop', sort: true },
+    // { title: '发布时间', index: 'publish_time', type: 'date', sort: true },
+    // { title: '供应商发货时间	', index: 'supplier_sendat', type: 'date', sort: true },
     // { title: '拉动类型', index: 'part_type_name', sort: true },
     // { title: '物料单状态', index: 'sheet_status_name', sort: true },
     // { title: '车间物料单编号', index: 'workshop_runsheet_code', sort: true },
     // { title: '车间流水号', index: 'workshop_sn', sort: true },
     // { title: '供应商流水号', index: 'supplier_sn', sort: true },
     // { title: '物料单页序号', index: 'page_order', sort: true },
+    // { title: 'Dock编号', index: 'dock_code', sort: true },
     // { title: '卸货时间(分)', index: 'unloading_time', sort: true },
     // { title: '收料', index: 'receiver_name', sort: true },
     // { title: '重做标志', index: 'redo_flag_name', sort: true },
-    // { title: '通讯状态', index: 'mq_status_name', sort: true },
+    // { title: '重做标志', index: 'mq_status_name', sort: true },
+    // { title: '打印状态', index: 'print_status_name', sort: true },
+    // { title: '任务单编号', index: 'task_no', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -140,7 +139,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
     this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
 
     this.http
-      .post('/dd/GetRunsheetPager', this.q)
+      .post('/dd/GetRunSheetByPartPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {

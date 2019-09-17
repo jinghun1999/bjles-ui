@@ -5,8 +5,10 @@ import { DdSheetlistComponent } from './sheetlist/sheetlist.component';
 import { DdManualComponent } from './manual/manual.component';
 import { DdSheetlistInComponent } from './sheetlist-in/sheetlist-in.component';
 import { DdDetailComponent } from './detail/detail.component';
+import { DdSheetlistPartComponent } from './sheetlist-part/sheetlist-part.component';
 
-const COMPONENTS = [DdSheetlistComponent, DdManualComponent, DdSheetlistInComponent];
+const COMPONENTS = [DdSheetlistComponent, DdManualComponent, DdSheetlistInComponent,
+  DdSheetlistPartComponent];
 const COMPONENTS_NOROUNT = [DdDetailComponent];
 
 @NgModule({
