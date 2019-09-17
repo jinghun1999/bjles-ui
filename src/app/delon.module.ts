@@ -52,9 +52,8 @@ import { DelonAuthConfig } from '@delon/auth';
 export function fnDelonAuthConfig(): DelonAuthConfig {
   return {
     ...new DelonAuthConfig(),
-    token_send_key : 'Authorization',
-    token_send_template : 'Bearer ${token}',
-    token_send_place : 'header',
+    token_send_key: 'Authorization',
+    token_send_place: 'header',
     login_url: '/passport/login',
   };
 }
