@@ -11,7 +11,7 @@ import { DelonACLModule } from '@delon/acl';
 // #region mock
 import { DelonMockModule } from '@delon/mock';
 import * as MOCKDATA from '../../_mock';
-import { environment } from '@env/environment';
+// import { environment } from '@env/environment';
 const MOCK_MODULES = true ? [DelonMockModule.forRoot({ data: MOCKDATA })] : [];
 // #endregion
 
@@ -40,7 +40,7 @@ const REUSETAB_PROVIDES = [
 
 // #region global config functions
 
-import { PageHeaderConfig } from '@delon/abc';
+import { STConfig, PageHeaderConfig } from '@delon/abc';
 export function fnPageHeaderConfig(): PageHeaderConfig {
   return {
     ...new PageHeaderConfig(),
@@ -53,14 +53,13 @@ export function fnDelonAuthConfig(): DelonAuthConfig {
   return {
     ...new DelonAuthConfig(),
     token_send_key: 'Authorization',
+    // tslint:disable-next-line: no-invalid-template-strings
     token_send_template: 'Bearer ${token}',
     token_send_place: 'header',
     login_url: '/passport/login',
   };
 }
 
-// tslint:disable-next-line: no-duplicate-imports
-import { STConfig } from '@delon/abc';
 export function fnSTConfig(): STConfig {
   return {
     ...new STConfig(),
