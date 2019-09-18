@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange, XlsxService } from '@delon/abc';
 import { SupplierPurchasinglistEditComponent } from './edit/edit.component';
-import { CommonFunctionService, CommonApiService } from '@core';
+import { CommonFunctionService, CommonApiService, ExpHttpService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
@@ -82,6 +82,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
+    private httpService: ExpHttpService,
   ) {}
 
   ngOnInit() {
@@ -169,8 +170,11 @@ export class SupplierPurchasinglistComponent implements OnInit {
       case 'Import':
         this.import();
         break;
-      case 'Change':
-        this.Change();
+      case 'Reset':
+        this.RestAmount();
+        break;
+      case 'Download':
+        this.Download();
         break;
     }
   }
@@ -181,6 +185,10 @@ export class SupplierPurchasinglistComponent implements OnInit {
 
   import() {
     const file1 = document.getElementById('import') as HTMLInputElement;
+    if (file1.files.length === 0) {
+      this.msg.error('请选择需要导入的数据文件！');
+      return false;
+    }
     const file = file1.files[0];
     this.loading = true;
     this.xlsx.import(file).then(res1 => {
@@ -193,23 +201,31 @@ export class SupplierPurchasinglistComponent implements OnInit {
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
-            this.msg.success(res.data);
-            this.st.reload();
+            if (res.successful) {
+              if (!res.data.result) {
+                this.cfun.downErrorExcel(res.data.column, res.data.errDT, 'purchasing_error.xlsx');
+              }
+              this.msg.success(res.data.msg);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+              this.loading = false;
+            }
           },
           (err: any) => this.msg.error('系统异常'),
         );
     });
   }
 
-  Change() {
+  RestAmount() {
     if (this.selectedRows.length === 0) {
-      this.msg.error('请选择需要的零件！');
+      this.msg.error('请选择需要的记录！');
       return false;
     } else {
       this.loading = true;
 
       this.http
-        .post('/part/ChangePartStatus', this.selectedRows)
+        .post('/Supplier/RestAmount', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -255,6 +271,9 @@ export class SupplierPurchasinglistComponent implements OnInit {
     this.q.page.export = false;
   }
 
+  Download() {
+    this.httpService.downLoadFile('/assets/tpl/purchasing_import.xlsx', 'purchasingTPL');
+  }
   search() {
     this.getData();
   }
