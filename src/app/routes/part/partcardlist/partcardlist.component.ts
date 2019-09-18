@@ -54,7 +54,8 @@ export class PartPartcardlistComponent implements OnInit {
     { title: '删除标识', index: 'Flag', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();  expandForm = true;
+  pages: STPage = new PagerConfig();
+  expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -65,7 +66,6 @@ pages: STPage = new PagerConfig();  expandForm = true;
     workshop: [],
   };
   data: any[] = [];
-  data_import: any;
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops = [];

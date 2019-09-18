@@ -144,7 +144,7 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
     }
 
     this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
-    this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
+    this.q.receive_time = this.cfun.getSelectDate(this.q.receive_time);
     this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
 
     this.http
