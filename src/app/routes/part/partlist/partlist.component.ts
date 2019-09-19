@@ -50,7 +50,8 @@ export class PartPartlistComponent implements OnInit {
     { title: '删除标识', index: 'part_flag', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();  expandForm = true;
+  pages: STPage = new PagerConfig();
+  expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -180,6 +181,10 @@ pages: STPage = new PagerConfig();  expandForm = true;
 
   import() {
     const file1 = document.getElementById('import') as HTMLInputElement;
+    if (file1.files.length === 0) {
+      this.msg.error('请选择需要导入的数据文件！');
+      return false;
+    }
     const file = file1.files[0];
     this.loading = true;
     this.xlsx.import(file).then(res1 => {

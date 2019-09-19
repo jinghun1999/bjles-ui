@@ -5,25 +5,42 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
+import { SupplierWorkschedulelistEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-bom-vsnbomversionlist',
-  templateUrl: './vsnbomversionlist.component.html',
+  selector: 'app-supplier-workschedulelist',
+  templateUrl: './workschedulelist.component.html',
 })
-export class BomVsnbomversionlistComponent implements OnInit {
-  actionPath = 'BOMManagement/VSNBOMVersionValidQuery.aspx';
-  searchPath = '/BOM/GetVSNBOMVersionPager';
+export class SupplierWorkschedulelistComponent implements OnInit {
+  actionPath = 'SystemManagement/WorkScheduleList.aspx';
+  searchPath = '/supplier/GetWorkSchedulePager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: 'VSN', index: 'VSN', sort: true },
-    { title: '批次号', index: 'VSNBatchNo', sort: true },
-    { title: '版本号', index: 'VersionNo', sort: true },
-
-    { title: '下放日期', index: 'TransactionDate', sort: true },
-    { title: '是否生效', index: 'ValidFlag', sort: true },
-    { title: '生效日期', index: 'ValidatedDate', sort: true },
-    { title: '是否手工生效', index: 'IsManual', sort: true },
-    { title: '手工生效操作员', index: 'UserName', sort: true },
+    { title: '', index: ['work_schedule_sn'], type: 'checkbox', exported: false },
+    {
+      title: '操作',
+      buttons: [
+        {
+          text: '编辑',
+          iif: (item, btn, column) => {
+            return !(new Date(item.end_time) < new Date());
+          },
+          type: 'modal',
+          click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SupplierWorkschedulelistEditComponent,
+          },
+        },
+      ],
+    },
+    { title: '工厂', index: 'plant', sort: true },
+    { title: '车间', index: 'workshop', sort: true },
+    { title: '工作时间类型', index: 'work_schedule_type_name', sort: true },
+    { title: '工作日', index: 'work_date', sort: true },
+    { title: '班次', index: 'shift_name', sort: true },
+    { title: '开始时间', index: 'start_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '结束时间', index: 'end_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -35,12 +52,16 @@ export class BomVsnbomversionlistComponent implements OnInit {
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
-    TransactionDate: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
+    plant: '',
+    workshop: [],
+    start_end_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   data: any[] = [];
-  data_import: any;
   dataAction: any[] = [];
-  sub_IfTrueFalse = new ItemData();
+  pre_lists = [];
+  sub_workshops = [];
+  sub_Shift = new ItemData();
+  sub_Work_schedule_type = new ItemData();
 
   constructor(
     private http: _HttpClient,
@@ -54,6 +75,18 @@ export class BomVsnbomversionlistComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+
+    this.capi.getPlant().subscribe(
+      (res: any) => {
+        this.pre_lists = res;
+        if (this.pre_lists.length > 0) {
+          this.sub_workshops = this.pre_lists[0].children;
+          this.q.plant = this.pre_lists[0].value;
+          this.plantChange(this.q.plant);
+        }
+      },
+      (err: any) => this.msg.error('获取不到工厂车间信息！！'),
+    );
 
     // toolBar
     this.capi.getActions(this.actionPath).subscribe((res: any) => {
@@ -73,6 +106,12 @@ export class BomVsnbomversionlistComponent implements OnInit {
           tmp_data.data = res;
         });
     }
+  }
+
+  plantChange(value: string): void {
+    const l = this.pre_lists.find(p => p.value === value);
+    this.sub_workshops = l.children;
+    this.q.workshop = '';
   }
 
   stChange(e: STChange) {
@@ -101,8 +140,6 @@ export class BomVsnbomversionlistComponent implements OnInit {
   }
 
   toolBarOnClick(e: any) {
-    // tslint:disable-next-line:no-debugger
-    // debugger;
     switch (e.action_name) {
       case 'Search':
         this.search();
@@ -114,11 +151,23 @@ export class BomVsnbomversionlistComponent implements OnInit {
       case 'HideOrExpand':
         this.hideOrExpand();
         break;
+      case 'Create':
+        this.Create();
+        break;
+      case 'Save':
+        // 批量更新
+        this.batchUpdate();
+        break;
     }
   }
+  batchUpdate() {}
 
   hideOrExpand() {
     this.expandForm = !this.expandForm;
+  }
+
+  Create() {
+    // this.modal.create(PartPartcardlistEditComponent, { record: [] }, { size: 'xl' }).subscribe(res => {});
   }
 
   export() {
@@ -156,10 +205,14 @@ export class BomVsnbomversionlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
 
-    if (this.q.TransactionDate.length === 2) {
-      this.q.TransactionDate = this.cfun.getSelectDate(this.q.TransactionDate);
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
     }
+    if (this.q.start_end_time.length !== 2) {
+      this.msg.error('开始结束时间错误!');
+    } else this.q.start_end_time = this.cfun.getSelectDate(this.q.start_end_time);
 
     this.http
       .post(this.searchPath, this.q)
@@ -177,5 +230,6 @@ export class BomVsnbomversionlistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
+    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
   }
 }

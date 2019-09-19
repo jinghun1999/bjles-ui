@@ -34,7 +34,8 @@ export class BomVinbomlistComponent implements OnInit {
     { title: '是否生效', index: 'current_status_name', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();  expandForm = true;
+  pages: STPage = new PagerConfig();
+  expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -190,6 +191,9 @@ pages: STPage = new PagerConfig();  expandForm = true;
 
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
+    }
+    if (this.q.EntryTime.length === 2) {
+      this.q.create_time = this.cfun.getSelectDate(this.q.create_time);
     }
 
     this.http

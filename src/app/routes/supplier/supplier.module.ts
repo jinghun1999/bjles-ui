@@ -5,13 +5,17 @@ import { SupplierSupplierlistComponent } from './supplierlist/supplierlist.compo
 import { SupplierSupplierlistEditComponent } from './supplierlist/edit/edit.component';
 import { SupplierPurchasinglistComponent } from './purchasinglist/purchasinglist.component';
 import { SupplierPurchasinglistEditComponent } from './purchasinglist/edit/edit.component';
+import { SupplierWorkschedulelistComponent } from './workschedulelist/workschedulelist.component';
+import { SupplierWorkschedulelistEditComponent } from './workschedulelist/edit/edit.component';
 
 const COMPONENTS = [
   SupplierSupplierlistComponent,
-  SupplierPurchasinglistComponent];
+  SupplierPurchasinglistComponent,
+  SupplierWorkschedulelistComponent];
 const COMPONENTS_NOROUNT = [
   SupplierSupplierlistEditComponent,
-  SupplierPurchasinglistEditComponent];
+  SupplierPurchasinglistEditComponent,
+  SupplierWorkschedulelistEditComponent];
 
 @NgModule({
   imports: [

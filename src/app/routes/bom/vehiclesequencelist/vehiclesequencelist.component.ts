@@ -30,7 +30,8 @@ export class BomVehiclesequencelistComponent implements OnInit {
     { title: '上线时间	', index: 'EntryTime', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();  expandForm = true;
+  pages: STPage = new PagerConfig();
+  expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -186,6 +187,10 @@ export class BomVehiclesequencelistComponent implements OnInit {
 
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
+    }
+
+    if (this.q.EntryTime.length === 2) {
+      this.q.EntryTime = this.cfun.getSelectDate(this.q.EntryTime);
     }
 
     this.http
