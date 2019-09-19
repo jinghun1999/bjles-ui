@@ -6,6 +6,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { SupplierWorkschedulelistEditComponent } from './edit/edit.component';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-supplier-workschedulelist',
@@ -37,7 +38,7 @@ export class SupplierWorkschedulelistComponent implements OnInit {
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
     { title: '工作时间类型', index: 'work_schedule_type_name', sort: true },
-    { title: '工作日', index: 'work_date', sort: true },
+    { title: '工作日', index: 'work_date', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
     { title: '班次', index: 'shift_name', sort: true },
     { title: '开始时间', index: 'start_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
     { title: '结束时间', index: 'end_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
@@ -49,12 +50,14 @@ export class SupplierWorkschedulelistComponent implements OnInit {
 
   size = 'small';
   today = new Date().toLocaleDateString();
+  currentStartDate = new Date(this.today + ' 00:00:00');
+  currentEndDate = new Date(this.today + ' 23:59:59');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: [],
-    start_end_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
+    start_end_time: [this.currentStartDate, this.currentEndDate],
   };
   data: any[] = [];
   dataAction: any[] = [];
@@ -62,6 +65,9 @@ export class SupplierWorkschedulelistComponent implements OnInit {
   sub_workshops = [];
   sub_Shift = new ItemData();
   sub_Work_schedule_type = new ItemData();
+
+  isVisible = false;
+  update = [this.currentStartDate, this.currentEndDate.setFullYear(this.currentEndDate.getFullYear() + 1)];
 
   constructor(
     private http: _HttpClient,
@@ -160,14 +166,58 @@ export class SupplierWorkschedulelistComponent implements OnInit {
         break;
     }
   }
-  batchUpdate() {}
+  batchUpdate() {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择要批量更新的记录');
+      return false;
+    }
+    this.isVisible = true;
+  }
+  handleOk(): void {
+    if (this.update.length === 2) {
+      if (format(this.update[0], 'YYYY-MM-DD') === format(this.update[1], 'YYYY-MM-DD')) {
+        this.update = this.cfun.getSelectDate(this.update);
+        const pager: any = {
+          pager: this.selectedRows,
+          update: this.update,
+        };
+        this.http
+          .post('/supplier/WorkScheduleBatchUpdate', pager)
+          .pipe(tap(() => (this.loading = false)))
+          .subscribe(
+            res => {
+              if (res.successful) {
+                this.msg.success(res.data);
+                this.isVisible = false;
+              } else {
+                this.msg.error(res.message);
+                this.loading = false;
+              }
+            },
+            (err: any) => this.msg.error('系统异常'),
+          );
+      } else {
+        this.msg.error('开始时间和结束时间必须是同一天!');
+      }
+    } else {
+      this.msg.error('请选择批量更新日期!');
+    }
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
 
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
   Create() {
-    // this.modal.create(PartPartcardlistEditComponent, { record: [] }, { size: 'xl' }).subscribe(res => {});
+    this.modal
+      .create(SupplierWorkschedulelistEditComponent, { record: { add: true } }, { size: 'xl' })
+      .subscribe(res => {
+        if (res) this.st.reload();
+      });
   }
 
   export() {
@@ -210,7 +260,7 @@ export class SupplierWorkschedulelistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
     }
-    if (this.q.start_end_time.length !== 2) {
+    if (this.q.start_end_time !== undefined && this.q.start_end_time.length !== 2) {
       this.msg.error('开始结束时间错误!');
     } else this.q.start_end_time = this.cfun.getSelectDate(this.q.start_end_time);
 

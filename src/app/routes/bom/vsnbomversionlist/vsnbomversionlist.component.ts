@@ -20,9 +20,9 @@ export class BomVsnbomversionlistComponent implements OnInit {
     { title: '版本号', index: 'VersionNo', sort: true },
 
     { title: '下放日期', index: 'TransactionDate', sort: true },
-    { title: '是否生效', index: 'ValidFlag', sort: true },
+    { title: '是否生效', index: 'ValidFlagName', sort: true },
     { title: '生效日期', index: 'ValidatedDate', sort: true },
-    { title: '是否手工生效', index: 'IsManual', sort: true },
+    { title: '是否手工生效', index: 'ManualName', sort: true },
     { title: '手工生效操作员', index: 'UserName', sort: true },
   ];
   selectedRows: STData[] = [];
@@ -157,7 +157,7 @@ export class BomVsnbomversionlistComponent implements OnInit {
   getData() {
     this.loading = true;
 
-    if (this.q.TransactionDate.length === 2) {
+    if (this.q.TransactionDate !== undefined && this.q.TransactionDate.length === 2) {
       this.q.TransactionDate = this.cfun.getSelectDate(this.q.TransactionDate);
     }
 

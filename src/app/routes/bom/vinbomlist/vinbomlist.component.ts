@@ -192,7 +192,7 @@ export class BomVinbomlistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
     }
-    if (this.q.EntryTime.length === 2) {
+    if (this.q.EntryTime !== undefined && this.q.EntryTime.length === 2) {
       this.q.create_time = this.cfun.getSelectDate(this.q.create_time);
     }
 

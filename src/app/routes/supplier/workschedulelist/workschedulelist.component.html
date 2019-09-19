@@ -60,7 +60,7 @@
           <nz-form-label [nzSpan]="8">开始结束时间</nz-form-label>
           <nz-form-control [nzSpan]="40">
             <nz-range-picker [(ngModel)]="q.start_end_time" name="start_end_time" id="start_end_time" [nzSize]="size"
-              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+              nzAllowClear="false" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
             </nz-range-picker>
           </nz-form-control>
         </nz-form-item>
@@ -80,4 +80,9 @@
       [page]="pages">
     </st>
   </ng-container>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="请选择时间" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <nz-range-picker [(ngModel)]="update" name="update" id="update" [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }"
+      nzFormat="yyyy-MM-dd HH:mm">
+    </nz-range-picker>
+  </nz-modal>
 </nz-card>

@@ -233,7 +233,7 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
       this.q.workshop = tmp_workshops;
     }
 
-    if (this.q.Synchronization_time.length === 2) {
+    if (this.q.Synchronization_time !== undefined && this.q.Synchronization_time.length === 2) {
       this.q.Synchronization_time = this.cfun.getSelectDate(this.q.Synchronization_time);
     }
 
