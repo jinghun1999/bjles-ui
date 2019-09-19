@@ -189,7 +189,7 @@ export class BomVehiclesequencelistComponent implements OnInit {
       this.q.workshop = tmp_workshops;
     }
 
-    if (this.q.EntryTime.length === 2) {
+    if (this.q.EntryTime !== undefined && this.q.EntryTime.length === 2) {
       this.q.EntryTime = this.cfun.getSelectDate(this.q.EntryTime);
     }
 

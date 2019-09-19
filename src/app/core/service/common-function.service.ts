@@ -39,6 +39,12 @@ export class CommonFunctionService {
     }
     return e;
   }
+  getDate(e: any) {
+    if (e !== undefined && e !== '') {
+      e = format(e, 'YYYY-MM-DD HH:mm:ss');
+    }
+    return e;
+  }
 
   // column:是返回的表头列 '工厂,车间,零件号'
   // d是API返回的DataTable

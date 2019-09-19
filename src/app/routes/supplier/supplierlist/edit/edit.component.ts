@@ -29,7 +29,7 @@ export class SupplierSupplierlistEditComponent implements OnInit {
 
   save() {
     this.loading = true;
-    this.http.post('/Supplier/SupplierSaveData', this.record).subscribe(
+    this.http.post('/Supplier/SupplierSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
