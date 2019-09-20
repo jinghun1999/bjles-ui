@@ -20,7 +20,7 @@ export class JisRackComponent implements OnInit {
     private cfun: CommonFunctionService,
     private model: ModalHelper,
     private modelSrv: NzModalService,
-  ) { }
+  ) {}
   today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
@@ -64,7 +64,7 @@ export class JisRackComponent implements OnInit {
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '料架', index: 'rack', sort: true },
+    { title: '料架代码', index: 'rack', sort: true },
     { title: '排序类型', index: 'rack_name', sort: true },
     { title: '状态', index: 'status_text', sort: true },
     { title: '供应商代码', index: 'supplier', sort: true },
@@ -104,7 +104,10 @@ export class JisRackComponent implements OnInit {
     );
 
     // toolBar
-    this.capi.getActions('JISManagement/RackList.aspx').subscribe((res: any) => { this.actions = res; this.loading = false; });
+    this.capi.getActions('JISManagement/RackList.aspx').subscribe((res: any) => {
+      this.actions = res;
+      this.loading = false;
+    });
   }
 
   getData() {
@@ -185,7 +188,7 @@ export class JisRackComponent implements OnInit {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => { });
+    setTimeout(() => {});
     // setTimeout(() => this.getData());
   }
 
@@ -225,7 +228,9 @@ export class JisRackComponent implements OnInit {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);
     if (value && tmp_data.data.length === 0) {
-      this.capi.getCodeDetailInfo(type, '').subscribe((res: any) => { tmp_data.data = res; });
+      this.capi.getCodeDetailInfo(type, '').subscribe((res: any) => {
+        tmp_data.data = res;
+      });
     }
   }
 
@@ -263,7 +268,7 @@ export class JisRackComponent implements OnInit {
   }
 
   add() {
-    this.model.create(JisRackEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe((res) => {
+    this.model.create(JisRackEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       this.getData();
     });
   }
@@ -274,7 +279,9 @@ export class JisRackComponent implements OnInit {
       return false;
     } else {
       this.modelSrv.confirm({
-        nzTitle: '删除提示', nzContent: '删除后不可恢复，确认删除吗？', nzOkType: 'danger',
+        nzTitle: '删除提示',
+        nzContent: '删除后不可恢复，确认删除吗？',
+        nzOkType: 'danger',
         nzOnOk: () => {
           this.http.post('/jis/postDeleteRack', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
