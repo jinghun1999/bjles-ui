@@ -5,20 +5,18 @@ import { ItemData } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
-  selector: 'app-supplier-workschedulelist-edit',
-  templateUrl: './edit.component.html',
+  selector: 'app-supplier-wtmodellist-detailedit',
+  templateUrl: './detailedit.component.html',
 })
-export class SupplierWorkschedulelistEditComponent implements OnInit {
+export class SupplierWtmodellistDetaileditComponent implements OnInit {
   record: any;
 
   size = 'small';
   pre_lists = [];
   sub_workshops = [];
-  sub_Work_schedule_type = new ItemData();
-  sub_Shift = new ItemData();
-  sub_card_state = new ItemData();
-
-  pc_all = true;
+  sub_part_type = new ItemData();
+  sub_supplier = new ItemData();
+  sub_route = new ItemData();
 
   loading = false;
   title = '';
@@ -38,7 +36,6 @@ export class SupplierWorkschedulelistEditComponent implements OnInit {
         if (this.pre_lists.length > 0) {
           this.sub_workshops = this.pre_lists[0].children;
           // this.record.plant = this.pre_lists[0].value;
-          if (this.record.plant === undefined || this.record.plant === '') this.record.plant = this.pre_lists[0].value;
           this.plantChange(this.record.plant);
         }
       },
@@ -46,29 +43,20 @@ export class SupplierWorkschedulelistEditComponent implements OnInit {
     );
 
     this.initCodeDetail();
+    this.getListItems(true, 'route');
+    this.getListItems(true, 'supplier');
 
     // tslint:disable-next-line: prefer-conditional-expression
     if (this.record.add === true) {
       this.title = '添加';
-      this.record.Periods = '0';
-      this.record.work_schedule_type = this.sub_Work_schedule_type.data.find(p => p.text === '工作时间').val;
-      this.record.shift = this.sub_Shift.data[0].val;
-      const today = new Date().toLocaleDateString();
-      this.record.start_end_time = [new Date(today + ' 00:00:00'), new Date(today + ' 23:59:59')];
-      this.record.work_date = today;
-      this.record.work_schedule_sn = 0;
     } else {
       this.title = '编辑';
-      this.record.start_end_time = [this.record.start_time, this.record.end_time];
     }
   }
 
   save() {
     this.loading = true;
-    this.record.work_date = this.cfun.getDate(this.record.work_date);
-    this.record.start_end_time = this.cfun.getSelectDate(this.record.start_end_time);
-
-    this.http.post('/supplier/WorkScheduleSave', this.record).subscribe(
+    this.http.post('/supplier/WTDetailSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -93,11 +81,30 @@ export class SupplierWorkschedulelistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    this.capi.getCodeDetailInfo('Work_schedule_type', '', 'int').subscribe((res: any) => {
-      this.sub_Work_schedule_type.data = res;
+    this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
+      this.sub_part_type.data = res;
     });
-    this.capi.getCodeDetailInfo('Shift', '', 'string').subscribe((res: any) => {
-      this.sub_Shift.data = res;
-    });
+  }
+
+  getListItems(value: any, type: any): void {
+    // tslint:disable-next-line: no-eval
+    const tmp_data = eval('this.sub_' + type);
+
+    if (value && this.record.workshop !== tmp_data.last_workshop) {
+      if (this.record.workshop !== undefined && this.record.workshop.length > 0) {
+        this.loading = true;
+        this.capi.getListItems(type, this.record.plant, this.record.workshop).subscribe(
+          (res: any) => {
+            tmp_data.data = res;
+            this.loading = false;
+          },
+          (err: any) => this.msg.error('获取数据失败!'),
+        );
+        tmp_data.last_workshop = this.record.workshop;
+      } else {
+        tmp_data.data = [];
+        tmp_data.last_workshop = '';
+      }
+    }
   }
 }

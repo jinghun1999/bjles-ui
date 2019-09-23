@@ -5,43 +5,36 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { SupplierWorkschedulelistEditComponent } from './edit/edit.component';
-import { format } from 'date-fns';
+import { SupplierWtmodellistEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-supplier-workschedulelist',
-  templateUrl: './workschedulelist.component.html',
+  selector: 'app-supplier-wtmodellist',
+  templateUrl: './wtmodellist.component.html',
 })
-export class SupplierWorkschedulelistComponent implements OnInit {
-  actionPath = 'SystemManagement/WorkScheduleList.aspx';
-  searchPath = '/supplier/GetWorkSchedulePager';
+export class SupplierWtmodellistComponent implements OnInit {
+  actionPath = 'SupplierManagement/WTModeList.aspx';
+  searchPath = '/supplier/GetWTPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['work_schedule_sn'], type: 'checkbox', exported: false },
+    { title: '', index: ['mode_id'], type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
         {
-          text: '编辑',
-          iif: (item, btn, column) => {
-            return !(new Date(item.end_time) < new Date());
-          },
+          text: '修改',
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: SupplierWorkschedulelistEditComponent,
+            component: SupplierWtmodellistEditComponent,
           },
         },
       ],
     },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '工作时间类型', index: 'work_schedule_type_name', sort: true },
-    { title: '工作日', index: 'work_date', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '班次', index: 'shift_name', sort: true },
-    { title: '开始时间', index: 'start_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '结束时间', index: 'end_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '模式名称', index: 'mode_name', sort: true },
+    { title: '是否默认', index: 'default_name', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -49,25 +42,16 @@ export class SupplierWorkschedulelistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
-  currentStartDate = new Date(this.today + ' 00:00:00');
-  currentEndDate = new Date(this.today + ' 23:59:59');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: [],
-    start_end_time: [this.currentStartDate, this.currentEndDate],
   };
   data: any[] = [];
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_Shift = new ItemData();
-  sub_Work_schedule_type = new ItemData();
-
-  isVisible = false;
-  update = [this.currentStartDate, this.currentEndDate.setFullYear(this.currentEndDate.getFullYear() + 1)];
 
   constructor(
     private http: _HttpClient,
@@ -151,21 +135,13 @@ export class SupplierWorkschedulelistComponent implements OnInit {
         this.search();
         this.expandForm = false;
         break;
-      case 'Export':
-        this.export();
-        break;
       case 'HideOrExpand':
         this.hideOrExpand();
         break;
       case 'Create':
         this.Create();
         break;
-      case 'Save':
-        // 批量更新
-        this.batchUpdate();
-        break;
       case 'Delete':
-        // 批量更新
         this.Delete();
         break;
     }
@@ -178,7 +154,7 @@ export class SupplierWorkschedulelistComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/supplier/WorkScheduleDelete', this.selectedRows)
+        .post('/supplier/WTDelete', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -194,87 +170,14 @@ export class SupplierWorkschedulelistComponent implements OnInit {
     }
   }
 
-  batchUpdate() {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择要批量更新的记录');
-      return false;
-    }
-    this.isVisible = true;
-  }
-  handleOk(): void {
-    if (this.update.length === 2) {
-      if (format(this.update[0], 'YYYY-MM-DD') === format(this.update[1], 'YYYY-MM-DD')) {
-        this.update = this.cfun.getSelectDate(this.update);
-        const pager: any = {
-          pager: this.selectedRows,
-          update: this.update,
-        };
-        this.http
-          .post('/supplier/WorkScheduleBatchUpdate', pager)
-          .pipe(tap(() => (this.loading = false)))
-          .subscribe(
-            res => {
-              if (res.successful) {
-                this.msg.success(res.data);
-                this.isVisible = false;
-              } else {
-                this.msg.error(res.message);
-                this.loading = false;
-              }
-            },
-            (err: any) => this.msg.error('系统异常'),
-          );
-      } else {
-        this.msg.error('开始时间和结束时间必须是同一天!');
-      }
-    } else {
-      this.msg.error('请选择批量更新日期!');
-    }
-  }
-
-  handleCancel(): void {
-    this.isVisible = false;
-  }
-
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
   Create() {
-    this.modal
-      .create(SupplierWorkschedulelistEditComponent, { record: { add: true } }, { size: 'xl' })
-      .subscribe(res => {
-        if (res) this.st.reload();
-      });
-  }
-
-  export() {
-    if (this.st.total === 0) {
-      this.msg.error('请输入条件，查询出数据方可导出数据！');
-      return false;
-    }
-
-    this.q.page.export = true;
-    this.http
-      .post(this.searchPath, this.q)
-      .pipe(tap(() => (this.loading = false)))
-      .subscribe(
-        res => {
-          if (res.successful) {
-            this.st.export(res.data.rows, {
-              callback: this.cfun.callbackOfExport,
-              filename: 'result.xlsx',
-              sheetname: 'sheet1',
-            });
-          } else {
-            this.msg.error(res.message);
-            this.loading = false;
-          }
-        },
-        (err: any) => this.msg.error('系统异常'),
-      );
-
-    this.q.page.export = false;
+    this.modal.create(SupplierWtmodellistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+      if (res) this.st.reload();
+    });
   }
 
   search() {
@@ -288,9 +191,6 @@ export class SupplierWorkschedulelistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
     }
-    if (this.q.start_end_time !== undefined && this.q.start_end_time.length !== 2) {
-      this.msg.error('开始结束时间错误!');
-    } else this.q.start_end_time = this.cfun.getSelectDate(this.q.start_end_time);
 
     this.http
       .post(this.searchPath, this.q)

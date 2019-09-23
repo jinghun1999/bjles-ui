@@ -20,7 +20,7 @@ export class JisRackEditComponent implements OnInit {
   sub_rack_state = new ItemData();
   codes = {
     c1: [],
-    c2: []
+    c2: [],
   };
 
   constructor(
@@ -28,7 +28,7 @@ export class JisRackEditComponent implements OnInit {
     private msgSrv: NzMessageService,
     public http: _HttpClient,
     private capi: CommonApiService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.capi.getPlant().subscribe((res: any) => {
@@ -61,14 +61,16 @@ export class JisRackEditComponent implements OnInit {
     // tslint:disable-next-line: no-eval
     const t = eval(`this.sub_${type}`);
     // this.loading = true;
-    this.capi.getListItems(type, this.record.plant, this.record.workshop, this.record.supplier).subscribe((res: any) => {
-      t.data = res;
-      // this.loading = false;
-    });
+    this.capi
+      .getListItems(type, this.record.plant, this.record.workshop, this.record.supplier)
+      .subscribe((res: any) => {
+        t.data = res;
+        // this.loading = false;
+      });
     // tslint:disable-next-line: no-eval
-    eval(`this.record.${type}=''`)
+    eval(`this.record.${type}=''`);
   }
-  save(value: any) {
+  save() {
     this.http.post('/jis/postRack', this.record).subscribe((res: any) => {
       if (res.successful) {
         // this.msg.success('保存成功');

@@ -1,0 +1,101 @@
+<nz-card nzTitle="窗口时间模式设定">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
+            <nz-select [(ngModel)]="record.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)" [nzDisabled]="isReadonly">
+              <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
+            <nz-select [(ngModel)]="record.workshop" [nzSize]="size" name="workshop" id="workshop"
+              [nzPlaceHolder]="'请选择'" nzShowSearch="true" [nzDisabled]="isReadonly">
+              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">模式名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入模式名称">
+            <input nz-input [(ngModel)]="record.mode_name" name="mode_name" id="mode_name" [nzSize]="size"
+              placeholder="请输入" required />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">默认模式</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="record.isdefault" [nzSize]="size" name="isdefault" id="isdefault"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" nzAllowClear required>
+              <nz-option *ngFor="let i of sub_isdefault.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="isReadonly">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">供应商</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择">
+            <nz-select [(ngModel)]="record.supplier" [nzSize]="size" [nzMaxTagCount]="1" name="supplier"
+              id="supplier_code" [nzPlaceHolder]="'请选择'" (nzOpenChange)="getListItems($event,'supplier')"
+              nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
+                [nzValue]="option.itemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24" *ngIf="isReadonly">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">配送线路代码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入模式名称">
+            <nz-select [(ngModel)]="record.route" [nzSize]="size" name="route" id="route" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getListItems($event,'route')" nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_route.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24" *ngIf="isReadonly">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+    </div>
+
+    <div class="search-buttons">
+      <button nz-button *ngFor="let i of dataAction;" type="click" id="btn{{i.action_name}}"
+        (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container *ngIf="isReadonly">
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages">
+    </st>
+  </ng-container>
+</nz-card>
