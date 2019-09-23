@@ -7,7 +7,7 @@ import { CacheService } from '@delon/cache';
   providedIn: 'root',
 })
 export class CommonApiService {
-  constructor(private http: HttpClient, public cache: CacheService) { }
+  constructor(private http: HttpClient, public cache: CacheService) {}
 
   getPlant() {
     return new Observable(observe => {
@@ -79,6 +79,9 @@ export class CommonApiService {
         break;
       case 'rack':
         url = '/jis/getRacks';
+        break;
+      case 'mode_id':
+        url = '/supplier/GetWTModeName';
         break;
     }
     let params = `?plant=${plant}&workshop=${workshop}`;

@@ -1,10 +1,64 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
-</div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
-  <div class="modal-footer">
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+  <div class="modal-title">
+    {{ title }}-工作日窗口时间模式
   </div>
-</sf>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm" *ngIf="record.add">
+    <nz-form-label nzSpan="2">添加日期类别</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.Periods" [nzSize]="size" name="Periods" id="Periods" nzAllowClear="false">
+        <nz-option nzValue="0" nzLabel="按日"></nz-option>
+        <nz-option nzValue="1" nzLabel="按周"></nz-option>
+        <nz-option nzValue="2" nzLabel="按月"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2" *ngIf="record.Periods==='1' || record.Periods==='2'">星期六</nz-form-label>
+    <nz-form-control nzSpan="5" *ngIf="record.Periods==='1' || record.Periods==='2'">
+      <input type="checkbox" [(ngModel)]="record.Sat" name="Sat" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2" *ngIf="record.Periods==='1' || record.Periods==='2'">星期日</nz-form-label>
+    <nz-form-control nzSpan="5" *ngIf="record.Periods==='1' || record.Periods==='2'">
+      <input type="checkbox" [(ngModel)]="record.Sun" name="Sun" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.plant" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间*</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.workshop" [nzSize]="size" name="workshop" id="workshop" nzShowSearch="true"
+        nzAllowClear="false" (ngModelChange)="workshopChange($event)" required [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">工作日*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-date-picker [(ngModel)]="record.workday" name="workday" [nzAllowClear]="false"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label [nzSpan]="2">窗口时间模式</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.mode_id" [nzSize]="size" name="mode_id" id="mode_id" [nzPlaceHolder]="'请选择'"
+        required nzShowSearch="true" [nzLoading]="loading">
+        <nz-option *ngFor="let option of sub_mode_id.data" [nzLabel]="option.itemText" [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+  </nz-form-item>
+</form>

@@ -1,9 +1,95 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
+            <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)">
+              <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
+            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
+            <nz-select [(ngModel)]="q.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" (nzOpenChange)="getListItems($event,'supplier')" nzShowSearch="true" nzAllowClear
+              [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
+                [nzValue]="option.itemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">配送路线代码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
+            <nz-select [(ngModel)]="q.route" [nzSize]="size" name="route" id="route" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" (nzOpenChange)="getListItems($event,'route')" nzShowSearch="true" nzAllowClear
+              [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_route.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="48">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">工作日</nz-form-label>
+          <nz-form-control [nzSpan]="40">
+            <nz-range-picker [(ngModel)]="q.workday" name="workday" id="workday" [nzSize]="size" nzAllowClear="true"
+              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="part_type">拉动类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.part_type" [nzSize]="size" name="part_type" id="part_type" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'part_type')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages" [scroll]="{x: '1500px'}">
+    </st>
+  </ng-container>
 </nz-card>
