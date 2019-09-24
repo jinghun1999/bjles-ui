@@ -16,6 +16,12 @@ import { SupplierWorkdaymodellistEditComponent } from './workdaymodellist/edit/e
 import { SupplierWorkdaylistEditComponent } from './workdaylist/edit/edit.component';
 import { SupplierRespondlistComponent } from './respondlist/respondlist.component';
 import { SupplierRespondlistEditComponent } from './respondlist/edit/edit.component';
+import { SupplierSupplydatelistComponent } from './supplydatelist/supplydatelist.component';
+import { SupplierSupplydatelistEditComponent } from './supplydatelist/edit/edit.component';
+import { SupplierComprehensivelistComponent } from './comprehensivelist/comprehensivelist.component';
+import { SupplierComprehensivelistEditComponent } from './comprehensivelist/edit/edit.component';
+import { SupplierSupplyschedulelistComponent } from './supplyschedulelist/supplyschedulelist.component';
+import { SupplierSupplyschedulelistEditComponent } from './supplyschedulelist/edit/edit.component';
 
 const COMPONENTS = [
   SupplierSupplierlistComponent,
@@ -24,7 +30,10 @@ const COMPONENTS = [
   SupplierWtmodellistComponent,
   SupplierWorkdaymodellistComponent,
   SupplierWorkdaylistComponent,
-  SupplierRespondlistComponent];
+  SupplierRespondlistComponent,
+  SupplierSupplydatelistComponent,
+  SupplierComprehensivelistComponent,
+  SupplierSupplyschedulelistComponent];
 const COMPONENTS_NOROUNT = [
   SupplierSupplierlistEditComponent,
   SupplierPurchasinglistEditComponent,
@@ -33,7 +42,10 @@ const COMPONENTS_NOROUNT = [
   SupplierWtmodellistDetaileditComponent,
   SupplierWorkdaymodellistEditComponent,
   SupplierWorkdaylistEditComponent,
-  SupplierRespondlistEditComponent];
+  SupplierRespondlistEditComponent,
+  SupplierSupplydatelistEditComponent,
+  SupplierComprehensivelistEditComponent,
+  SupplierSupplyschedulelistEditComponent];
 
 @NgModule({
   imports: [

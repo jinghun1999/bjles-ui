@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ title }}-供应商供货排程设置
+  </div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.PlantID" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间*</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.WorkshopID" [nzSize]="size" name="workshop" id="workshop" nzShowSearch="true"
+        nzAllowClear="false" (ngModelChange)="workshopChange($event)" required [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label [nzSpan]="2">供应商</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.SupplierID" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+        required nzShowSearch="true" [nzLoading]="loading" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText" [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件号*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" required [(ngModel)]="record.PartNumber"
+        name="PartNumber" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">开始结束时间*</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <nz-range-picker [(ngModel)]="record.start_end_time" name="start_end_time" id="start_end_time" [nzSize]="size"
+        [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm" [nzAllowClear]="false" required>
+      </nz-range-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">计划员编号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PlannerCode" name="PlannerCode" />
+    </nz-form-control>
+  </nz-form-item>
+
+</form>
