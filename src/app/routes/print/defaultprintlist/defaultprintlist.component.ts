@@ -179,7 +179,7 @@ export class PrintDefaultprintlistComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/print/PrintDelete', this.selectedRows)
+        .post('/print/DefaultPrintDelete', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
