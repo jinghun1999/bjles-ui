@@ -77,15 +77,21 @@ export class CommonApiService {
       case 'supplier':
         url = '/supplier/getSuppliers';
         break;
+      case 'supplier_print':
+        url = '/supplier/GetSuppliersByPrint';
+        break;
       case 'rack':
         url = '/jis/getRacks';
         break;
       case 'mode_id':
         url = '/supplier/GetWTModeName';
         break;
+      case 'printer_name':
+        url = '/print/GetPrinter';
+        break;
     }
     let params = `?plant=${plant}&workshop=${workshop}`;
-    if (type === 'rack' && supplier) {
+    if ((type === 'rack' || type === 'printer_name') && supplier) {
       params += `&supplier=${supplier}`;
     }
     if (!url.length) {
