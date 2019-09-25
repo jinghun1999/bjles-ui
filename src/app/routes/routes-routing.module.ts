@@ -33,6 +33,7 @@ const routes: Routes = [
       { path: 'part', loadChildren: () => import('./part/part.module').then(m => m.PartModule) },
       { path: 'bom', loadChildren: () => import('./bom/bom.module').then(m => m.BomModule) },
       { path: 'supplier', loadChildren: () => import('./supplier/supplier.module').then(m => m.SupplierModule) },
+      { path: 'print', loadChildren: () => import('./print/print.module').then(m => m.PrintModule) },
     ],
   },
   // 全屏布局

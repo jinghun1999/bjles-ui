@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ title }}-物料单缺省打印机设置
+  </div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.plant" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label [nzSpan]="2">供应商</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+        required nzShowSearch="true" [nzLoading]="loading" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_supplier_print.data" [nzLabel]="option.itemText"
+          [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">拉动类型*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.part_type" [nzSize]="size" name="part_type" id="part_type" [nzShowSearch]="true"
+        [nzDisabled]="!record.add" required>
+        <nz-option *ngFor="let i of sub_part_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label [nzSpan]="2">打印机名称</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择打印机名称">
+      <nz-select [(ngModel)]="record.printer_name" [nzSize]="size" name="printer" id="printer" [nzPlaceHolder]="'请选择'"
+        required nzShowSearch="true" [nzLoading]="loading" (nzOpenChange)="getListItems($event,'printer_name')">
+        <nz-option *ngFor="let option of sub_printer_name.data" [nzLabel]="option.itemText"
+          [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>
