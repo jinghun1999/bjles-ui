@@ -25,7 +25,7 @@ export class JisRackEditComponent implements OnInit {
 
   constructor(
     private modal: NzModalRef,
-    private msgSrv: NzMessageService,
+    private msg: NzMessageService,
     public http: _HttpClient,
     private capi: CommonApiService,
   ) {}
@@ -33,31 +33,40 @@ export class JisRackEditComponent implements OnInit {
   ngOnInit(): void {
     this.capi.getPlant().subscribe((res: any) => {
       this.plants = res;
-    });
 
-    this.capi.getCodes('rack_state,jis_rack_seq').subscribe((res: any) => {
-      this.loading = false;
-      this.codes = res;
-      if (!this.record.add) {
-        this.record.seq = this.record.seq + '';
-        this.record.status = this.record.status + '';
-        this.plantChange(this.record.plant);
-      }
+      this.capi.getCodes('rack_state,jis_rack_seq').subscribe((rs1: any) => {
+        this.loading = false;
+
+        this.codes = rs1;
+
+        if (!this.record.add) {
+          // 修改界面需要默认初始化下拉数据
+          this.record.seq = this.record.seq + '';
+          this.record.status = this.record.status + '';
+          this.sub_workshops = this.plants.find(p => p.value === this.record.plant).children;
+          this.getListItems(null, 'supplier', false);
+          this.getListItems(null, 'route', false);
+          this.getListItems(null, 'dock', false);
+        }
+      });
     });
   }
-  plantChange(v: string) {
+
+  plantChange(v: string, init: boolean = false) {
     const l = this.plants.find(p => p.value === v);
     this.sub_workshops = l.children;
+
     this.record.workshop = '';
     // this.wsChange(null);
   }
+
   wsChange(v: string) {
     this.record.dock = '';
     this.record.route = '';
     this.record.supplier = '';
     this.record.receive_supplier = '';
   }
-  getListItems(value: any, type: string): void {
+  getListItems(value: any, type: string, clear: boolean = false): void {
     // tslint:disable-next-line: no-eval
     const t = eval(`this.sub_${type}`);
     // this.loading = true;
@@ -67,19 +76,26 @@ export class JisRackEditComponent implements OnInit {
         t.data = res;
         // this.loading = false;
       });
-    // tslint:disable-next-line: no-eval
-    eval(`this.record.${type}=''`);
+    if (clear) {
+      // tslint:disable-next-line: no-eval
+      eval(`this.record.${type}=''`);
+    }
   }
   save() {
-    this.http.post('/jis/postRack', this.record).subscribe((res: any) => {
-      if (res.successful) {
-        // this.msg.success('保存成功');
-        this.modal.close(true);
-        this.close();
-      } else {
-        // this.msg.error(res.message);
-      }
-    });
+    this.http.post('/jis/postRack', this.record).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          // this.msg.success('保存成功');
+          this.modal.close(true);
+          this.close();
+        } else {
+          this.msg.error(res.message);
+        }
+      },
+      (err: any) => {
+        this.msg.error('数据验证失败，请检查');
+      },
+    );
   }
 
   close() {

@@ -28,7 +28,6 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-
     <div nz-col [nzSpan]="8">
       <nz-form-item nzFlex>
         <nz-form-label [nzSpan]="8" ngFor="sp" nzRequired>供应商</nz-form-label>
@@ -89,7 +88,7 @@
       <nz-form-item nzFlex>
         <nz-form-label [nzSpan]="8" nzFor="pt">包装类型</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <input nz-input [(ngModel)]="record.pack_type" [disabled]="true" nzSize="small" name='pt' id='pt' />
+          <input nz-input [(ngModel)]="record.pack_type" nzSize="small" name='pt' id='pt' />
         </nz-form-control>
       </nz-form-item>
     </div>

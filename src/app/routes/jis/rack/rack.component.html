@@ -72,10 +72,9 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" nzFor="state">状态</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <nz-select [(ngModel)]="q.state" [nzSize]="size" name="state" id="state"
-              (nzOpenChange)="getCodeDetails($event,'rack_state')" [nzPlaceHolder]="'请选择'" [nzShowSearch]="true"
-              nzAllowClear>
-              <nz-option *ngFor="let i of sub_rack_state.data;" [nzLabel]="i.text" [nzValue]="i.val">
+            <nz-select [(ngModel)]="q.state" [nzSize]="size" name="state" id="state" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of codes.c1;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -87,8 +86,8 @@
           <nz-form-label [nzSpan]="8" nzFor="seq">顺序</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.seq" [nzSize]="size" name="seq" id="seq" [nzPlaceHolder]="'请选择'"
-              (nzOpenChange)="getCodeDetails($event,'jis_rack_seq')" [nzShowSearch]="true" nzAllowClear>
-              <nz-option *ngFor="let i of sub_rack_seq.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of codes.c2;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -108,6 +107,16 @@
           <nz-form-label [nzSpan]="8" nzFor="sc">排序卡号</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <input nz-input [(ngModel)]="q.sort_card" [nzSize]="size" name='sc' id='sc' />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="import">导入数据</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" nzMultiple="false">
+              <button nz-button nzSize="small"><span>选择文件...</span></button>
+            </nz-upload>
           </nz-form-control>
         </nz-form-item>
       </div>

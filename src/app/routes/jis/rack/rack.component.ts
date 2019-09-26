@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
-import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
+import { STColumn, STComponent, STData, STPage, STChange, XlsxService } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
+import { UploadFile } from 'ng-zorro-antd/upload';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 import { JisRackEditComponent } from './edit/edit.component';
@@ -20,6 +21,7 @@ export class JisRackComponent implements OnInit {
     private cfun: CommonFunctionService,
     private model: ModalHelper,
     private modelSrv: NzModalService,
+    private xlsx: XlsxService,
   ) {}
   today = new Date().toLocaleDateString();
   q: any = {
@@ -42,8 +44,14 @@ export class JisRackComponent implements OnInit {
   sub_route = new ItemData();
   sub_rack = new ItemData();
 
-  sub_rack_state = new ItemData();
-  sub_rack_seq = new ItemData();
+  // sub_rack_state = new ItemData();
+  // sub_rack_seq = new ItemData();
+  codes = {
+    c1: [],
+    c2: [],
+  };
+
+  fileList = [];
 
   loading = false;
   @ViewChild('st', { static: false }) st: STComponent;
@@ -59,6 +67,7 @@ export class JisRackComponent implements OnInit {
             size: 'xl',
             component: JisRackEditComponent,
           },
+          click: 'reload',
         },
       ],
     },
@@ -74,7 +83,7 @@ export class JisRackComponent implements OnInit {
     { title: '包装类型', index: 'pack_type', sort: true },
     { title: '配送路线', index: 'route', sort: true },
     { title: '上线工位', index: 'online_uloc', sort: true },
-    { title: '卸货区', index: 'dock', sort: true },
+    { title: 'Dock卸货区', index: 'dock', sort: true },
 
     { title: '车辆累积数量', index: 'backlog_vechile_qty', sort: true },
     { title: '累积时间(分)', index: 'backlog_time', sort: true },
@@ -107,6 +116,10 @@ export class JisRackComponent implements OnInit {
     this.capi.getActions('JISManagement/RackList.aspx').subscribe((res: any) => {
       this.actions = res;
       this.loading = false;
+    });
+
+    this.capi.getCodes('rack_state,jis_rack_seq').subscribe((rs1: any) => {
+      this.codes = rs1;
     });
   }
 
@@ -182,6 +195,7 @@ export class JisRackComponent implements OnInit {
         break;
       case 'Import':
         // 导入
+        this.handleUpload();
         break;
     }
   }
@@ -292,5 +306,36 @@ export class JisRackComponent implements OnInit {
         },
       });
     }
+  }
+
+  beforeUpload = (file: UploadFile): boolean => {
+    this.fileList = [];
+    this.fileList = this.fileList.concat(file);
+    return false;
+  };
+
+  handleUpload(): void {
+    if (!this.fileList.length) {
+      this.msg.warning('请先选择导入文件');
+      return;
+    }
+    const file = this.fileList[0];
+    this.xlsx.import(file).then(res1 => {
+      this.fileList = [];
+      this.http
+        .post('/jis/ImportData', res1)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    });
   }
 }
