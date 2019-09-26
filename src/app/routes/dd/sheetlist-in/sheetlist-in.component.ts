@@ -176,9 +176,8 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
         this.getData();
         break;
       case 'sort':
-        this.q.sort.field = e.sort.column.indexKey;
-        this.q.sort.order = e.sort.value;
-        this.getData();
+                 this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value;        this.getData();
         break;
     }
   }

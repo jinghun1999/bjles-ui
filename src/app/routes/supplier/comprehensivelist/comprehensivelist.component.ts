@@ -236,6 +236,8 @@ export class SupplierComprehensivelistComponent implements OnInit {
       case 'sort':
         this.q.sort.field = e.sort.column._sort.key;
         this.q.sort.order = e.sort.value;
+        //  this.q.sort = e.sort.column._sort;
+
         this.getData();
         break;
     }

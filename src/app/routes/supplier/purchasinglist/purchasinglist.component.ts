@@ -32,7 +32,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
         },
       ],
     },
-    { title: '停用标识', index: 'disable_name', sort: true },
+    { title: '停用标识', index: 'disable_name', sort: { key: 'IsDisable' } },
     { title: '工厂', index: 'PlantID', sort: true },
     { title: '车间', index: 'WorkShopID', sort: true },
     { title: '零件号', index: 'PartNumber', sort: true },
@@ -40,7 +40,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
     { title: '供应商代码', index: 'ShipSupplierID', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
     { title: '供应商地址', index: 'SupplierAddress', sort: true },
-    { title: '供货计划配比', index: 'ratio_name', sort: true },
+    { title: '供货计划配比', index: 'ratio_name', sort: { key: 'Ratio' } },
     { title: '供货累积数量', index: 'Amount', sort: true },
     { title: '总供货累积数量', index: 'AmountTotal', sort: true },
 
@@ -144,9 +144,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-        this.q.sort.field = e.sort.column.indexKey;
-        if (this.q.sort.field === 'disable_name') this.q.sort.field = 'IsDisable';
-        else if (this.q.sort.field === 'ratio_name') this.q.sort.field = 'Ratio';
+        this.q.sort.field = e.sort.column._sort.key;
         this.q.sort.order = e.sort.value;
         this.getData();
         break;
