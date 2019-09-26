@@ -33,7 +33,7 @@ export class SupplierComprehensivelistComponent implements OnInit {
       ],
     },
     { title: '工厂', index: 'plant', sort: true },
-    { title: '车间', index: 'workshop', sort: true },
+    { title: '车间', index: 'workshop', sort: { key: 'Workshop' } },
     { title: '零件卡号', index: 'cardno', sort: true },
     { title: '零件号', index: 'partno', sort: true },
     { title: '零件中文名称', index: 'partcname', sort: true },
@@ -54,13 +54,13 @@ export class SupplierComprehensivelistComponent implements OnInit {
     { title: '线旁包装类型-排序/填充', index: 'Px', sort: true },
     { title: '线旁包装数-排序/填充', index: 'Py', sort: true },
     { title: '线旁包装尺寸-排序/填充', index: 'pz', sort: true },
-    { title: '标签规格', index: 'lable_type_name', sort: true },
+    { title: '标签规格', index: 'lable_type_name', sort: { key: 'LabelType' } },
     { title: '料架代码', index: 'rack', sort: true },
     { title: '排序类型', index: 'jisrackseq', sort: true },
     { title: '厂内配送线路代码', index: 'route', sort: true },
     { title: '厂内响应时间(min)', index: 'onlinetime', sort: true },
     { title: '零件专业科室', index: 'PartsDepartment', sort: true },
-    { title: '拉动类型', index: 'part_type_name', sort: true },
+    { title: '拉动类型', index: 'part_type_name', sort: { key: 'parttype' } },
     { title: '库位地址', index: 'Dloc', sort: true },
     { title: '仓库最小库存（来源仓库的最小存量）', index: 'Cminstorage', sort: true },
     { title: '仓库最大库存（来源仓库的最大存量）', index: 'Cmaxstorage', sort: true },
@@ -86,15 +86,15 @@ export class SupplierComprehensivelistComponent implements OnInit {
     { title: '供应商包装宽(mm)', index: 'Suppliery', sort: true },
     { title: '供应商包装高(mm)', index: 'Supplierz', sort: true },
     { title: '包装容积率', index: 'Supplierratio', sort: true },
-    { title: '是否超重', index: 'overweight_name', sort: true },
-    { title: '是否一次性包装', index: 'packaging_name', sort: true },
-    { title: '是否翻包', index: 'flipBag_name', sort: true },
-    { title: '是否是直供件', index: 'direct_name', sort: true },
+    { title: '是否超重', index: 'overweight_name', sort: { key: 'IsOverweight' } },
+    { title: '是否一次性包装', index: 'packaging_name', sort: { key: 'IsPackaging' } },
+    { title: '是否翻包', index: 'flipBag_name', sort: { key: 'IsFlipBag' } },
+    { title: '是否是直供件', index: 'direct_name', sort: { key: 'IsDirect' } },
     { title: '外部拉动方式', index: 'ExternalPull', sort: true },
     { title: '车型在产情况', index: 'CarModelType', sort: true },
     { title: '备注', index: 'Remark', sort: true },
-    { title: '卡片状态', index: 'cardstate_name', sort: true },
-    { title: '数据可见性', index: 'dataVisible_name', sort: true },
+    { title: '卡片状态', index: 'cardstate_name', sort: { key: 'cardstate' } },
+    { title: '数据可见性', index: 'dataVisible_name', sort: { key: 'DataVisible' } },
     { title: '同步时间', index: 'SynchronizeDate', sort: true },
   ];
   selectedRows: STData[] = [];
@@ -234,7 +234,7 @@ export class SupplierComprehensivelistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-        this.q.sort.field = e.sort.column.indexKey;
+        this.q.sort.field = e.sort.column._sort.key;
         this.q.sort.order = e.sort.value;
         this.getData();
         break;
