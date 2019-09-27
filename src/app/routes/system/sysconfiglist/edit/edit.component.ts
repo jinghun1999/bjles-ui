@@ -1,61 +1,91 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { SFSchema, SFUISchema } from '@delon/form';
+import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
   selector: 'app-system-sysconfiglist-edit',
   templateUrl: './edit.component.html',
 })
 export class SystemSysconfiglistEditComponent implements OnInit {
-  record: any = {};
-  i: any;
-  schema: SFSchema = {
-    properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
-    },
-    required: ['owner', 'callNo', 'href', 'description'],
-  };
-  ui: SFUISchema = {
-    '*': {
-      spanLabelFixed: 100,
-      grid: { span: 12 },
-    },
-    $no: {
-      widget: 'text'
-    },
-    $href: {
-      widget: 'string',
-    },
-    $description: {
-      widget: 'textarea',
-      grid: { span: 24 },
-    },
-  };
+  record: any;
+
+  size = 'small';
+  pc_all = true;
+
+  loading = false;
+  title = '';
 
   constructor(
     private modal: NzModalRef,
-    private msgSrv: NzMessageService,
+    private msg: NzMessageService,
     public http: _HttpClient,
+    private capi: CommonApiService,
+    private cfun: CommonFunctionService,
   ) {}
 
   ngOnInit(): void {
-    if (this.record.id > 0)
-    this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
+    if (this.record.add === true) {
+      this.title = '添加';
+    }
+    //  else {
+    //   this.record.supplier = this.record.supplier + '';
+    //   this.record.route = this.record.route + '';
+    // }
+
+    this.initCodeDetail();
   }
 
-  save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe(res => {
-      this.msgSrv.success('保存成功');
-      this.modal.close(true);
-    });
+  save() {
+    this.loading = true;
+    this.record.workday = this.cfun.getDate(this.record.workday);
+
+    this.http.post('/system/SysConfigSave', this.record).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          this.msg.success(res.data);
+          this.loading = false;
+          this.modal.close(true);
+        } else {
+          this.msg.error(res.message);
+          this.loading = false;
+        }
+      },
+      (err: any) => this.msg.error('保存失败!'),
+    );
   }
 
   close() {
     this.modal.destroy();
+  }
+
+  initCodeDetail() {
+    // this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_part_type.data = res;
+    // });
+    // this.capi.getCodeDetailInfo('Shift', '', 'string').subscribe((res: any) => {
+    //   this.sub_Shift.data = res;
+    // });
+  }
+
+  getListItems(value: any, type: any): void {
+    if (!value) return;
+
+    // tslint:disable-next-line: no-eval
+    const tmp_data = eval('this.sub_' + type);
+
+    this.loading = true;
+    this.capi.getListItems(type, this.record.plant, '').subscribe(
+      (res: any) => {
+        tmp_data.data = res;
+      },
+      (err: any) => this.msg.error('获取数据失败!'),
+    );
+    this.loading = false;
+
+    if (this.record.add === true) {
+      // tslint:disable-next-line: no-eval
+      eval('this.record.' + type + ' = undefined ;');
+    }
   }
 }

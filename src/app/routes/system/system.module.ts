@@ -13,6 +13,7 @@ import { SystemProcesslistComponent } from './processlist/processlist.component'
 import { SystemCodelistComponent } from './codelist/codelist.component';
 import { SystemCachinglistComponent } from './cachinglist/cachinglist.component';
 import { SystemCodelistEditComponent } from './codelist/edit/edit.component';
+import { SystemProcesslistEditComponent } from './processlist/edit/edit.component';
 
 const COMPONENTS = [
   SystemAppconfiglistComponent,
@@ -27,7 +28,8 @@ const COMPONENTS = [
 const COMPONENTS_NOROUNT = [
   SystemAppconfiglistEditComponent,
   SystemSysconfiglistEditComponent,
-  SystemCodelistEditComponent];
+  SystemCodelistEditComponent,
+  SystemProcesslistEditComponent];
 
 @NgModule({
   imports: [

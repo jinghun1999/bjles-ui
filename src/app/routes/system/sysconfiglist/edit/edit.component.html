@@ -1,10 +1,40 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
-</div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
-  <div class="modal-footer">
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+  <div class="modal-title">
+    {{ title }}-厂内已安装打印机维护
   </div>
-</sf>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">参数名</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" required [disabled]="!record.add" [(ngModel)]="record.parameter_name"
+        name="parameter_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">参数值</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" required [(ngModel)]="record.parameter_value" name="param_value" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">参数缺省值</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" required [(ngModel)]="record.default_value" name="default_value" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm" *ngIf="record.add">
+    <nz-form-label nzSpan="2">参数描述</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.parameter_description"
+        name="parameter_description" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">是否改变</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input type="checkbox" [(ngModel)]="record.changeable" name="changeable" />
+    </nz-form-control>
+  </nz-form-item>
+</form>

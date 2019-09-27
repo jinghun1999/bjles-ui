@@ -1,9 +1,40 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">系统名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.system_name" name="system_name" id="system_name" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">运行状态</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.last_run_status" [nzSize]="size" name="status" id="status" [nzPlaceHolder]="'请选择'"
+              (nzOpenChange)="getCodeDetails($event,'system_status')" [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_system_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages" [scroll]="{x: '1400px'}">
+    </st>
+  </ng-container>
 </nz-card>

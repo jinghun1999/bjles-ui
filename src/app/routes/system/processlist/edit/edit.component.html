@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ title }}-厂内已安装打印机维护
+  </div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">系统标识符</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.system_id" name="system_id" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">系统名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.system_name" name="system_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">最后运行状态</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.last_run_status_name"
+        name="last_run_status_name" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">最后运行开始时间</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.last_run_begin_time"
+        name="last_run_begin_time" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">最后运行结束时间</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [disabled]="!record.add" [(ngModel)]="record.last_run_end_time"
+        name="last_run_end_time" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">运行时间间隔</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.run_interval" name="run_interval" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">检查间隔时间</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.check_interval" name="check_interval" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">系统参数1</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.system_parameter1" name="param1" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">系统参数2</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.system_parameter2" name="param2" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">系统参数3</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.system_parameter3" name="param3" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">系统参数4</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.system_parameter4" name="param4" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">系统参数5</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.system_parameter5" name="param5" />
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

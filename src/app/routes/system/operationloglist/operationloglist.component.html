@@ -1,9 +1,92 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">操作内容</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入操作内容">
+            <input nz-input [(ngModel)]="q.operation_parameter1" name="operation_parameter1" id="operation_parameter1"
+              [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">操作数据</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入操作内容">
+            <input nz-input [(ngModel)]="q.operation_detail" name="operation_detail" id="operation_detail"
+              [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">选择模块</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.model" [nzSize]="size" name="model" id="model" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_model.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">选择操作动作</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.action" [nzSize]="size" name="action" id="action" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" nzAllowClear>
+              <nz-option *ngFor="let i of sub_action.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="48">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">操作时间</nz-form-label>
+          <nz-form-control [nzSpan]="40">
+            <nz-range-picker [(ngModel)]="q.operation_time" name="operation_time" id="operation_time" nzAllowClear
+              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [expand]="expand" [loading]="loading"
+      (change)="stChange($event)" [page]="pages" [scroll]="{x: '1500px'}" expandRowByClick expandAccordion>
+      <ng-template #expand let-item let-index="index" let-column="column">
+        <sv-container>
+          <sv label="操作序号" type="danger">{{ item.operation_log_sn }}</sv>
+          <sv label="操作时间">{{ item.operation_time }}</sv>
+          <sv label="动作标识符">{{ item.action_id }}</sv>
+          <sv label="操作者">{{ item.operator }}</sv>
+          <sv label="操作详细">{{ item.operation_detail }}</sv>
+          <sv label="操作参数1">{{ item.operation_parameter1 }}</sv>
+          <sv label="操作参数2">{{ item.operation_parameter2 }}</sv>
+          <sv label="操作参数3">{{ item.operation_parameter3 }}</sv>
+          <sv label="操作参数4">{{ item.operation_parameter4 }}</sv>
+          <sv label="操作参数5">{{ item.operation_parameter5 }}</sv>
+          <sv label="操作参数6">{{ item.operation_parameter6 }}</sv>
+          <sv label="操作参数7">{{ item.operation_parameter7 }}</sv>
+          <sv label="操作参数8">{{ item.operation_parameter8 }}</sv>
+          <sv label="操作参数9">{{ item.operation_parameter9 }}</sv>
+          <sv label="操作参数10">{{ item.operation_parameter10 }}</sv>
+        </sv-container>
+      </ng-template>
+    </st>
+  </ng-container>
 </nz-card>

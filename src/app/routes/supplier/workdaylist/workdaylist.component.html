@@ -2,7 +2,7 @@
 <nz-card nzBordered="false">
   <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
     <div nz-row [nzGutter]="24" *ngIf="expandForm">
-      <div nz-col nzMd="8" nzSm="24">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
@@ -14,7 +14,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
@@ -27,7 +27,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
@@ -42,7 +42,7 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="24">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">配送路线代码</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
@@ -56,17 +56,17 @@
         </nz-form-item>
       </div>
 
-      <div nz-col nzMd="8" nzSm="48">
+      <div nz-col [nzSpan]="16">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">工作日</nz-form-label>
-          <nz-form-control [nzSpan]="40">
+          <nz-form-label [nzSpan]="4">工作日</nz-form-label>
+          <nz-form-control [nzSpan]="20">
             <nz-range-picker [(ngModel)]="q.workday" name="workday" id="workday" [nzSize]="size" nzAllowClear="true"
               [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
             </nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col [nzSpan]="8" nzSm="24">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" nzFor="part_type">拉动类型</nz-form-label>
           <nz-form-control [nzSpan]="16">

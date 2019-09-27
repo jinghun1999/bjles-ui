@@ -1,9 +1,53 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">消息</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.exception_message" name="exception_message" id="exception_message"
+              [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8"> 事件级别</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.information_or_error" [nzSize]="size" name="level" id="level"
+              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'event_level')" [nzShowSearch]="true"
+              nzAllowClear>
+              <nz-option *ngFor="let i of sub_event_level.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">记录时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.time_stamp" name="time_stamp" id="time_stamp" nzAllowClear [nzSize]="size"
+              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages" [scroll]="{x: '1500px'}">
+    </st>
+  </ng-container>
 </nz-card>

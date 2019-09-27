@@ -4,10 +4,10 @@ import { _HttpClient } from '@delon/theme';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
-  selector: 'app-system-appconfiglist-edit',
+  selector: 'app-system-processlist-edit',
   templateUrl: './edit.component.html',
 })
-export class SystemAppconfiglistEditComponent implements OnInit {
+export class SystemProcesslistEditComponent implements OnInit {
   record: any;
 
   size = 'small';
@@ -40,7 +40,7 @@ export class SystemAppconfiglistEditComponent implements OnInit {
     this.loading = true;
     this.record.workday = this.cfun.getDate(this.record.workday);
 
-    this.http.post('/system/AppConfigSave', this.record).subscribe(
+    this.http.post('/system/ProcessSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);

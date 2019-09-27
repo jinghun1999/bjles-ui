@@ -1,9 +1,55 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">参数名</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.parameter_name" name="parameter_name" id="parameter_name" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">参数值</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.parameter_value" name="parameter_value" id="parameter_value" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">默认值</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.default_value" name="default_value" id="default_value" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">描述</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入消息">
+            <input nz-input [(ngModel)]="q.parameter_description" name="parameter_description"
+              id="parameter_description" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages">
+    </st>
+  </ng-container>
 </nz-card>

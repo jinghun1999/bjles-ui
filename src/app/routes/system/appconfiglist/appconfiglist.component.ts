@@ -16,7 +16,20 @@ export class SystemAppconfiglistComponent implements OnInit {
   searchPath = '/system/GetAppConfigPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['plant', 'workshop', 'application_name'], type: 'checkbox', exported: false },
+    {
+      title: '操作',
+      buttons: [
+        {
+          text: '编辑',
+          type: 'modal',
+          click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SystemAppconfiglistEditComponent,
+          },
+        },
+      ],
+    },
     { title: '应用名称', index: 'application_name', sort: true },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
@@ -105,8 +118,9 @@ export class SystemAppconfiglistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value;
+        this.getData();
         break;
     }
   }

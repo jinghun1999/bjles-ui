@@ -1,9 +1,50 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">事件名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入应用程序名称">
+            <input nz-input [(ngModel)]="q.event_name" name="event_name" id="event_name" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">事件类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.event_type" [nzSize]="size" name="event_type" id="event_type"
+              [nzPlaceHolder]="'请选择'" (nzOpenChange)="getCodeDetails($event,'event_type')" [nzShowSearch]="true"
+              nzAllowClear>
+              <nz-option *ngFor="let i of sub_event_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">描述</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入应用程序名称">
+            <input nz-input [(ngModel)]="q.application_description" name="application_description"
+              id="application_description" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
+      [page]="pages">
+    </st>
+  </ng-container>
 </nz-card>
