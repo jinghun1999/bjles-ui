@@ -6,13 +6,13 @@ import { tap } from 'rxjs/operators';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
-import { JisRackEditComponent } from './edit/edit.component';
+import { JisRackpartEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-jis-rack',
-  templateUrl: './rack.component.html',
+  selector: 'app-jis-rackpart',
+  templateUrl: './rackpart.component.html',
 })
-export class JisRackComponent implements OnInit {
+export class JisRackpartComponent implements OnInit {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
@@ -31,7 +31,8 @@ export class JisRackComponent implements OnInit {
     workshop: [],
     supplier: [],
     rack: [],
-    route: [],
+    part_no: '',
+    part_name: '',
   };
   size = 'small';
   data: any[] = [];
@@ -57,40 +58,15 @@ export class JisRackComponent implements OnInit {
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'id', type: 'checkbox', exported: false },
-    {
-      title: '',
-      buttons: [
-        {
-          text: '编辑',
-          type: 'modal',
-          modal: {
-            size: 'xl',
-            component: JisRackEditComponent,
-          },
-          click: 'reload',
-        },
-      ],
-    },
     { title: '工厂', index: 'plant', sort: true },
     { title: '车间', index: 'workshop', sort: true },
-    { title: '料架代码', index: 'rack', sort: true },
-    { title: '排序类型', index: 'rack_name', sort: true },
-    { title: '状态', index: 'status_text', sort: true },
     { title: '供应商代码', index: 'supplier', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
-
-    { title: '排序卡号', index: 'sort_card', sort: true },
-    { title: '包装类型', index: 'pack_type', sort: true },
-    { title: '配送路线', index: 'route', sort: true },
-    { title: '上线工位', index: 'online_uloc', sort: true },
-    { title: 'Dock卸货区', index: 'dock', sort: true },
-
-    { title: '车辆累积数量', index: 'backlog_vechile_qty', sort: true },
-    { title: '累积时间(分)', index: 'backlog_time', sort: true },
-    { title: '交货时间(分)', index: 'deliver_time', sort: true },
-    { title: '顺序', index: 'seq_text', sort: true },
-    { title: '卸货时间(分)', index: 'unloading_time', sort: true },
-    { title: '零件累积数量', index: 'backlog_part_qty', sort: true },
+    { title: '料架代码', index: 'rack', sort: true },
+    { title: '排序类型', index: 'rack_name', sort: true },
+    { title: '零件号', index: 'jit_part_no', sort: true },
+    { title: '零件名称', index: 'part_name', sort: true },
+    { title: '累计消耗个数', index: 'total_amount', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -113,7 +89,7 @@ export class JisRackComponent implements OnInit {
     );
 
     // toolBar
-    this.capi.getActions('JISManagement/RackList.aspx').subscribe((res: any) => {
+    this.capi.getActions('JISManagement/JITPartMapList.aspx').subscribe((res: any) => {
       this.actions = res;
       this.loading = false;
     });
@@ -132,7 +108,7 @@ export class JisRackComponent implements OnInit {
     }
 
     this.http
-      .post('/jis/postRackPager', this.q)
+      .post('/jis/postRackpartPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
@@ -260,14 +236,14 @@ export class JisRackComponent implements OnInit {
 
     this.q.page.export = true;
     this.http
-      .post('/jis/postRackPager', this.q)
+      .post('/jis/postRackpartPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
             this.st.export(res.data.rows, {
               callback: this.cfun.callbackOfExport,
-              filename: 'rack.xlsx',
+              filename: 'rack-part.xlsx',
               sheetname: 'sheet1',
             });
           } else {
@@ -282,7 +258,7 @@ export class JisRackComponent implements OnInit {
   }
 
   add() {
-    this.model.create(JisRackEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.model.create(JisRackpartEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       this.getData();
     });
   }
@@ -297,7 +273,7 @@ export class JisRackComponent implements OnInit {
         nzContent: '删除后不可恢复，确认删除吗？',
         nzOkType: 'danger',
         nzOnOk: () => {
-          this.http.post('/jis/postDeleteRack', this.selectedRows).subscribe((res: any) => {
+          this.http.post('/jis/postDeleteRackpart', this.selectedRows).subscribe((res: any) => {
             if (res.successful) {
               this.selectedRows = [];
               this.msg.success(res.data);
@@ -325,7 +301,7 @@ export class JisRackComponent implements OnInit {
     this.xlsx.import(file).then(res1 => {
       this.fileList = [];
       this.http
-        .post('/jis/postImportRack', res1)
+        .post('/jis/postImportRackPart', res1)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(res => {
           this.loading = false;
