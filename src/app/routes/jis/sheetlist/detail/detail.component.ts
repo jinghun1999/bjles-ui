@@ -6,7 +6,6 @@ import { STColumn } from '@delon/abc';
 @Component({
   selector: 'app-jis-sheetlist-detail',
   templateUrl: './detail.component.html',
-  styleUrls: ['./detail.less'],
 })
 export class JisSheetlistDetailComponent implements OnInit {
   record: any = {};
