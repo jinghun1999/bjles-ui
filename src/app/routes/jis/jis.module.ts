@@ -6,14 +6,20 @@ import { JisRackComponent } from './rack/rack.component';
 import { JisRackEditComponent } from './rack/edit/edit.component';
 import { JisRackpartComponent } from './rackpart/rackpart.component';
 import { JisRackpartEditComponent } from './rackpart/edit/edit.component';
+import { JisSheetvinComponent } from './sheetvin/sheetvin.component';
+import { JisSheetinnerComponent } from './sheetinner/sheetinner.component';
+import { JisSheetlistDetailComponent } from './sheetlist/detail/detail.component';
 
 const COMPONENTS = [
   JisSheetlistComponent,
   JisRackComponent,
-  JisRackpartComponent];
+  JisRackpartComponent,
+  JisSheetvinComponent,
+  JisSheetinnerComponent];
 const COMPONENTS_NOROUNT = [
   JisRackEditComponent,
-  JisRackpartEditComponent];
+  JisRackpartEditComponent,
+  JisSheetlistDetailComponent];
 
 @NgModule({
   imports: [

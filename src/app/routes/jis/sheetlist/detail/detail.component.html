@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <div class="modal-title">查看排序单 {{ record.runsheet_code }} 的明细信息</div>
+</div>
+<nz-spin *ngIf="!data.list" class="modal-spin"></nz-spin>
+<div sv-container *ngIf="data.list" size="small">
+  <sv label="JIS物料单编号">{{ record.runsheet_code }}</sv>
+  <sv label="JIS物料单发布时间">{{record.publish_time|date:'yyyy-MM-dd HH:mm'}}</sv>
+  <sv label="工厂">{{record.plant}}</sv>
+  <sv label="车间">{{record.workshop}}</sv>
+  <sv label="卸货区">{{record.dock}}</sv>
+  <sv label="供应商代码">{{record.supplier_name}}</sv>
+  <sv label="料架">{{record.rack}}</sv>
+  <sv label="料架名称">{{record.rack_name}}</sv>
+  <sv label="工位">{{record.uloc}}</sv>
+  <sv label="每单台数">{{record.sheet_vichile_count}}</sv>
+  <sv label="日计">{{record.sheet_sequence}}</sv>
+  <sv label="预期到货时间">{{record.expected_time|date:'yyyy-MM-dd HH:mm'}}</sv>
+  <sv label="实际到货时间">{{record.actual_time|date:'yyyy-MM-dd HH:mm'}}</sv>
+</div>
+<div nz-row>
+  <div nz-col [nzSpan]="18">
+    <st [data]="data.list" [size]="'small'" [columns]="columnsDetail" [page]="{show: false}"></st>
+  </div>
+  <div nz-col [nzSpan]="6">
+    <st [data]="data.sum_part" [size]="'small'" [columns]="column_sum_part" [page]="{show: false}"></st>
+    <st [data]="data.sum_car" [size]="'small'" [columns]="column_sum_car" [page]="{show: false}"></st>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button nz-button type="button" (click)="close()">关闭</button>
+</div>

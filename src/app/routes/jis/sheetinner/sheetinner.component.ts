@@ -2,20 +2,21 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@ang
 import { format } from 'date-fns';
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
-import { JisSheetlistDetailComponent } from './detail/detail.component';
+import { JisSheetlistDetailComponent } from '../sheetlist/detail/detail.component';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { CommonApiService, CommonFunctionService } from '@core';
 
 @Component({
-  selector: 'app-jis-sheetlist',
-  templateUrl: './sheetlist.component.html',
+  selector: 'app-jis-sheetinner',
+  templateUrl: './sheetinner.component.html',
 })
-export class JisSheetlistComponent implements OnInit, OnDestroy {
+export class JisSheetinnerComponent implements OnInit, OnDestroy {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
+    private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
   ) {}
@@ -31,7 +32,7 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
     rack: [],
     publish_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
     actual_time: [],
-    inner_only: false,
+    inner_only: true,
   };
   size = 'small';
   data: any[] = [];
@@ -109,11 +110,10 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
       (err: any) => this.msg.error('获取查询条件出错'),
     );
 
-    this.capi.getActions('JISManagement/RunSheetList.aspx').subscribe((res: any) => {
+    this.capi.getActions('JISManagement/RDCJITList.aspx').subscribe((res: any) => {
       this.actions = res;
+      this.loading = false;
     });
-
-    this.loading = false;
   }
   ngOnDestroy() {
     if (this.timer) {
@@ -137,7 +137,6 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    this.loading = true;
     const tmp_workshops = this.sub_workshop.map(p => p.value);
 
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
@@ -148,6 +147,7 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
     this.q.receive_time = this.cfun.getSelectDate(this.q.receive_time);
     this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
 
+    this.loading = true;
     this.http
       .post('/jis/postRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -159,6 +159,7 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
           this.msg.error(res.message);
         }
       });
+    // if (tmp_workshops === this.q.workshop) this.q.workshop = [];
   }
 
   stChange(e: STChange) {
@@ -268,21 +269,18 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
       this.http
         .post('/jis/postPrint', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.dataPrints = res.data.data;
-              this.msg.success(res.data.msg);
+        .subscribe(res => {
+          if (res.successful) {
+            this.dataPrints = res.data.data;
+            this.msg.success(res.data.msg);
 
-              this.dataPrints.forEach(p => {
-                window.open(p.print_file, '_blank');
-              });
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
+            this.dataPrints.forEach(p => {
+              window.open(p.print_file, '_blank');
+            });
+          } else {
+            this.msg.error(res.message);
+          }
+        });
     }
     this.st.clearCheck();
   }
@@ -296,13 +294,12 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
       this.msg.error('请输入条件，查询出数据方可导出数据！');
       return false;
     }
-    this.loading = true;
+
     this.q.page.export = true;
     this.http
       .post('/jis/postRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(res => {
-        this.q.page.export = false;
         if (res.successful) {
           this.st.export(res.data.rows, {
             callback: this.cfun.callbackOfExport,
@@ -311,7 +308,9 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
           });
         } else {
           this.msg.error(res.message);
+          this.loading = false;
         }
+        this.q.page.export = false;
       });
   }
 }
