@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <div class="modal-title">编辑 {{ record.user_name }} 的用户-供应商权限信息</div>
+</div>
+
+<form #f="ngForm" nz-form>
+
+  <div class="search-buttons">
+    <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+
+  <nz-transfer [nzDataSource]="list" nzSize="small" [nzShowSearch]="showSearch" [nzShowSelectAll]="true"
+    [nzRenderList]="[renderList, renderList]" [nzFilterOption]="filterOption">
+    <ng-template #renderList let-items let-direction="direction" let-stat="stat" let-onItemSelectAll="onItemSelectAll"
+      let-onItemSelect="onItemSelect">
+      <nz-table #t [nzData]="convertItems(items)" nzSize="small">
+        <thead>
+          <tr>
+            <th nzShowCheckbox [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+              (nzCheckedChange)="onItemSelectAll($event)"></th>
+            <th>供应商代码</th>
+            <th>名称</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
+            <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
+            <td>{{ data.supplier_id }}</td>
+            <td>{{ data.supplier_name }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+  </nz-transfer>
+</form>

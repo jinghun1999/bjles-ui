@@ -2,16 +2,21 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { CommonApiService, CommonFunctionService } from '@core';
+import { ItemData } from 'src/app/model';
 
 @Component({
-  selector: 'app-system-codelist-edit',
+  selector: 'app-system-userlist-edit',
   templateUrl: './edit.component.html',
 })
-export class SystemCodelistEditComponent implements OnInit {
+export class SystemUserlistEditComponent implements OnInit {
   record: any;
 
   size = 'small';
   pc_all = true;
+
+  sub_user_state = new ItemData();
+  sub_user_type = new ItemData();
+  sub_shift = new ItemData();
 
   loading = false;
   title = '';
@@ -40,16 +45,15 @@ export class SystemCodelistEditComponent implements OnInit {
     this.loading = true;
     this.record.workday = this.cfun.getDate(this.record.workday);
 
-    this.http.post('/system/CodeSave', this.record).subscribe(
+    this.http.post('/system/UserInfoSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
-          this.loading = false;
           this.modal.close(true);
         } else {
           this.msg.error(res.message);
-          this.loading = false;
         }
+        this.loading = false;
       },
       (err: any) => this.msg.error('保存失败!'),
     );
@@ -60,12 +64,15 @@ export class SystemCodelistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    // this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
-    //   this.sub_part_type.data = res;
-    // });
-    // this.capi.getCodeDetailInfo('Shift', '', 'string').subscribe((res: any) => {
-    //   this.sub_Shift.data = res;
-    // });
+    this.capi.getCodeDetailInfo('user_state', '', 'int').subscribe((res: any) => {
+      this.sub_user_state.data = res;
+    });
+    this.capi.getCodeDetailInfo('user_type', '', 'int').subscribe((res: any) => {
+      this.sub_user_type.data = res;
+    });
+    this.capi.getCodeDetailInfo('Shift', '', 'int').subscribe((res: any) => {
+      this.sub_shift.data = res;
+    });
   }
 
   getListItems(value: any, type: any): void {

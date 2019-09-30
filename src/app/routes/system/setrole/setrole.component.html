@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <div class="modal-title">编辑 {{ record.user_name }} 的角色信息</div>
+</div>
+
+<form #f="ngForm" nz-form>
+
+  <div class="search-buttons">
+    <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+
+  <nz-transfer [nzDataSource]="list" nzSize="small" [nzShowSearch]="showSearch" [nzShowSelectAll]="true"
+    [nzRenderList]="[renderList, renderList]" [nzFilterOption]="filterOption">
+    <ng-template #renderList let-items let-direction="direction" let-stat="stat" let-onItemSelectAll="onItemSelectAll"
+      let-onItemSelect="onItemSelect">
+      <nz-table #t [nzData]="convertItems(items)" nzSize="small">
+        <thead>
+          <tr>
+            <th nzShowCheckbox [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+              (nzCheckedChange)="onItemSelectAll($event)"></th>
+            <th>角色名称</th>
+            <!-- <th *ngIf="direction === 'left'">角色类型</th> -->
+            <th *ngIf="direction === 'left'">备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
+            <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
+            <td>{{ data.role_name }}</td>
+            <!-- <td *ngIf="direction === 'left'">
+            <nz-tag>{{ data.role_type_name }}</nz-tag>
+          </td> -->
+            <td *ngIf="direction === 'left'">{{ data.comments }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+  </nz-transfer>
+</form>

@@ -9,9 +9,12 @@ import { SystemSysconfiglistComponent } from './sysconfiglist/sysconfiglist.comp
 import { SystemProcesslistComponent } from './processlist/processlist.component';
 import { SystemCodelistComponent } from './codelist/codelist.component';
 import { SystemCachinglistComponent } from './cachinglist/cachinglist.component';
+import { SystemUserlistComponent } from './userlist/userlist.component';
+import { SystemRolelistComponent } from './rolelist/rolelist.component';
+import { SystemMenulistComponent } from './menulist/menulist.component';
+import { SystemActionlistComponent } from './actionlist/actionlist.component';
 
 const routes: Routes = [
-
   { path: 'appconfiglist', component: SystemAppconfiglistComponent },
   { path: 'eventlist', component: SystemEventlistComponent },
   { path: 'eventloglist', component: SystemEventloglistComponent },
@@ -20,10 +23,15 @@ const routes: Routes = [
   { path: 'sysconfiglist', component: SystemSysconfiglistComponent },
   { path: 'processlist', component: SystemProcesslistComponent },
   { path: 'codelist', component: SystemCodelistComponent },
-  { path: 'cachinglist', component: SystemCachinglistComponent }];
+  { path: 'cachinglist', component: SystemCachinglistComponent },
+  { path: 'userlist', component: SystemUserlistComponent },
+  { path: 'rolelist', component: SystemRolelistComponent },
+  { path: 'menulist', component: SystemMenulistComponent },
+  { path: 'actionlist', component: SystemActionlistComponent },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class SystemRoutingModule { }
+export class SystemRoutingModule {}

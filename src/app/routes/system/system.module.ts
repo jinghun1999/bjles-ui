@@ -14,6 +14,20 @@ import { SystemCodelistComponent } from './codelist/codelist.component';
 import { SystemCachinglistComponent } from './cachinglist/cachinglist.component';
 import { SystemCodelistEditComponent } from './codelist/edit/edit.component';
 import { SystemProcesslistEditComponent } from './processlist/edit/edit.component';
+import { SystemCodelistDetailComponent } from './codelist/detail/detail.component';
+import { SystemUserlistComponent } from './userlist/userlist.component';
+import { SystemUserlistEditComponent } from './userlist/edit/edit.component';
+import { SystemRoleComponent } from './setrole/setrole.component';
+import { SystemRolelistComponent } from './rolelist/rolelist.component';
+import { SystemRolelistEditComponent } from './rolelist/edit/edit.component';
+import { SystemMenulistComponent } from './menulist/menulist.component';
+import { SystemActionlistComponent } from './actionlist/actionlist.component';
+import { SystemMenulistEditComponent } from './menulist/edit/edit.component';
+import { SystemActionlistEditComponent } from './actionlist/edit/edit.component';
+import { SystemSetworkshopComponent } from './setworkshop/setworkshop.component';
+import { SystemSetsupplierComponent } from './setsupplier/setsupplier.component';
+import { SystemSetmenuComponent } from './setmenu/setmenu.component';
+import { SystemSetactionComponent } from './setaction/setaction.component';
 
 const COMPONENTS = [
   SystemAppconfiglistComponent,
@@ -24,22 +38,32 @@ const COMPONENTS = [
   SystemSysconfiglistComponent,
   SystemProcesslistComponent,
   SystemCodelistComponent,
-  SystemCachinglistComponent];
+  SystemCachinglistComponent,
+  SystemUserlistComponent,
+  SystemRolelistComponent,
+  SystemMenulistComponent,
+  SystemActionlistComponent,
+];
 const COMPONENTS_NOROUNT = [
   SystemAppconfiglistEditComponent,
   SystemSysconfiglistEditComponent,
   SystemCodelistEditComponent,
-  SystemProcesslistEditComponent];
+  SystemProcesslistEditComponent,
+  SystemCodelistDetailComponent,
+  SystemUserlistEditComponent,
+  SystemRoleComponent,
+  SystemRolelistEditComponent,
+  SystemMenulistEditComponent,
+  SystemActionlistEditComponent,
+  SystemSetworkshopComponent,
+  SystemSetsupplierComponent,
+  SystemSetmenuComponent,
+  SystemSetactionComponent,
+];
 
 @NgModule({
-  imports: [
-    SharedModule,
-    SystemRoutingModule
-  ],
-  declarations: [
-    ...COMPONENTS,
-    ...COMPONENTS_NOROUNT
-  ],
-  entryComponents: COMPONENTS_NOROUNT
+  imports: [SharedModule, SystemRoutingModule],
+  declarations: [...COMPONENTS, ...COMPONENTS_NOROUNT],
+  entryComponents: COMPONENTS_NOROUNT,
 })
-export class SystemModule { }
+export class SystemModule {}

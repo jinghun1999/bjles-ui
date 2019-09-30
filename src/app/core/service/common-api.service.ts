@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CacheService } from '@delon/cache';
+import { PageInfo, SortInfo } from 'src/app/model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,16 @@ export class CommonApiService {
   getActions(actionPath: any) {
     return new Observable(observe => {
       this.http.get('/system/getActions?actionPath=' + actionPath).subscribe((res: any) => {
+        observe.next(res.data);
+        // 如果有错误，通过 error() 方法将错误返回
+        // observe.error(res.message);
+      });
+    });
+  }
+
+  GetMenusOfTree() {
+    return new Observable(observe => {
+      this.http.get('/system/GetMenusOfTree').subscribe((res: any) => {
         observe.next(res.data);
         // 如果有错误，通过 error() 方法将错误返回
         // observe.error(res.message);

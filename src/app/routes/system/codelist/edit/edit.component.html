@@ -1,10 +1,29 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
-</div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
-  <div class="modal-footer">
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
+  <div class="modal-title">
+    {{ title }}-系统代码维护
   </div>
-</sf>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">代码名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" required [disabled]="!record.add" [(ngModel)]="record.code_name"
+        name="code_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">代码中文描述</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.code_cdescription" name="code_cdescription" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">代码英文描述</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.code_edescription" name="code_edescription" />
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

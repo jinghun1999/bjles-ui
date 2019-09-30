@@ -1,6 +1,6 @@
 <div class="modal-header">
   <div class="modal-title">
-    {{ title }}-厂内已安装打印机维护
+    {{ title }}-应用配置维护
   </div>
 </div>
 <form #f="ngForm" nz-form (ngSubmit)="save()">
@@ -73,8 +73,9 @@
       <input nz-input [nzSize]="size" [(ngModel)]="record.application_parameter10" name="param10" />
     </nz-form-control>
     <nz-form-label nzSpan="2">描述</nz-form-label>
-    <textarea style="width:50%" rows="4" nz-input [(ngModel)]="record.application_description"
-      name='app_desc'></textarea>
+    <nz-form-control nzSpan="12">
+      <textarea rows="4" nz-input [(ngModel)]="record.application_description" name='app_desc'></textarea>
+    </nz-form-control>
   </nz-form-item>
 
 </form>

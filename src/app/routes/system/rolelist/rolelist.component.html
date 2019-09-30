@@ -2,24 +2,33 @@
 <nz-card nzBordered="false">
   <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
     <div nz-row [nzGutter]="24" *ngIf="expandForm">
-      <div nz-col [nzSpan]="8">
+
+      <div nz-col nzSpan="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">代码名称</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入代码名称">
-            <input nz-input [(ngModel)]="q.code_name" name="code_name" id="code_name" [nzSize]="size"
+          <nz-form-label [nzSpan]="8">角色名</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.role_name" name="role_name" id="role_name" [nzSize]="size"
               placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
+
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">描述</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请输入描述">
-            <input nz-input [(ngModel)]="q.code_cdescription" name="code_cdescription" id="code_cdescription"
-              [nzSize]="size" placeholder="请输入" />
+          <nz-form-label [nzSpan]="8">角色类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.role_type" [nzSize]="size" name="role_type" id="role_type" [nzPlaceHolder]="'请选择'"
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'role_type')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_role_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
+
+
+
+
     </div>
 
     <div class="search-buttons">
@@ -30,7 +39,7 @@
   </form>
   <ng-container>
     <st #st [columns]="columns" [size]="size" [data]="data" [loading]="loading" (change)="stChange($event)"
-      [page]="pages">
+      [page]="pages" [scroll]="{ x: '1500px'}">
     </st>
   </ng-container>
 </nz-card>

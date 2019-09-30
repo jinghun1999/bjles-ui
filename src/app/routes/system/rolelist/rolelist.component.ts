@@ -5,45 +5,45 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { SystemCodelistEditComponent } from './edit/edit.component';
-import { SystemCodelistDetailComponent } from './detail/detail.component';
+import { SystemRolelistEditComponent } from './edit/edit.component';
+import { SystemSetactionComponent } from '../setaction/setaction.component';
 
 @Component({
-  selector: 'app-system-codelist',
-  templateUrl: './codelist.component.html',
+  selector: 'app-system-rolelist',
+  templateUrl: './rolelist.component.html',
 })
-export class SystemCodelistComponent implements OnInit {
-  actionPath = 'SystemManagement/CodeList.aspx';
-  searchPath = '/system/GetCodePager';
+export class SystemRolelistComponent implements OnInit {
+  actionPath = 'SystemManagement/RoleList.aspx';
+  searchPath = '/system/GetRolePager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['parameter_name'], type: 'checkbox', exported: false },
+    { title: '', index: ['role_id'], type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
+        {
+          text: '设置动作',
+          type: 'modal',
+          click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SystemSetactionComponent,
+          },
+        },
         {
           text: '编辑',
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: SystemCodelistEditComponent,
-          },
-        },
-        {
-          text: item => item.code_name,
-          type: 'modal',
-          click: 'reload',
-          modal: {
-            size: 'xl',
-            component: SystemCodelistDetailComponent,
+            component: SystemRolelistEditComponent,
           },
         },
       ],
     },
-    { title: '代码名称', index: 'code_name', sort: true },
-    { title: '代码中文描述', index: 'code_cdescription', sort: true },
-    { title: '代码英文描述', index: 'code_edescription', sort: true },
+    { title: '角色名称', index: 'role_name', sort: true },
+    { title: '角色类型', index: 'role_type_name', sort: true },
+    { title: '备注', index: 'comments', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -57,6 +57,7 @@ export class SystemCodelistComponent implements OnInit {
   };
   data: any[] = [];
   dataAction: any[] = [];
+  sub_role_type = new ItemData();
 
   constructor(
     private http: _HttpClient,
@@ -150,7 +151,6 @@ export class SystemCodelistComponent implements OnInit {
         this.export();
         break;
       case 'HideOrExpand':
-      case 'Hide':
         this.hideOrExpand();
         break;
       case 'Create':
@@ -162,14 +162,19 @@ export class SystemCodelistComponent implements OnInit {
         break;
     }
   }
-  Delete(): void {
-    // if (this.selectedRows.length === 0) {
-    //   this.msg.error('请选择需要删除的计划！');
+
+  ItemCommand(records: STData, CommandName: string) {
+    // if (records === null || records === undefined || records.length === 0) {
+    //   this.msg.error('请选择记录！');
     //   return;
     // } else {
     //   this.loading = true;
+    //   let url = '';
+    //   // tslint:disable-next-line: prefer-conditional-expression
+    //   if (CommandName === 'InitPass') url = '/system/UserInfoInitPass';
+    //   else url = '/system/UserInfoUnlock';
     //   this.http
-    //     .post('/supplier/RespondDelete', this.selectedRows)
+    //     .post(url, records)
     //     .pipe(tap(() => (this.loading = false)))
     //     .subscribe(
     //       res => {
@@ -185,12 +190,36 @@ export class SystemCodelistComponent implements OnInit {
     // }
   }
 
+  Delete(): void {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择需要删除的计划！');
+      return;
+    } else {
+      this.loading = true;
+
+      this.http
+        .post('/system/RoleDelete', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
+  }
+
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
   Create() {
-    this.modal.create(SystemCodelistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(SystemRolelistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
   }

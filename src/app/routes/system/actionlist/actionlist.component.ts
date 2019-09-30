@@ -5,45 +5,50 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { SystemCodelistEditComponent } from './edit/edit.component';
-import { SystemCodelistDetailComponent } from './detail/detail.component';
+import { SystemActionlistEditComponent } from './edit/edit.component';
+import { SystemRoleComponent } from '../setrole/setrole.component';
 
 @Component({
-  selector: 'app-system-codelist',
-  templateUrl: './codelist.component.html',
+  selector: 'app-system-actionlist',
+  templateUrl: './actionlist.component.html',
 })
-export class SystemCodelistComponent implements OnInit {
-  actionPath = 'SystemManagement/CodeList.aspx';
-  searchPath = '/system/GetCodePager';
+export class SystemActionlistComponent implements OnInit {
+  actionPath = 'SystemManagement/ActionList.aspx';
+  searchPath = '/system/GetActionPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['parameter_name'], type: 'checkbox', exported: false },
+    { title: '', index: ['action_id'], type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
+        {
+          text: '设置角色',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'lg',
+            component: SystemRoleComponent,
+          },
+        },
         {
           text: '编辑',
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: SystemCodelistEditComponent,
-          },
-        },
-        {
-          text: item => item.code_name,
-          type: 'modal',
-          click: 'reload',
-          modal: {
-            size: 'xl',
-            component: SystemCodelistDetailComponent,
+            component: SystemActionlistEditComponent,
           },
         },
       ],
     },
-    { title: '代码名称', index: 'code_name', sort: true },
-    { title: '代码中文描述', index: 'code_cdescription', sort: true },
-    { title: '代码英文描述', index: 'code_edescription', sort: true },
+    { title: '动作名', index: 'action_name_cn', sort: true },
+    { title: '命令名', index: 'action_name', sort: true },
+    { title: '动作描述', index: 'action_description', sort: true },
+    { title: '链接地址', index: 'action_url', sort: true },
+    { title: '动作类型', index: 'action_type', sort: true },
+    { title: '排序号', index: 'menu_order', sort: true },
+    { title: '动作图标', index: 'icon_name', sort: true },
+    { title: '客户端脚本', index: 'client_js', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -57,6 +62,7 @@ export class SystemCodelistComponent implements OnInit {
   };
   data: any[] = [];
   dataAction: any[] = [];
+  dataMenu: any[] = [];
 
   constructor(
     private http: _HttpClient,
@@ -74,6 +80,10 @@ export class SystemCodelistComponent implements OnInit {
     // toolBar
     this.capi.getActions(this.actionPath).subscribe((res: any) => {
       this.dataAction = res;
+    });
+
+    this.capi.GetMenusOfTree().subscribe((res: any) => {
+      this.dataMenu = res;
     });
 
     this.loading = false;
@@ -150,7 +160,6 @@ export class SystemCodelistComponent implements OnInit {
         this.export();
         break;
       case 'HideOrExpand':
-      case 'Hide':
         this.hideOrExpand();
         break;
       case 'Create':
@@ -162,14 +171,19 @@ export class SystemCodelistComponent implements OnInit {
         break;
     }
   }
-  Delete(): void {
-    // if (this.selectedRows.length === 0) {
-    //   this.msg.error('请选择需要删除的计划！');
+
+  ItemCommand(records: STData, CommandName: string) {
+    // if (records === null || records === undefined || records.length === 0) {
+    //   this.msg.error('请选择记录！');
     //   return;
     // } else {
     //   this.loading = true;
+    //   let url = '';
+    //   // tslint:disable-next-line: prefer-conditional-expression
+    //   if (CommandName === 'InitPass') url = '/system/UserInfoInitPass';
+    //   else url = '/system/UserInfoUnlock';
     //   this.http
-    //     .post('/supplier/RespondDelete', this.selectedRows)
+    //     .post(url, records)
     //     .pipe(tap(() => (this.loading = false)))
     //     .subscribe(
     //       res => {
@@ -185,12 +199,36 @@ export class SystemCodelistComponent implements OnInit {
     // }
   }
 
+  Delete(): void {
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择需要删除的计划！');
+      return;
+    } else {
+      this.loading = true;
+
+      this.http
+        .post('/system/ActionDelete', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
+  }
+
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
   Create() {
-    this.modal.create(SystemCodelistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(SystemActionlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
   }
@@ -247,5 +285,9 @@ export class SystemCodelistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
+  }
+
+  onChange($event: string[]): void {
+    console.log($event);
   }
 }

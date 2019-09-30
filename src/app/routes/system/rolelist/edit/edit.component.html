@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ title }}-角色
+  </div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">角色名称*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.role_name" name="role_name" required />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">角色类型*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.role_type" [nzSize]="size" name="role_type" id="role_type" [nzShowSearch]="true"
+        required>
+        <nz-option *ngFor="let i of sub_role_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">备注</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <textarea rows="4" nz-input [(ngModel)]="record.comments" name='comments'></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

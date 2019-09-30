@@ -5,45 +5,80 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { SystemCodelistEditComponent } from './edit/edit.component';
-import { SystemCodelistDetailComponent } from './detail/detail.component';
+import { SystemUserlistEditComponent } from './edit/edit.component';
+import { SystemRoleComponent } from '../setrole/setrole.component';
+import { SystemSetworkshopComponent } from '../setworkshop/setworkshop.component';
+import { SystemSetsupplierComponent } from '../setsupplier/setsupplier.component';
 
 @Component({
-  selector: 'app-system-codelist',
-  templateUrl: './codelist.component.html',
+  selector: 'app-system-userlist',
+  templateUrl: './userlist.component.html',
 })
-export class SystemCodelistComponent implements OnInit {
-  actionPath = 'SystemManagement/CodeList.aspx';
-  searchPath = '/system/GetCodePager';
+export class SystemUserlistComponent implements OnInit {
+  actionPath = 'SystemManagement/UserList.aspx';
+  searchPath = '/system/GetUserInfoPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['parameter_name'], type: 'checkbox', exported: false },
+    { title: '', index: ['user_id'], type: 'checkbox', exported: false },
     {
       title: '操作',
       buttons: [
+        {
+          text: '设置角色',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'lg',
+            component: SystemRoleComponent,
+          },
+        },
+        {
+          text: '设置车间',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'lg',
+            component: SystemSetworkshopComponent,
+          },
+        },
+        {
+          text: '设置供应商',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'lg',
+            component: SystemSetsupplierComponent,
+          },
+        },
+        {
+          text: `恢复密码`,
+          click: record => this.ItemCommand(record, 'InitPass'),
+        },
+        {
+          text: `解锁`,
+          click: record => this.ItemCommand(record, 'Unlock'),
+        },
         {
           text: '编辑',
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: SystemCodelistEditComponent,
-          },
-        },
-        {
-          text: item => item.code_name,
-          type: 'modal',
-          click: 'reload',
-          modal: {
-            size: 'xl',
-            component: SystemCodelistDetailComponent,
+            component: SystemUserlistEditComponent,
           },
         },
       ],
     },
-    { title: '代码名称', index: 'code_name', sort: true },
-    { title: '代码中文描述', index: 'code_cdescription', sort: true },
-    { title: '代码英文描述', index: 'code_edescription', sort: true },
+    { title: '用户名', index: 'user_name', sort: true },
+    { title: '姓名', index: 'employee_name', sort: true },
+    { title: '办公室电话', index: 'office_phone', sort: true },
+    { title: '移动电话', index: 'mobile_phone', sort: true },
+    { title: '电子邮件', index: 'email', sort: true },
+    { title: '公司', index: 'company', sort: true },
+    { title: '部门', index: 'department', sort: true },
+    { title: '班次', index: 'shift_name', sort: true },
+    { title: '用户类型', index: 'user_type_name', sort: true },
+    { title: '用户状态', index: 'status_name', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -57,6 +92,8 @@ export class SystemCodelistComponent implements OnInit {
   };
   data: any[] = [];
   dataAction: any[] = [];
+  sub_user_state = new ItemData();
+  sub_shift = new ItemData();
 
   constructor(
     private http: _HttpClient,
@@ -150,7 +187,6 @@ export class SystemCodelistComponent implements OnInit {
         this.export();
         break;
       case 'HideOrExpand':
-      case 'Hide':
         this.hideOrExpand();
         break;
       case 'Create':
@@ -162,27 +198,56 @@ export class SystemCodelistComponent implements OnInit {
         break;
     }
   }
+
+  ItemCommand(records: STData, CommandName: string) {
+    if (records === null || records === undefined || records.length === 0) {
+      this.msg.error('请选择记录！');
+      return;
+    } else {
+      this.loading = true;
+      let url = '';
+      // tslint:disable-next-line: prefer-conditional-expression
+      if (CommandName === 'InitPass') url = '/system/UserInfoInitPass';
+      else url = '/system/UserInfoUnlock';
+      this.http
+        .post(url, records)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
+  }
+
   Delete(): void {
-    // if (this.selectedRows.length === 0) {
-    //   this.msg.error('请选择需要删除的计划！');
-    //   return;
-    // } else {
-    //   this.loading = true;
-    //   this.http
-    //     .post('/supplier/RespondDelete', this.selectedRows)
-    //     .pipe(tap(() => (this.loading = false)))
-    //     .subscribe(
-    //       res => {
-    //         if (res.successful) {
-    //           this.msg.success(res.data);
-    //           this.st.reload();
-    //         } else {
-    //           this.msg.error(res.message);
-    //         }
-    //       },
-    //       (err: any) => this.msg.error('系统异常'),
-    //     );
-    // }
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择需要删除的计划！');
+      return;
+    } else {
+      this.loading = true;
+
+      this.http
+        .post('/system/UserInfoDelete', this.selectedRows)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              this.msg.success(res.data);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    }
   }
 
   hideOrExpand() {
@@ -190,7 +255,7 @@ export class SystemCodelistComponent implements OnInit {
   }
 
   Create() {
-    this.modal.create(SystemCodelistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(SystemUserlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
   }

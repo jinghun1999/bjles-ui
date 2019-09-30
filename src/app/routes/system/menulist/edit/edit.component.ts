@@ -2,16 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { CommonApiService, CommonFunctionService } from '@core';
+import { ItemData } from 'src/app/model';
 
 @Component({
-  selector: 'app-system-codelist-edit',
+  selector: 'app-system-menulist-edit',
   templateUrl: './edit.component.html',
 })
-export class SystemCodelistEditComponent implements OnInit {
+export class SystemMenulistEditComponent implements OnInit {
   record: any;
 
   size = 'small';
   pc_all = true;
+
+  dataMenu: any[] = [];
 
   loading = false;
   title = '';
@@ -27,11 +30,13 @@ export class SystemCodelistEditComponent implements OnInit {
   ngOnInit(): void {
     if (this.record.add === true) {
       this.title = '添加';
+    } else {
+      this.record.parent_menu_id = this.record.parent_menu_id + '';
     }
-    //  else {
-    //   this.record.supplier = this.record.supplier + '';
-    //   this.record.route = this.record.route + '';
-    // }
+
+    this.capi.GetMenusOfTree().subscribe((res: any) => {
+      this.dataMenu = res.filter(p => p.text.substring(0, 2) !== '--');
+    });
 
     this.initCodeDetail();
   }
@@ -40,7 +45,7 @@ export class SystemCodelistEditComponent implements OnInit {
     this.loading = true;
     this.record.workday = this.cfun.getDate(this.record.workday);
 
-    this.http.post('/system/CodeSave', this.record).subscribe(
+    this.http.post('/system/MenuSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -60,11 +65,14 @@ export class SystemCodelistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    // this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
-    //   this.sub_part_type.data = res;
+    // this.capi.getCodeDetailInfo('role_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_role_type.data = res;
     // });
-    // this.capi.getCodeDetailInfo('Shift', '', 'string').subscribe((res: any) => {
-    //   this.sub_Shift.data = res;
+    // this.capi.getCodeDetailInfo('user_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_user_type.data = res;
+    // });
+    // this.capi.getCodeDetailInfo('Shift', '', 'int').subscribe((res: any) => {
+    //   this.sub_shift.data = res;
     // });
   }
 

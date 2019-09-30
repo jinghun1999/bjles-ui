@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <div class="modal-title">编辑 {{ record.user_name }} 的角色信息</div>
+</div>
+
+<form #f="ngForm" nz-form>
+
+  <div class="search-buttons">
+    <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+
+  <nz-transfer [nzDataSource]="list" nzSize="small" [nzShowSearch]="showSearch" [nzShowSelectAll]="true"
+    [nzRenderList]="[renderList, renderList]" [nzFilterOption]="filterOption">
+    <ng-template #renderList let-items let-direction="direction" let-stat="stat" let-onItemSelectAll="onItemSelectAll"
+      let-onItemSelect="onItemSelect">
+      <nz-table #t [nzData]="convertItems(items)" nzSize="small">
+        <thead>
+          <tr>
+            <th nzShowCheckbox [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+              (nzCheckedChange)="onItemSelectAll($event)"></th>
+            <th>动作名</th>
+            <th>动作显示名</th>
+            <!-- <th>动作描述</th> -->
+            <th>所属菜单名</th>
+            <th>连接地址</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
+            <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
+            <td>{{ data.Action_name }}</td>
+            <td>{{ data.Action_name_cn }}</td>
+            <!-- <td>{{ data.Action_Description }}</td> -->
+            <td>{{ data.menu_name }}</td>
+            <td>{{ data.Action_url }}</td>
+
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+  </nz-transfer>
+</form>

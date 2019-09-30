@@ -2,19 +2,25 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { CommonApiService, CommonFunctionService } from '@core';
+import { PageInfo, SortInfo } from 'src/app/model';
+import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-system-codelist-edit',
+  selector: 'app-system-actionlist-edit',
   templateUrl: './edit.component.html',
 })
-export class SystemCodelistEditComponent implements OnInit {
+export class SystemActionlistEditComponent implements OnInit {
   record: any;
 
   size = 'small';
   pc_all = true;
 
+  dataMenu: any[] = [];
+  dataActionTPL: any[] = [];
+
   loading = false;
   title = '';
+  action_tpl = '';
 
   constructor(
     private modal: NzModalRef,
@@ -27,11 +33,30 @@ export class SystemCodelistEditComponent implements OnInit {
   ngOnInit(): void {
     if (this.record.add === true) {
       this.title = '添加';
+
+      const q: any = {
+        page: new PageInfo(),
+        sort: new SortInfo(),
+        action_TPL: true,
+      };
+
+      this.http.post('/system/GetActionPager', q).subscribe(
+        res => {
+          if (res.successful) {
+            this.dataActionTPL = res.data.rows;
+          } else {
+            this.msg.error(res.message);
+          }
+        },
+        (err: any) => this.msg.error('系统异常'),
+      );
+    } else {
+      this.record.parent_menu_id = this.record.parent_menu_id + '';
     }
-    //  else {
-    //   this.record.supplier = this.record.supplier + '';
-    //   this.record.route = this.record.route + '';
-    // }
+
+    this.capi.GetMenusOfTree().subscribe((res: any) => {
+      this.dataMenu = res;
+    });
 
     this.initCodeDetail();
   }
@@ -40,7 +65,7 @@ export class SystemCodelistEditComponent implements OnInit {
     this.loading = true;
     this.record.workday = this.cfun.getDate(this.record.workday);
 
-    this.http.post('/system/CodeSave', this.record).subscribe(
+    this.http.post('/system/ActionSave', this.record).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -60,12 +85,26 @@ export class SystemCodelistEditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    // this.capi.getCodeDetailInfo('part_type', '', 'int').subscribe((res: any) => {
-    //   this.sub_part_type.data = res;
+    // this.capi.getCodeDetailInfo('role_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_role_type.data = res;
     // });
-    // this.capi.getCodeDetailInfo('Shift', '', 'string').subscribe((res: any) => {
-    //   this.sub_Shift.data = res;
+    // this.capi.getCodeDetailInfo('user_type', '', 'int').subscribe((res: any) => {
+    //   this.sub_user_type.data = res;
     // });
+    // this.capi.getCodeDetailInfo('Shift', '', 'int').subscribe((res: any) => {
+    //   this.sub_shift.data = res;
+    // });
+  }
+
+  tplChange(value: any): void {
+    const l = this.dataActionTPL.find(p => p.action_name === value);
+    this.record.action_name = l.action_name;
+    this.record.action_url = l.action_url;
+    this.record.action_type = l.action_type;
+    this.record.action_name_cn = l.action_name_cn;
+    this.record.icon_name = l.icon_name;
+    this.record.client_js = l.client_js;
+    this.record.section = l.section;
   }
 
   getListItems(value: any, type: any): void {
