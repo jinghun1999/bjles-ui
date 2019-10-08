@@ -4,13 +4,14 @@ import { _HttpClient } from '@delon/theme';
 import { CommonApiService } from '@core';
 
 @Component({
-  selector: 'app-system-setaction',
-  templateUrl: './setaction.component.html',
+  selector: 'app-system-setuser',
+  templateUrl: './setuser.component.html',
 })
-export class SystemSetactionComponent implements OnInit {
+export class SystemSetuserComponent implements OnInit {
   record: any = {};
   dataAction: any[] = [];
   operation = '';
+  title = '';
 
   list: any[] = [];
   showSearch = true;
@@ -28,13 +29,18 @@ export class SystemSetactionComponent implements OnInit {
     let url = '';
 
     if (this.record.role_id > 0) {
-      actionPath = 'SystemManagement/SetActionToRole.aspx';
-      url = `/system/GetActionsByRole?role_id=${this.record.role_id}`;
+      actionPath = 'SystemManagement/SetUserToRole.aspx';
+      url = `/system/GetUsersByRole?role_id=${this.record.role_id}`;
       this.operation = 'role';
-    } else if (this.record.menu_id > 0) {
-      actionPath = 'SystemManagement/SetActionToMenu.aspx';
-      url = `/system/GetActionsByMenu?menu_id=${this.record.menu_id}`;
-      this.operation = 'menu';
+      this.title = this.record.role_name + '(角色)';
+      // } else if (this.record.menu_id > 0) {
+      //   actionPath = 'SystemManagement/SetRoleForMenu.aspx';
+      //   url = `/system/GetRolesByMenuID?menu_id=${this.record.menu_id}`;
+      //   this.operation = 'menu';
+      // } else if (this.record.action_id > 0) {
+      //   actionPath = 'SystemManagement/SetRoleForAction.aspx';
+      //   url = `/system/GetRolesByActionID?action_id=${this.record.action_id}`;
+      //   this.operation = 'action';
     }
 
     this.capi.getActions(actionPath).subscribe((res: any) => {
@@ -54,15 +60,16 @@ export class SystemSetactionComponent implements OnInit {
   }
 
   save() {
-    const action_ids = this.list
+    const user_ids = this.list
       .filter(p => p.direction === 'right')
-      .map(p => p.Action_id)
+      .map(p => p.user_id)
       .toString();
     let url = '';
-    if (this.operation === 'role')
-      url = `/system/SaveActionsByRole?action_ids=${action_ids}&role_id=${this.record.role_id}`;
-    else if (this.operation === 'menu')
-      url = `/system/SaveActionsByMenu?action_ids=${action_ids}&menu_id=${this.record.menu_id}`;
+    if (this.operation === 'role') url = `/system/SaveUsersByRole?user_ids=${user_ids}&role_id=${this.record.role_id}`;
+    // else if (this.operation === 'menu')
+    //   url = `/system/SaveRolesByMenu?role_ids=${role_ids}&menu_id=${this.record.menu_id}`;
+    // else if (this.operation === 'action')
+    //   url = `/system/SaveRolesByAction?role_ids=${role_ids}&action_id=${this.record.action_id}`;
     this.http.get(url).subscribe(
       (res: any) => {
         if (res.successful) {
@@ -107,13 +114,15 @@ export class SystemSetactionComponent implements OnInit {
   }
   filterOption(inputValue: string, item: any): boolean {
     return (
-      (item.Action_name !== null && item.Action_name !== undefined && item.Action_name.indexOf(inputValue) > -1) ||
-      (item.Action_name_cn !== null &&
-        item.Action_name_cn !== undefined &&
-        item.Action_name_cn.indexOf(inputValue) > -1) ||
-      // (item.Action_Description !== null && item.Action_Description !== undefined && item.Action_Description.indexOf(inputValue) > -1) ||
-      (item.menu_name !== null && item.menu_name !== undefined && item.menu_name.indexOf(inputValue) > -1) ||
-      (item.Action_url !== null && item.Action_url !== undefined && item.Action_url.indexOf(inputValue) > -1)
+      item.user_name.indexOf(inputValue) > -1 ||
+      (item.employee_name !== null &&
+        item.employee_name !== undefined &&
+        item.employee_name.indexOf(inputValue) > -1) ||
+      (item.shift_name !== null && item.shift_name !== undefined && item.shift_name.indexOf(inputValue) > -1) ||
+      (item.user_type_name !== null &&
+        item.user_type_name !== undefined &&
+        item.user_type_name.indexOf(inputValue) > -1) ||
+      (item.status_name !== null && item.status_name !== undefined && item.status_name.indexOf(inputValue) > -1)
     );
   }
 }

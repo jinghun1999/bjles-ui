@@ -7,6 +7,9 @@ import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { SystemRolelistEditComponent } from './edit/edit.component';
 import { SystemSetactionComponent } from '../setaction/setaction.component';
+import { SystemSetmenuComponent } from '../setmenu/setmenu.component';
+import { SystemSetuserComponent } from '../setuser/setuser.component';
+import { SystemSetprivilegeExtComponent } from '../setprivilege-ext/setprivilege-ext.component';
 
 @Component({
   selector: 'app-system-rolelist',
@@ -22,12 +25,39 @@ export class SystemRolelistComponent implements OnInit {
       title: '操作',
       buttons: [
         {
+          text: '设置用户',
+          type: 'modal',
+          click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SystemSetuserComponent,
+          },
+        },
+        {
           text: '设置动作',
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
             component: SystemSetactionComponent,
+          },
+        },
+        {
+          text: '设置菜单',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SystemSetmenuComponent,
+          },
+        },
+        {
+          text: '设置扩展权限',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'xl',
+            component: SystemSetprivilegeExtComponent,
           },
         },
         {

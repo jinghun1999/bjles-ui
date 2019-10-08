@@ -7,6 +7,7 @@ import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
 import { SystemActionlistEditComponent } from './edit/edit.component';
 import { SystemRoleComponent } from '../setrole/setrole.component';
+import { SystemSetmenuComponent } from '../setmenu/setmenu.component';
 
 @Component({
   selector: 'app-system-actionlist',
@@ -28,6 +29,15 @@ export class SystemActionlistComponent implements OnInit {
           modal: {
             size: 'lg',
             component: SystemRoleComponent,
+          },
+        },
+        {
+          text: '设置菜单',
+          type: 'modal',
+          // click: 'reload',
+          modal: {
+            size: 'lg',
+            component: SystemSetmenuComponent,
           },
         },
         {

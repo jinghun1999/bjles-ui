@@ -28,6 +28,8 @@ import { SystemSetworkshopComponent } from './setworkshop/setworkshop.component'
 import { SystemSetsupplierComponent } from './setsupplier/setsupplier.component';
 import { SystemSetmenuComponent } from './setmenu/setmenu.component';
 import { SystemSetactionComponent } from './setaction/setaction.component';
+import { SystemSetuserComponent } from './setuser/setuser.component';
+import { SystemSetprivilegeExtComponent } from './setprivilege-ext/setprivilege-ext.component';
 
 const COMPONENTS = [
   SystemAppconfiglistComponent,
@@ -59,6 +61,8 @@ const COMPONENTS_NOROUNT = [
   SystemSetsupplierComponent,
   SystemSetmenuComponent,
   SystemSetactionComponent,
+  SystemSetuserComponent,
+  SystemSetprivilegeExtComponent,
 ];
 
 @NgModule({

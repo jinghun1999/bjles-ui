@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.user_name }} 的菜单信息</div>
+  <div class="modal-title">编辑 {{ title }} 的用户信息</div>
 </div>
 
 <form #f="ngForm" nz-form>
@@ -19,17 +19,17 @@
           <tr>
             <th nzShowCheckbox [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
               (nzCheckedChange)="onItemSelectAll($event)"></th>
-            <th>菜单名</th>
-            <th *ngIf="direction === 'left'">上级菜单名</th>
-            <th>备注</th>
+            <th>权限代码</th>
+            <th>权限名称</th>
+            <th *ngIf="direction === 'left'">备注</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
             <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
-            <td>{{ data.menu_name }}</td>
-            <td *ngIf="direction === 'left'">{{ data.parent_menu_name }}</td>
-            <td>{{ data.comments }}</td>
+            <td>{{ data.PrivilegeCode }}</td>
+            <td>{{ data.PrivilegeName }}</td>
+            <td *ngIf="direction === 'left'">{{ data.Remark }}</td>
           </tr>
         </tbody>
       </nz-table>

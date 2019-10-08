@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.user_name }} 的菜单信息</div>
+  <div class="modal-title">编辑 {{ title }} 的用户信息</div>
 </div>
 
 <form #f="ngForm" nz-form>
@@ -19,17 +19,22 @@
           <tr>
             <th nzShowCheckbox [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
               (nzCheckedChange)="onItemSelectAll($event)"></th>
-            <th>菜单名</th>
-            <th *ngIf="direction === 'left'">上级菜单名</th>
-            <th>备注</th>
+            <th>用户</th>
+            <th>姓名</th>
+            <th *ngIf="direction === 'left'">班次</th>
+            <th *ngIf="direction === 'left'">用户类型</th>
+            <th *ngIf="direction === 'left'">用户状态</th>
+            <!-- <th *ngIf="direction === 'left'">角色类型</th> -->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
             <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="onItemSelect(data)"></td>
-            <td>{{ data.menu_name }}</td>
-            <td *ngIf="direction === 'left'">{{ data.parent_menu_name }}</td>
-            <td>{{ data.comments }}</td>
+            <td>{{ data.user_name }}</td>
+            <td>{{ data.employee_name }}</td>
+            <td *ngIf="direction === 'left'">{{ data.shift_name }}</td>
+            <td *ngIf="direction === 'left'">{{ data.user_type_name }}</td>
+            <td *ngIf="direction === 'left'">{{ data.status_name }}</td>
           </tr>
         </tbody>
       </nz-table>
