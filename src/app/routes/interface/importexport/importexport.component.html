@@ -1,0 +1,46 @@
+<page-header></page-header>
+<nz-card [nzBordered]="false" nzSize="size">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row *ngIf="expandForm">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">导入/导出</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择导入/导出">
+            <nz-select [(ngModel)]="q.tableName" [nzSize]="size" name="tableName" id="tableName">
+              <nz-option *ngFor="let option of sub_tables.data" [nzLabel]="option.Description" [nzValue]="option.Name">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">导出时间</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.start_end_time" name="start_end_time" id="start_end_time" nzAllowClear
+              [nzSize]="size" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">>
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" id="btn{{i.action_name}}" nz-button type="click"
+        (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+
+  </form>
+
+</nz-card>
