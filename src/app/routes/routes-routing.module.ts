@@ -36,6 +36,7 @@ const routes: Routes = [
       { path: 'print', loadChildren: () => import('./print/print.module').then(m => m.PrintModule) },
       { path: 'system', loadChildren: () => import('./system/system.module').then(m => m.SystemModule) },
       { path: 'interface', loadChildren: () => import('./interface/interface.module').then(m => m.InterfaceModule) },
+      { path: 'wm', loadChildren: () => import('./wm/wm.module').then(m => m.WMModule) },
     ],
   },
   // 全屏布局

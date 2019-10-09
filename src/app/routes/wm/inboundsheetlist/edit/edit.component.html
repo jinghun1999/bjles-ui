@@ -1,0 +1,26 @@
+<nz-card [nzHoverable]="true" [nzBordered]="false" nzTitle="详细信息">
+  <div class="search-buttons">
+    <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+  <div nz-row [nzGutter]="24" *ngIf="expandForm">
+    <nz-form-item class="mb-sm">
+      <nz-form-label nzSpan="2">零件号</nz-form-label>
+      <nz-form-control nzSpan="5">
+        <input nz-input [nzSize]="size" [(ngModel)]="part_no" name="part_no" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <sv-container size="size">
+      <sv label="物料单号">{{ record.ResourceSheetNo }}</sv>
+      <sv label="工厂">{{ record.PlantId }}</sv>
+      <sv label="供应商代码">{{ record.SupplierId }}</sv>
+      <sv label="供应商名称">{{ record.supplier_name }}</sv>
+      <sv label="目标仓库">{{ record.WorkshopId }}</sv>
+
+    </sv-container>
+  </div>
+
+  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail"></st>
+</nz-card>
