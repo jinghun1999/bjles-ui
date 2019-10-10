@@ -1,0 +1,110 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}-月度计划</div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">计划协议号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input
+        nz-input
+        [nzSize]="size"
+        [(ngModel)]="record.PlanAgreementNo"
+        name="PlanAgreementNo"
+        [disabled]="!record.add"
+      />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input
+        nz-input
+        [nzSize]="size"
+        (ngModelChange)="GetSupplierOfPartNo($event, 'supplier')"
+        [(ngModel)]="record.PartNo"
+        name="PartNo"
+        [disabled]="!record.add"
+        required
+      />
+    </nz-form-control>
+
+    <nz-form-label [nzSpan]="2">供应商</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select
+        [(ngModel)]="record.SupplierID"
+        [nzSize]="size"
+        name="supplier"
+        id="supplier"
+        [nzPlaceHolder]="'请选择'"
+        required
+        nzShowSearch="true"
+        [nzLoading]="loading"
+        [nzDisabled]="!record.add"
+      >
+        <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText" [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">交货月份</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-month-picker
+        [(ngModel)]="record.YearMonth"
+        [nzDisabled]="!record.add"
+        required
+        id="YearMonth"
+        name="YearMonth"
+        nzPlaceHolder="请选择"
+      >
+      </nz-month-picker>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">计划员编号</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PlannerCode" name="PlannerCode" [disabled]="!record.add" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">交货数量</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请输入交货数量">
+      <nz-input-number
+        [(ngModel)]="record.MonthMaxQty"
+        name="MonthMaxQty"
+        [nzMin]="1"
+        [nzStep]="1"
+        [nzSize]="size"
+      ></nz-input-number>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm" *ngIf="record.add">
+    <nz-form-label nzSpan="2">配比</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-input-number
+        [(ngModel)]="record.Proportion"
+        [nzDisabled]="!record.add"
+        name="Proportion"
+        [nzMin]="1"
+        [nzStep]="1"
+        [nzSize]="size"
+      ></nz-input-number>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">优先级</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-input-number
+        [(ngModel)]="record.Priority"
+        [nzDisabled]="!record.add"
+        name="Priority"
+        [nzMin]="1"
+        [nzStep]="1"
+        [nzSize]="size"
+      ></nz-input-number>
+    </nz-form-control>
+  </nz-form-item>
+</form>

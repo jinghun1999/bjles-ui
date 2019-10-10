@@ -1,0 +1,8 @@
+<nz-card [nzHoverable]="true" [nzBordered]="false" nzTitle="查看导入月度计划信息">
+  <div class="search-buttons">
+    <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+  <st [data]="dataDetail" size="size" [scroll]="{ x: '1400px'}" [widthMode]="widthMode" [columns]="columnsDetail"></st>
+</nz-card>

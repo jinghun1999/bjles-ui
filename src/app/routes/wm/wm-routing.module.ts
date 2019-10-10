@@ -7,6 +7,8 @@ import { WmInboundrequestlistComponent } from './inboundrequestlist/inboundreque
 import { WmIssuerequestlistComponent } from './issuerequestlist/issuerequestlist.component';
 import { WmIssueconfirmlistComponent } from './issueconfirmlist/issueconfirmlist.component';
 import { WmInboundconfirmlistComponent } from './inboundconfirmlist/inboundconfirmlist.component';
+import { WmWarehouselistComponent } from './warehouselist/warehouselist.component';
+import { WmMonthplanlistComponent } from './monthplanlist/monthplanlist.component';
 
 const routes: Routes = [
 
@@ -16,7 +18,9 @@ const routes: Routes = [
   { path: 'inboundrequestlist', component: WmInboundrequestlistComponent },
   { path: 'issuerequestlist', component: WmIssuerequestlistComponent },
   { path: 'issueconfirmlist', component: WmIssueconfirmlistComponent },
-  { path: 'inboundconfirmlist', component: WmInboundconfirmlistComponent }];
+  { path: 'inboundconfirmlist', component: WmInboundconfirmlistComponent },
+  { path: 'warehouselist', component: WmWarehouselistComponent },
+  { path: 'monthplanlist', component: WmMonthplanlistComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

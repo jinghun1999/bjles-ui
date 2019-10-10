@@ -15,6 +15,10 @@ import { WmInboundsheetlistEditComponent } from './inboundsheetlist/edit/edit.co
 import { WmIssuesheetlistEditComponent } from './issuesheetlist/edit/edit.component';
 import { WmIssuerequestlistEditComponent } from './issuerequestlist/edit/edit.component';
 import { WmIssueconfirmlistEditComponent } from './issueconfirmlist/edit/edit.component';
+import { WmWarehouselistComponent } from './warehouselist/warehouselist.component';
+import { WmMonthplanlistComponent } from './monthplanlist/monthplanlist.component';
+import { WmMonthplanlistEditComponent } from './monthplanlist/edit/edit.component';
+import { WmMonthplanlistViewComponent } from './monthplanlist/view/view.component';
 
 const COMPONENTS = [
   WmTerminallistComponent,
@@ -23,7 +27,9 @@ const COMPONENTS = [
   WmInboundrequestlistComponent,
   WmIssuerequestlistComponent,
   WmIssueconfirmlistComponent,
-  WmInboundconfirmlistComponent];
+  WmInboundconfirmlistComponent,
+  WmWarehouselistComponent,
+  WmMonthplanlistComponent];
 const COMPONENTS_NOROUNT = [
   WmTerminallistEditComponent,
   WmInboundconfirmlistEditComponent,
@@ -31,7 +37,9 @@ const COMPONENTS_NOROUNT = [
   WmInboundsheetlistEditComponent,
   WmIssuesheetlistEditComponent,
   WmIssuerequestlistEditComponent,
-  WmIssueconfirmlistEditComponent];
+  WmIssueconfirmlistEditComponent,
+  WmMonthplanlistEditComponent,
+  WmMonthplanlistViewComponent];
 
 @NgModule({
   imports: [

@@ -5,46 +5,38 @@ import { CommonFunctionService, CommonApiService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { WmInboundsheetlistEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-wm-inboundsheetlist',
-  templateUrl: './inboundsheetlist.component.html',
+  selector: 'app-wm-warehouselist',
+  templateUrl: './warehouselist.component.html',
 })
-export class WmInboundsheetlistComponent implements OnInit {
-  actionPath = 'WMManagement/InboundSheetQueryList.aspx';
-  searchPath = '/wm/GetInboundSheetPager';
+export class WmWarehouselistComponent implements OnInit {
+  actionPath = 'WMManagement/PartStockTransitDetailWarehouseList.aspx';
+  searchPath = '/wm/GetWarehousePager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
-    { title: '', index: ['InboundId'], type: 'checkbox', exported: false },
-    {
-      title: '操作',
-      buttons: [
-        {
-          text: '查看',
-          type: 'modal',
-          click: 'reload',
-          modal: {
-            size: 'xl',
-            component: WmInboundsheetlistEditComponent,
-          },
-        },
-      ],
-    },
-    { title: '物料单号', index: 'ResourceSheetNo', sort: true },
-    { title: '工厂', index: 'PlantId', sort: true },
-    { title: '供应商', index: 'SupplierId', sort: true },
-    { title: '供应商名称', index: 'supplier_name', sort: { key: 'SupplierId' } },
-    { title: '目标仓库', index: 'WorkshopId', sort: true },
-    { title: '单据类型	', index: 'business_type_name', sort: { key: 'BusinessType' } },
+    { title: '', index: ['WMTransitDetailID'], type: 'checkbox', exported: false },
+    { title: '出入库时间', index: 'InOutTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '供应商', index: 'DUNS', sort: true },
+    { title: '供应商名称', index: 'supplier_name', sort: { key: 'DUNS' } },
+    { title: '库位地址', index: 'DLoc', sort: true },
+    { title: '出入箱数', index: 'InOutContainerQty', sort: true },
+    { title: '出入件数', index: 'InOutPartQty', sort: true },
+    { title: '工厂', index: 'PlantID', sort: true },
+    { title: '源仓库', index: 'SourceWorkShopName', sort: { key: 'SourceWorkShopID' } },
+    { title: '目标仓库', index: 'TargetWorkShopName', sort: { key: 'TargetWorkShopID' } },
+    { title: '单据类型', index: 'business_type_name', sort: { key: 'BusinessType' } },
+    { title: '出入库方式', index: 'WMInOutMode_name', sort: { key: 'WMInOutMode' } },
     { title: '移动类型编号', index: 'TransactionCode', sort: true },
-    { title: '移动类型名称', index: 'TransactionName', sort: true },
-    { title: '发布时间', index: 'PublishTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '预期到货时间', index: 'ExpectedArrivalTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: 'Dock编号', index: 'DockId', sort: true },
-    { title: '配送路线代码', index: 'RouteId', sort: true },
-    { title: '创建时间', index: 'create_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '备注', index: 'Remark', sort: true },
+    { title: 'SAP移动类型编码', index: 'TransactionCodeSap', sort: true },
+
+    { title: '物料单号', index: 'RunSheetNO', sort: true },
+    { title: '请求单号', index: 'RequestSheetNo', sort: true },
+    { title: '确认单号', index: 'ConfirmSheetNo', sort: true },
+    { title: '箱型', index: 'ContainerType', sort: true },
+
+    { title: '操作员账号', index: 'InOutUserName', sort: true },
+    { title: '操作员', index: 'InOutEmployeeName', sort: { key: 'InOutUserName' } },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -59,14 +51,15 @@ export class WmInboundsheetlistComponent implements OnInit {
     plant: '',
     workshop: [],
     supplier: [],
-    PublishTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
+    WMInOutMode: [],
+    InOutTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   data: any[] = [];
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_supplier = new ItemData();
   sub_wm_tran_sheet_type = new ItemData();
+  sub_WMInOutMode = new ItemData();
 
   constructor(
     private http: _HttpClient,
@@ -191,7 +184,7 @@ export class WmInboundsheetlistComponent implements OnInit {
   }
 
   Create() {
-    // this.modal.create(WmInboundsheetlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    // this.modal.create(WmIssueconfirmlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
     //   if (res) this.st.reload();
     // });
   }
@@ -236,10 +229,8 @@ export class WmInboundsheetlistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
     }
-    if (this.q.PublishTime !== undefined && this.q.PublishTime.length === 2)
-      this.q.PublishTime = this.cfun.getSelectDate(this.q.PublishTime);
-    if (this.q.ExpectedArrivalTime !== undefined && this.q.ExpectedArrivalTime.length === 2)
-      this.q.ExpectedArrivalTime = this.cfun.getSelectDate(this.q.ExpectedArrivalTime);
+    if (this.q.InOutTime !== undefined && this.q.InOutTime.length === 2)
+      this.q.InOutTime = this.cfun.getSelectDate(this.q.InOutTime);
 
     this.http
       .post(this.searchPath, this.q)
