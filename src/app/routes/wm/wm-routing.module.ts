@@ -9,6 +9,12 @@ import { WmIssueconfirmlistComponent } from './issueconfirmlist/issueconfirmlist
 import { WmInboundconfirmlistComponent } from './inboundconfirmlist/inboundconfirmlist.component';
 import { WmWarehouselistComponent } from './warehouselist/warehouselist.component';
 import { WmMonthplanlistComponent } from './monthplanlist/monthplanlist.component';
+import { WmPendinglistComponent } from './pendinglist/pendinglist.component';
+import { WmDiffwriteoffComponent } from './diffwriteoff/diffwriteoff.component';
+import { WmMovewhlistComponent } from './movewhlist/movewhlist.component';
+import { WmMovediffwhlistComponent } from './movediffwhlist/movediffwhlist.component';
+import { WmStockwarninglistComponent } from './stockwarninglist/stockwarninglist.component';
+import { WmReturnlistComponent } from './returnlist/returnlist.component';
 
 const routes: Routes = [
 
@@ -20,7 +26,13 @@ const routes: Routes = [
   { path: 'issueconfirmlist', component: WmIssueconfirmlistComponent },
   { path: 'inboundconfirmlist', component: WmInboundconfirmlistComponent },
   { path: 'warehouselist', component: WmWarehouselistComponent },
-  { path: 'monthplanlist', component: WmMonthplanlistComponent }];
+  { path: 'monthplanlist', component: WmMonthplanlistComponent },
+  { path: 'pendinglist', component: WmPendinglistComponent },
+  { path: 'diffwriteoff', component: WmDiffwriteoffComponent },
+  { path: 'movewhlist', component: WmMovewhlistComponent },
+  { path: 'movediffwhlist', component: WmMovediffwhlistComponent },
+  { path: 'stockwarninglist', component: WmStockwarninglistComponent },
+  { path: 'returnlist', component: WmReturnlistComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

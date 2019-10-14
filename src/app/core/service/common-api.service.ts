@@ -26,6 +26,22 @@ export class CommonApiService {
       }
     });
   }
+  getPlantOfDiff(plant: string, type: string, due: string) {
+    return new Observable(observe => {
+      const cache_name = `GetPlantsOfDiffplant=${plant}&type=${type}&due=${due}`;
+      const cache_data = this.cache.getNone(cache_name);
+      if (cache_data === undefined || cache_data === null || cache_data === '' || cache_data === []) {
+        this.http.get(`/System/GetPlantsOfDiff?plant=${plant}&type=${type}&due=${due}`).subscribe((res: any) => {
+          this.cache.set(cache_name, res.data, { type: 's', expire: 500 });
+          observe.next(res.data);
+          // 如果有错误，通过 error() 方法将错误返回
+          // observe.error(res.message);
+        });
+      } else {
+        observe.next(cache_data);
+      }
+    });
+  }
   getCodes(codes: string) {
     return new Observable(observe => {
       this.http.get('/system/getCodeEnums?codes=' + codes).subscribe((res: any) => {

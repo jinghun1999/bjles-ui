@@ -1,0 +1,109 @@
+<div class="modal-header">
+  <div class="modal-title">
+    {{ title }}-待处理物料
+  </div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.PlantID" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间*</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.Warehouse" [nzSize]="size" name="workshop" id="workshop" nzShowSearch="true"
+        nzAllowClear="false" required [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">零件号*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" (ngModelChange)="partChange($event)" [(ngModel)]="record.PartNumber"
+        name="PartNumber" [disabled]="!record.add" required />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件名称</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PartName" name="PartName" [disabled]="true" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">库位</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.ULoc" name="ULoc" [disabled]="true" />
+    </nz-form-control>
+    <nz-form-label [nzSpan]="2">供应商</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择供应商">
+      <nz-select [(ngModel)]="record.SupplierID" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+        (ngModelChange)="supplierChange($event)" required nzShowSearch="true" [nzLoading]="loading"
+        [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText" [nzValue]="option.itemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">可疑箱数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-input-number [(ngModel)]="record.PackQty" (ngModelChange)="PackQtyChange($event)" name="PackQty" [nzMin]="1"
+        [nzStep]="1" [nzSize]="size" required></nz-input-number>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">标准包装数</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PackStdQty" name="PackStdQty" [disabled]="true" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">库存数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.CurrentParts" name="CurrentParts" [disabled]="true" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">散件数*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-input-number [(ngModel)]="record.FragParts" (ngModelChange)="FragPartsChange($event)" required
+        name="FragParts" [nzMin]="0" [nzMax]="record.PackStdQty" [nzStep]="1" [nzSize]="size"></nz-input-number>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">可疑数量*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PartQty" name="PartQty" required [disabled]="true" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">问题分类*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.IssuesClass" [nzSize]="size" name="IssuesClass" id="IssuesClass"
+        [nzShowSearch]="true" [nzDisabled]="!record.add" required>
+        <nz-option *ngFor="let i of sub_wm_suspicious_issuesclass.data;" [nzLabel]="i.text" [nzValue]="i.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">失效症状</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.FailureSymptom" name="FailureSymptom" />
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">故障部位及备注</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <textarea rows="4" nz-input [(ngModel)]="record.Remark" name='Remark'></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

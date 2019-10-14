@@ -1,0 +1,153 @@
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
+            <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)">
+              <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
+            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
+            <nz-select [(ngModel)]="q.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" (nzOpenChange)="getListItems($event,'supplier')" nzShowSearch="true" nzAllowClear
+              [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
+                [nzValue]="option.itemValue">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">封存条</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.SealingStripCode" name="SealingStripCode" id="SealingStripCode"
+              [nzSize]="size" placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">问题分类</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.IssuesClass" [nzSize]="size" name="IssuesClass" id="IssuesClass"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'IssuesClass')"
+              nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_suspicious_issuesclass.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">是否确认</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.IsConfirmed" [nzSize]="size" name="IsConfirmed" id="IsConfirmed"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'wm_ISConfirmed')"
+              nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_ISConfirmed.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">解封情况</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.UnlockStatus" [nzSize]="size" name="UnlockStatus" id="UnlockStatus"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true"
+              (nzOpenChange)="getCodeDetails($event,'wm_suspicious_unlock_status')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_suspicious_unlock_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">退货状态</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.ReturnStatus" [nzSize]="size" name="returnStatus" id="returnStatus"
+              [nzPlaceHolder]="'请选择'" [nzShowSearch]="true"
+              (nzOpenChange)="getCodeDetails($event,'wm_suspicious_return_status')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_suspicious_return_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="16">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="4">创建日期</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <nz-range-picker [(ngModel)]="q.CreateTime" name="CreateTime" id="CreateTime" nzAllowClear [nzSize]="size"
+              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
+            </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <div class="search-buttons">
+      <button *ngFor="let i of dataAction;" nz-button type="click" (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+    </div>
+  </form>
+  <ng-container>
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '2100px'}" [data]="data" [loading]="loading"
+      (change)="stChange($event)" [page]="pages">
+    </st>
+  </ng-container>
+</nz-card>

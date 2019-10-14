@@ -19,6 +19,21 @@ import { WmWarehouselistComponent } from './warehouselist/warehouselist.componen
 import { WmMonthplanlistComponent } from './monthplanlist/monthplanlist.component';
 import { WmMonthplanlistEditComponent } from './monthplanlist/edit/edit.component';
 import { WmMonthplanlistViewComponent } from './monthplanlist/view/view.component';
+import { WmPendinglistComponent } from './pendinglist/pendinglist.component';
+import { WmPendinglistEditComponent } from './pendinglist/edit/edit.component';
+import { WmPendinglistViewComponent } from './pendinglist/view/view.component';
+import { WmPendinglistUnblockComponent } from './pendinglist/unblock/unblock.component';
+import { WmDiffwriteoffComponent } from './diffwriteoff/diffwriteoff.component';
+import { WmDiffwriteoffViewComponent } from './diffwriteoff/view/view.component';
+import { WmDiffwriteoffEditComponent } from './diffwriteoff/edit/edit.component';
+import { WmMovewhlistComponent } from './movewhlist/movewhlist.component';
+import { WmMovediffwhlistComponent } from './movediffwhlist/movediffwhlist.component';
+import { WmMovewheditComponent } from './movewhedit/movewhedit.component';
+import { WmMovewhviewComponent } from './movewhview/movewhview.component';
+import { WmStockwarninglistComponent } from './stockwarninglist/stockwarninglist.component';
+import { WmReturnlistComponent } from './returnlist/returnlist.component';
+import { WmReturnlistEditComponent } from './returnlist/edit/edit.component';
+import { WmReturnlistViewComponent } from './returnlist/view/view.component';
 
 const COMPONENTS = [
   WmTerminallistComponent,
@@ -29,7 +44,13 @@ const COMPONENTS = [
   WmIssueconfirmlistComponent,
   WmInboundconfirmlistComponent,
   WmWarehouselistComponent,
-  WmMonthplanlistComponent];
+  WmMonthplanlistComponent,
+  WmPendinglistComponent,
+  WmDiffwriteoffComponent,
+  WmMovewhlistComponent,
+  WmMovediffwhlistComponent,
+  WmStockwarninglistComponent,
+  WmReturnlistComponent];
 const COMPONENTS_NOROUNT = [
   WmTerminallistEditComponent,
   WmInboundconfirmlistEditComponent,
@@ -39,7 +60,16 @@ const COMPONENTS_NOROUNT = [
   WmIssuerequestlistEditComponent,
   WmIssueconfirmlistEditComponent,
   WmMonthplanlistEditComponent,
-  WmMonthplanlistViewComponent];
+  WmMonthplanlistViewComponent,
+  WmPendinglistEditComponent,
+  WmPendinglistViewComponent,
+  WmPendinglistUnblockComponent,
+  WmDiffwriteoffViewComponent,
+  WmDiffwriteoffEditComponent,
+  WmMovewheditComponent,
+  WmMovewhviewComponent,
+  WmReturnlistEditComponent,
+  WmReturnlistViewComponent];
 
 @NgModule({
   imports: [

@@ -1,0 +1,14 @@
+<nz-card [nzHoverable]="true" [nzBordered]="false" nzTitle="详细信息">
+  <div nz-row [nzGutter]="24" *ngIf="expandForm">
+
+    <sv-container size="size">
+      <sv label="单号">{{ record.SheetNo }}</sv>
+      <sv label="工厂">{{ record.PlantId }}</sv>
+      <sv label="车间">{{ record.SourceWorkshop }}</sv>
+      <sv label="备注">{{ record.Remark }}</sv>
+
+    </sv-container>
+  </div>
+
+  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail"></st>
+</nz-card>
