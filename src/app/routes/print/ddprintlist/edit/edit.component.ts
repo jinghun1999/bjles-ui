@@ -35,13 +35,14 @@ export class PrintDdprintlistEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // tslint:disable-next-line: prefer-conditional-expression
     if (this.record.add === true) {
       this.title = '添加';
+    } else {
+      this.title = '编辑';
+      // this.record.supplier = this.record.supplier + '';
+      // this.record.route = this.record.route + '';
     }
-    //  else {
-    //   this.record.supplier = this.record.supplier + '';
-    //   this.record.route = this.record.route + '';
-    // }
 
     this.capi.getPlant().subscribe(
       (res: any) => {

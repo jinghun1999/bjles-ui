@@ -30,12 +30,14 @@ export class SupplierWorkdaymodellistEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // tslint:disable-next-line: prefer-conditional-expression
     if (this.record.add === true) {
       this.title = '添加';
       this.record.Periods = '0';
       const today = new Date().toLocaleDateString();
       this.record.workday = today;
     } else {
+      this.title = '编辑';
       this.record.mode_id = this.record.mode_id + '';
     }
 
