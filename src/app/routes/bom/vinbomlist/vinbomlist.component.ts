@@ -124,8 +124,9 @@ export class BomVinbomlistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value;
+        this.getData();
         break;
     }
   }
@@ -158,6 +159,7 @@ export class BomVinbomlistComponent implements OnInit {
     }
 
     this.q.page.export = true;
+    this.initWhere();
     this.http
       .post(this.searchPath, this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -178,6 +180,7 @@ export class BomVinbomlistComponent implements OnInit {
       );
 
     this.q.page.export = false;
+    this.clrearWhere();
   }
 
   search() {
@@ -186,14 +189,7 @@ export class BomVinbomlistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-
-    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
-      this.q.workshop = tmp_workshops;
-    }
-    if (this.q.EntryTime !== undefined && this.q.EntryTime.length === 2) {
-      this.q.create_time = this.cfun.getSelectDate(this.q.create_time);
-    }
+    this.initWhere();
 
     this.http
       .post(this.searchPath, this.q)
@@ -211,6 +207,20 @@ export class BomVinbomlistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
-    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
+    this.clrearWhere();
+  }
+  initWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+    if (this.q.EntryTime !== undefined && this.q.EntryTime.length === 2) {
+      this.q.create_time = this.cfun.getSelectDate(this.q.create_time);
+    }
+  }
+  clrearWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+    if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
   }
 }

@@ -5,10 +5,10 @@ import { STColumn, STWidthMode } from '@delon/abc';
 import { CommonApiService } from '@core';
 
 @Component({
-  selector: 'app-wm-returnlist-view',
+  selector: 'app-wm-selfsheetlist-view',
   templateUrl: './view.component.html',
 })
-export class WmReturnlistViewComponent implements OnInit {
+export class WmSelfsheetlistViewComponent implements OnInit {
   constructor(
     private modal: NzModalRef,
     public msgSrv: NzMessageService,
@@ -26,13 +26,16 @@ export class WmReturnlistViewComponent implements OnInit {
   widthMode: STWidthMode = {};
   columnsDetail: STColumn[] = [
     { title: '序号', type: 'no' },
-    { title: '封存条', index: 'SealingStripCode' },
     { title: '零件号', index: 'PartNumber' },
     { title: '零件名称', index: 'PartName' },
-    { title: '供应商代码', index: 'SupplierId' },
-    { title: '供应商名称', index: 'SupplierName' },
-    { title: '剩余封存件数', index: 'lock_qty' },
-    { title: '退货件数', index: 'ReturnPartQty' },
+    { title: '供应商', index: 'SupplierID' },
+    { title: '需求箱数', index: 'MovedPackQty' },
+    { title: '标准包装数', index: 'PackingQty' },
+    { title: '需求散件数', index: 'MovedFragpartQty' },
+    { title: '需求总件数', index: 'MovedPartQty' },
+    { title: '单位', index: 'Unit' },
+    { title: '源库位', index: 'Rdc_Dloc' },
+    { title: '目的库位', index: 'Dloc' },
   ];
   // PackCountSum: any = 0;
 
@@ -43,7 +46,7 @@ export class WmReturnlistViewComponent implements OnInit {
     this.getData();
   }
   getData() {
-    const url = '/wm/GetReturnDetailPager';
+    const url = '/wm/GetselfsheetDetailPager';
     this.http.post(url, this.record).subscribe(
       res => {
         this.dataDetail = res.data;

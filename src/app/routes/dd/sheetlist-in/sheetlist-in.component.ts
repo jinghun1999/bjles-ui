@@ -129,15 +129,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
 
   getData() {
     this.loading = true;
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-
-    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
-      this.q.workshop = tmp_workshops;
-    }
-
-    this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
-    this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
-    this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
+    this.initWhere();
 
     this.http
       .post('/dd/GetRunsheetPager', this.q)
@@ -155,9 +147,23 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
         },
         (err: any) => this.msg.error('系统异常'),
       );
-    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
+    this.clrearWhere();
   }
+  initWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
 
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+
+    this.q.publish_time = this.cfun.getSelectDate(this.q.publish_time);
+    this.q.expected_arrival_time = this.cfun.getSelectDate(this.q.expected_arrival_time);
+    this.q.actual_arrival_time = this.cfun.getSelectDate(this.q.actual_arrival_time);
+  }
+  clrearWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+    if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
+  }
   stChange(e: STChange) {
     switch (e.type) {
       case 'checkbox':
@@ -176,8 +182,9 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value;
+        this.getData();
         break;
     }
   }
@@ -296,6 +303,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
     }
 
     this.q.page.export = true;
+    this.initWhere();
     this.http
       .post('/dd/GetRunsheetPager', this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -316,6 +324,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
       );
 
     this.q.page.export = false;
+    this.clrearWhere();
   }
 
   ngOnDestroy() {

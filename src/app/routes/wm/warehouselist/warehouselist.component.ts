@@ -196,6 +196,7 @@ export class WmWarehouselistComponent implements OnInit {
     }
 
     this.q.page.export = true;
+    this.initWhere();
     this.http
       .post(this.searchPath, this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -216,6 +217,7 @@ export class WmWarehouselistComponent implements OnInit {
       );
 
     this.q.page.export = false;
+    this.clrearWhere();
   }
 
   search() {
@@ -224,13 +226,7 @@ export class WmWarehouselistComponent implements OnInit {
 
   getData() {
     this.loading = true;
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-
-    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
-      this.q.workshop = tmp_workshops;
-    }
-    if (this.q.InOutTime !== undefined && this.q.InOutTime.length === 2)
-      this.q.InOutTime = this.cfun.getSelectDate(this.q.InOutTime);
+    this.initWhere();
 
     this.http
       .post(this.searchPath, this.q)
@@ -248,6 +244,20 @@ export class WmWarehouselistComponent implements OnInit {
         },
         (err: any) => this.msg.error('系统异常'),
       );
-    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
+    this.clrearWhere();
+  }
+  initWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+
+    if (this.q.InOutTime !== undefined && this.q.InOutTime.length === 2)
+      this.q.InOutTime = this.cfun.getSelectDate(this.q.InOutTime);
+  }
+  clrearWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+    if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
   }
 }

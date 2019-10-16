@@ -34,6 +34,11 @@ import { WmStockwarninglistComponent } from './stockwarninglist/stockwarninglist
 import { WmReturnlistComponent } from './returnlist/returnlist.component';
 import { WmReturnlistEditComponent } from './returnlist/edit/edit.component';
 import { WmReturnlistViewComponent } from './returnlist/view/view.component';
+import { WmSelfsheetlistComponent } from './selfsheetlist/selfsheetlist.component';
+import { WmSelfsheetlistViewComponent } from './selfsheetlist/view/view.component';
+import { WmSelfsheetlistEditComponent } from './selfsheetlist/edit/edit.component';
+import { WmTrantypelistComponent } from './trantypelist/trantypelist.component';
+import { WmTrantypelistEditComponent } from './trantypelist/edit/edit.component';
 
 const COMPONENTS = [
   WmTerminallistComponent,
@@ -50,7 +55,9 @@ const COMPONENTS = [
   WmMovewhlistComponent,
   WmMovediffwhlistComponent,
   WmStockwarninglistComponent,
-  WmReturnlistComponent];
+  WmReturnlistComponent,
+  WmSelfsheetlistComponent,
+  WmTrantypelistComponent];
 const COMPONENTS_NOROUNT = [
   WmTerminallistEditComponent,
   WmInboundconfirmlistEditComponent,
@@ -69,7 +76,10 @@ const COMPONENTS_NOROUNT = [
   WmMovewheditComponent,
   WmMovewhviewComponent,
   WmReturnlistEditComponent,
-  WmReturnlistViewComponent];
+  WmReturnlistViewComponent,
+  WmSelfsheetlistViewComponent,
+  WmSelfsheetlistEditComponent,
+  WmTrantypelistEditComponent];
 
 @NgModule({
   imports: [

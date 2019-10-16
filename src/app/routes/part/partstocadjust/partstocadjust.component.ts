@@ -151,6 +151,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
     }
 
     this.q.page.export = true;
+    this.initWhere();
     this.http
       .post(this.searchPath, this.q)
       .pipe(tap(() => (this.loading = false)))
@@ -171,6 +172,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
       );
 
     this.q.page.export = false;
+    this.clrearWhere();
   }
 
   search() {
@@ -179,11 +181,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
 
   getData() {
     this.loading = true;
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-
-    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
-      this.q.workshop = tmp_workshops;
-    }
+    this.initWhere();
 
     this.http
       .post(this.searchPath, this.q)
@@ -201,9 +199,19 @@ pages: STPage = new PagerConfig();  expandForm = true;
         },
         (err: any) => this.msg.error('系统异常'),
       );
-    if (tmp_workshops === this.q.workshop) this.q.workshop = [];
+    this.clrearWhere();
   }
+  initWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
 
+    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
+      this.q.workshop = tmp_workshops;
+    }
+  }
+  clrearWhere() {
+    const tmp_workshops = this.sub_workshops.map(p => p.value);
+    if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
+  }
   getListItems(value: any, type: any): void {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);

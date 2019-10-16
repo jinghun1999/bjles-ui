@@ -16,37 +16,35 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
-            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" nzShowSearch="true" nzAllowClear>
-              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
-            <nz-select [(ngModel)]="q.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" (nzOpenChange)="getListItems($event,'supplier')" nzShowSearch="true" nzAllowClear
-              [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
-                [nzValue]="option.itemValue">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">退货单号</nz-form-label>
+          <nz-form-label [nzSpan]="8">源仓库</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.ReturnSheetCode" name="ReturnSheetCode" id="ReturnSheetCode" [nzSize]="size"
+            <nz-select [(ngModel)]="q.workshop_s" [nzSize]="size" name="workshop_s" id="workshop_s"
+              [nzPlaceHolder]="'请选择'" nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops_s" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">目标仓库</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.workshop_t" [nzSize]="size" name="workshop_t" id="workshop_t"
+              [nzPlaceHolder]="'请选择'" nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops_t" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">移动类型编号</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.TransactionCode" name="TransactionCode" id="TransactionCode" [nzSize]="size"
               placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
@@ -54,18 +52,9 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">零件号</nz-form-label>
+          <nz-form-label [nzSpan]="8">SAP移动类型编码</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.part_no" name="part_no" id="part_no" [nzSize]="size" placeholder="请输入" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">封存条</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.SealingStripCode" name="SealingStripCode" id="SealingStripCode"
+            <input nz-input [(ngModel)]="q.TransactionCodeSap" name="TransactionCodeSap" id="TransactionCodeSap"
               [nzSize]="size" placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
@@ -73,36 +62,35 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">单据状态</nz-form-label>
+          <nz-form-label [nzSpan]="8">移动类型名称</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.ConfigName" name="ConfigName" id="ConfigName" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">单据类型</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.Status" [nzSize]="size" name="Status" id="Status" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'wm_return_status')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_wm_return_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'wm_tran_sheet_type')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_tran_sheet_type.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
 
-      <div nz-col [nzSpan]="16">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="4">退货时间</nz-form-label>
-          <nz-form-control [nzSpan]="20">
-            <nz-range-picker [(ngModel)]="q.ReturnTime" name="ReturnTime" id="ReturnTime" nzAllowClear [nzSize]="size"
-              [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
-            </nz-range-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <!-- <div nz-col [nzSpan]="8">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
           </nz-form-control>
         </nz-form-item>
-      </div> -->
+      </div>
 
     </div>
 
@@ -113,7 +101,7 @@
     </div>
   </form>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '2100px'}" [data]="data" [loading]="loading"
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '3600px'}" [data]="data" [loading]="loading"
       (change)="stChange($event)" [page]="pages">
     </st>
   </ng-container>

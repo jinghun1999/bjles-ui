@@ -5,16 +5,15 @@ import { CommonFunctionService, CommonApiService, ExpHttpService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { WmMovewhviewComponent } from '../movewhview/movewhview.component';
-import { WmMovewheditComponent } from '../movewhedit/movewhedit.component';
+import { WmTrantypelistEditComponent } from './edit/edit.component';
 
 @Component({
-  selector: 'app-wm-movediffwhlist',
-  templateUrl: './movediffwhlist.component.html',
+  selector: 'app-wm-trantypelist',
+  templateUrl: './trantypelist.component.html',
 })
-export class WmMovediffwhlistComponent implements OnInit {
-  actionPath = 'WMManagement/MoveWHList.aspx';
-  searchPath = '/wm/GetMoveWHPager';
+export class WmTrantypelistComponent implements OnInit {
+  actionPath = 'Warehouse/WMTranTypeList.aspx';
+  searchPath = '/wm/GetTranTypePager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: ['Id'], type: 'checkbox', exported: false },
@@ -22,38 +21,67 @@ export class WmMovediffwhlistComponent implements OnInit {
       title: '操作',
       buttons: [
         {
-          text: '编辑',
-          iif: item => item.Status === 0,
+          text: '复制',
+          // iif: item => item.Status === 0,
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: WmMovewheditComponent,
+            component: WmTrantypelistEditComponent,
+            params: (record: STData) => {
+              record.add = true;
+              return record;
+            },
           },
         },
         {
-          text: '查看',
-          iif: item => item.Status !== 0,
+          text: '编辑',
+          //  iif: item => item.Status !== 0,
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: WmMovewhviewComponent,
+            component: WmTrantypelistEditComponent,
           },
         },
       ],
     },
-    { title: '移库单号', index: 'MoveWHNo', sort: true },
-    { title: '创单时间', index: 'CreateTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '修改时间', index: 'ModifyTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
-    { title: '工厂', index: 'PlantID', sort: true },
-    { title: '源仓库', index: 'SourceWH', sort: true },
-    { title: '目的仓库', index: 'TargetWH', sort: true },
-    { title: '操作原因', index: 'Reason', sort: true },
-    { title: '状态', index: 'status_name', sort: true },
-    { title: '备注', index: 'Remark', sort: true },
-    { title: '创单人', index: 'CreateUser_name', sort: true },
-    { title: '修改人', index: 'ModifyUser_name', sort: true },
+    { title: '移动类型名称', index: 'ConfigName', sort: true },
+    { title: '移动类型编码', index: 'TransactionCode', sort: true },
+    { title: 'SAP移动类型编码', index: 'TransactionCodeSap', sort: true },
+    { title: '工厂', index: 'PlantId', sort: true },
+
+    { title: 'SAP源车间模式', index: 'SapSourceMode_name', sort: true },
+    { title: 'SAP源车间固定值', index: 'SapSourceValue', sort: true },
+    { title: 'SAP目标车间模式', index: 'SapTargetMode_name', sort: true },
+    { title: 'SAP目标车间固定值', index: 'SapTargetValue', sort: true },
+    { title: '源仓库', index: 'SourceWarehouse', sort: true },
+    { title: '目标仓库', index: 'TargetWarehouse', sort: true },
+    { title: '单据类型', index: 'BusinessType_name', sort: true },
+
+    { title: '是否预置', index: 'IsPreset', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '创建入库单', index: 'IsCreateInboundSheet', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '创建出库单', index: 'IsCreateIssueSheet', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '拆单', index: 'IsNeedSplitSheet', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '收货确认', index: 'IsInboundConfirm', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '发货确认(备件即出库)', index: 'IsDirectIssue', sort: true, type: 'yn', yn: { mode: 'text' } },
+    {
+      title: '发货确认(备件后再出库)',
+      index: 'IsPrepareAndIssue',
+      sort: true,
+      type: 'yn',
+      yn: { mode: 'text' },
+    },
+    { title: '波次收发', index: 'IsWaveOperate', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '入库扫箱', index: 'IsInScanBox', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '出库扫箱', index: 'IsOutScanBox', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '备料扫箱', index: 'IsPreparePartsScanBox', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '扣减源', index: 'IsDeductionSource', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '增加目标', index: 'IsIncreaseTarget', sort: true, type: 'yn', yn: { mode: 'text' } },
+    { title: '传帐', index: 'IsTransAccount', sort: true, type: 'yn', yn: { mode: 'text' } },
+
+    { title: '上次修改时间', index: 'ModifyDate', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '说明', index: 'Remark', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -61,7 +89,6 @@ export class WmMovediffwhlistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
 
   q: any = {
     page: new PageInfo(),
@@ -69,14 +96,13 @@ export class WmMovediffwhlistComponent implements OnInit {
     plant: '',
     workshop_s: [],
     workshop_t: [],
-    CreateTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   data: any[] = [];
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops_s = [];
   sub_workshops_t = [];
-  sub_wm_move_wh_status = new ItemData();
+  sub_wm_tran_sheet_type = new ItemData();
 
   // dataPrints: any[] = [];
 
@@ -230,8 +256,12 @@ export class WmMovediffwhlistComponent implements OnInit {
       // for (let j = 0, len = res1.sheet1[0].length; j < len; j++) {
       //   res1.sheet1[0][j] = this.columns.find(p => p.title === res1.sheet1[0][j]).index;
       // }
+      const ct = [];
+      for (let j = 0, len = res1.sheet1[0].length; j < len; j++) {
+        ct.push({ text: res1.sheet1[0][j], val: this.columns.find(p => p.title === res1.sheet1[0][j]).index });
+      }
       this.http
-        .post('/wm/MoveWHImport', res1)
+        .post('/wm/TranTypeImport', { text: ct, val: res1 })
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -252,27 +282,26 @@ export class WmMovediffwhlistComponent implements OnInit {
   }
 
   Confirm(): void {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择需要确认的记录！');
-      return;
-    } else {
-      this.loading = true;
-
-      this.http
-        .post('/wm/MoveWHConfirm', this.selectedRows)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.msg.success(res.data);
-              this.st.reload();
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    }
+    // if (this.selectedRows.length === 0) {
+    //   this.msg.error('请选择需要确认的记录！');
+    //   return;
+    // } else {
+    //   this.loading = true;
+    //   this.http
+    //     .post('/wm/TranTypeConfirm', this.selectedRows)
+    //     .pipe(tap(() => (this.loading = false)))
+    //     .subscribe(
+    //       res => {
+    //         if (res.successful) {
+    //           this.msg.success(res.data);
+    //           this.st.reload();
+    //         } else {
+    //           this.msg.error(res.message);
+    //         }
+    //       },
+    //       (err: any) => this.msg.error('系统异常'),
+    //     );
+    // }
   }
 
   print() {
@@ -303,7 +332,7 @@ export class WmMovediffwhlistComponent implements OnInit {
   }
 
   Download() {
-    this.httpService.downLoadFile('/assets/tpl/MoveWH_import.xlsx', 'MoveWHTPL');
+    this.httpService.downLoadFile('/assets/tpl/TranType_import.xlsx', 'TranTypeTPL');
   }
 
   Delete(): void {
@@ -314,7 +343,7 @@ export class WmMovediffwhlistComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/wm/MoveWHDelete', this.selectedRows)
+        .post('/wm/TranTypeDelete', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -335,9 +364,25 @@ export class WmMovediffwhlistComponent implements OnInit {
   }
 
   Create() {
-    this.modal.create(WmMovewheditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(WmTrantypelistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
+  }
+  initWhere() {
+    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
+    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
+    if (this.q.workshop_s === '' || this.q.workshop_s === undefined || this.q.workshop_s.length === 0) {
+      this.q.workshop_s = tmp_workshops_s;
+    }
+    if (this.q.workshop_t === '' || this.q.workshop_t === undefined || this.q.workshop_t.length === 0) {
+      this.q.workshop_t = tmp_workshops_t;
+    }
+  }
+  clrearWhere() {
+    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
+    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
+    if (tmp_workshops_s.toString() === this.q.workshop_s.toString()) this.q.workshop_s = [];
+    if (tmp_workshops_t.toString() === this.q.workshop_t.toString()) this.q.workshop_t = [];
   }
 
   export() {
@@ -345,20 +390,34 @@ export class WmMovediffwhlistComponent implements OnInit {
       this.msg.error('请输入条件，查询出数据方可导出数据！');
       return false;
     }
+    this.initWhere();
 
     this.q.page.export = true;
-    this.initWhere();
     this.http
       .post(this.searchPath, this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
-            this.st.export(res.data.rows, {
-              callback: this.cfun.callbackOfExport,
-              filename: 'result.xlsx',
-              sheetname: 'sheet1',
+            const currentColumn: STColumn[] = this.columns.filter(
+              p => (p.exported === undefined || p.exported) && p.buttons === undefined,
+            );
+            const data = [currentColumn.map(i => i.title)];
+            res.data.rows.forEach(i => data.push(currentColumn.map(c => i[c.index as string])));
+            this.xlsx.export({
+              sheets: [
+                {
+                  data,
+                  name: 'sheet1',
+                },
+              ],
             });
+            // this.cfun.downErrorExcel(res.data.column, res.data.ExportDT, 'result.xlsx');
+            // this.st.export(res.data.rows, {
+            //   callback: this.cfun.callbackOfExport,
+            //   filename: 'result.xlsx',
+            //   sheetname: 'sheet1',
+            // });
           } else {
             this.msg.error(res.message);
             this.loading = false;
@@ -375,30 +434,10 @@ export class WmMovediffwhlistComponent implements OnInit {
     this.getData();
   }
 
-  initWhere() {
-    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
-    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
-    if (this.q.workshop_s === '' || this.q.workshop_s === undefined || this.q.workshop_s.length === 0) {
-      this.q.workshop_s = tmp_workshops_s;
-    }
-    if (this.q.workshop_t === '' || this.q.workshop_t === undefined || this.q.workshop_t.length === 0) {
-      this.q.workshop_t = tmp_workshops_t;
-    }
-
-    if (this.q.CreateTime !== undefined && this.q.CreateTime.length === 2)
-      this.q.CreateTime = this.cfun.getSelectDate(this.q.CreateTime);
- }
-  clrearWhere() {
-    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
-    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
-    if (tmp_workshops_s.toString() === this.q.workshop_s.toString()) this.q.workshop_s = [];
-    if (tmp_workshops_t.toString() === this.q.workshop_t.toString()) this.q.workshop_t = [];
-  }
-
   getData() {
     this.loading = true;
-    this.initWhere();
 
+    this.initWhere();
 
     this.http
       .post(this.searchPath, this.q)

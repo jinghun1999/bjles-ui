@@ -1,0 +1,158 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}-移动类型</div>
+</div>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <div>
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </div>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">移动类型名称*</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请输入移动类型">
+      <input nz-input [nzSize]="size" required [(ngModel)]="record.ConfigName" name="cf_name" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">SAP源车间模式</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.SapSourceMode" [nzSize]="size" name="mode_s" id="mode_s" [nzShowSearch]="true"
+        [nzDisabled]="!record.add">
+        <nz-option *ngFor="let i of sub_SAPMode.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">SAP目标车间模式</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.SapTargetMode" [nzSize]="size" name="mode_t" id="mode_t" [nzShowSearch]="true"
+        [nzDisabled]="!record.add">
+        <nz-option *ngFor="let i of sub_SAPMode.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请选择工厂">
+      <nz-select [(ngModel)]="record.PlantId" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add" required>
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">源车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择源车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.SourceWarehouse" [nzSize]="size" name="wh_s" id="wh_s" nzShowSearch="true"
+        nzAllowClear="false" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">目标车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择目标车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.TargetWarehouse" [nzSize]="size" name="wh_t" id="wh_t" nzShowSearch="true"
+        nzAllowClear="false" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">单据类型*</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [(ngModel)]="record.BusinessType" [nzSize]="size" name="btype" id="btype" [nzShowSearch]="true"
+        [nzDisabled]="!record.add" required>
+        <nz-option *ngFor="let i of sub_wm_tran_sheet_type.data" [nzLabel]="i.text" [nzValue]="i.val"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">SAP类型编码*</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请输入SAP移动类型编码*">
+      <input nz-input [nzSize]="size" required [(ngModel)]="record.TransactionCodeSap" name="t_codeSap" />
+    </nz-form-control>
+
+    <!-- <nz-form-label nzSpan="2"></nz-form-label> -->
+    <nz-form-control nzSpan="7">
+      <label nz-checkbox [(ngModel)]="record.IsPreset" [nzDisabled]="!record.add" name="IsPreset">是否预置</label>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">移动类型编码*</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请输入移动类型编码*">
+      <input nz-input [nzSize]="size" required [(ngModel)]="record.TransactionCode" name="t_code"
+        [disabled]="!record.add" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">备注</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <textarea rows="2" nzSize="size" nz-input [(ngModel)]="record.Remark" name="Remark"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label>逻辑选项</nz-form-label>
+
+    <hr />
+    <nz-checkbox-wrapper style="width: 100%;">
+      <div nz-row>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsCreateInboundSheet" name="IsCreateInboundSheet">创建入库单</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsCreateIssueSheet" name="IsCreateIssueSheet">创建出库单</label>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsNeedSplitSheet" name="IsNeedSplitSheet">拆单</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsInboundConfirm" name="IsInboundConfirm">收货确认</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsDirectIssue" name="IsDirectIssue">发货确认(普通出库)</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsPrepareAndIssue" name="IsPrepareAndIssue">发货确认(备件后再出库)</label>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsWaveOperate" name="IsWaveOperate">波次收发</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsInScanBox" name="IsInScanBox">入库扫箱</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsOutScanBox" name="IsOutScanBox">出库扫箱</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsPreparePartsScanBox" name="IsPreparePartsScanBox">备料扫箱</label>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsDeductionSource" name="IsDeductionSource">扣减源</label>
+        </div>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsIncreaseTarget" name="IsIncreaseTarget">增加目标</label>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="4">
+          <label nz-checkbox [(ngModel)]="record.IsTransAccount" name="IsTransAccount">传帐</label>
+        </div>
+      </div>
+    </nz-checkbox-wrapper>
+  </nz-form-item>
+
+  <div class="detail-tips">
+    <h3>规则说明：</h3>
+    <p>1、如勾选【拆单】，则不生成请求单、确认单，仅生成出入库任务单</p>
+    <p>2、如未勾选【收货确认】，则【拆单】不能勾选，如未勾选【收货确认】或【发货确认】，则【波次收发】也不能勾选</p>
+    <p>3、如勾选【入库扫箱】则【收货确认】必须勾选；如勾选【出库扫箱】则【发货确认】必须勾选</p>
+    <p>4、创建出入库单与【入库扫箱】、【出库扫箱】对应联动，例如：未勾选【创建入库单】，则不能勾选【入库扫箱】</p>
+    <p>5、【备件即出库】和【备件后再出库】不能同时勾选</p>
+    <p>6、如单据类型为JIS,则不能选择【入库扫箱】、【出库扫箱】</p>
+    <p>7、如勾选【收货确认】，则【备件即出库】和【备件后再出库】不能勾选</p>
+    <p>
+      8、如同时勾选出入库单，则同时生成出入库单，在收发货时，出库确认时仅扣减源，入库确认时仅增加目标（前提：勾选了扣减源、增加目标）
+    </p>
+  </div>
+</form>

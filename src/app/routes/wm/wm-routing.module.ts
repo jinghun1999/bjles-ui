@@ -15,6 +15,8 @@ import { WmMovewhlistComponent } from './movewhlist/movewhlist.component';
 import { WmMovediffwhlistComponent } from './movediffwhlist/movediffwhlist.component';
 import { WmStockwarninglistComponent } from './stockwarninglist/stockwarninglist.component';
 import { WmReturnlistComponent } from './returnlist/returnlist.component';
+import { WmSelfsheetlistComponent } from './selfsheetlist/selfsheetlist.component';
+import { WmTrantypelistComponent } from './trantypelist/trantypelist.component';
 
 const routes: Routes = [
 
@@ -32,7 +34,9 @@ const routes: Routes = [
   { path: 'movewhlist', component: WmMovewhlistComponent },
   { path: 'movediffwhlist', component: WmMovediffwhlistComponent },
   { path: 'stockwarninglist', component: WmStockwarninglistComponent },
-  { path: 'returnlist', component: WmReturnlistComponent }];
+  { path: 'returnlist', component: WmReturnlistComponent },
+  { path: 'selfsheetlist', component: WmSelfsheetlistComponent },
+  { path: 'trantypelist', component: WmTrantypelistComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

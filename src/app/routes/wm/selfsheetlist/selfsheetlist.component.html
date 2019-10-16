@@ -16,38 +16,26 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
-            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" nzShowSearch="true" nzAllowClear>
-              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
-            <nz-select [(ngModel)]="q.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
-              nzMode="multiple" (nzOpenChange)="getListItems($event,'supplier')" nzShowSearch="true" nzAllowClear
-              [nzLoading]="loading">
-              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
-                [nzValue]="option.itemValue">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col [nzSpan]="8">
-        <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">退货单号</nz-form-label>
+          <nz-form-label [nzSpan]="8">源仓库</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.ReturnSheetCode" name="ReturnSheetCode" id="ReturnSheetCode" [nzSize]="size"
-              placeholder="请输入" />
+            <nz-select [(ngModel)]="q.workshop_s" [nzSize]="size" name="workshop_s" id="workshop_s"
+              [nzPlaceHolder]="'请选择'" nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops_s" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">目标仓库</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-select [(ngModel)]="q.workshop_t" [nzSize]="size" name="workshop_t" id="workshop_t"
+              [nzPlaceHolder]="'请选择'" nzMode="multiple" nzShowSearch="true" nzAllowClear>
+              <nz-option *ngFor="let option of sub_workshops_t" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -63,21 +51,31 @@
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">封存条</nz-form-label>
+          <nz-form-label [nzSpan]="8">单号</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input nz-input [(ngModel)]="q.SealingStripCode" name="SealingStripCode" id="SealingStripCode"
-              [nzSize]="size" placeholder="请输入" />
+            <input nz-input [(ngModel)]="q.SelfSheetNo" name="SelfSheetNo" id="SelfSheetNo" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
 
       <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="8">单据状态</nz-form-label>
+          <nz-form-label [nzSpan]="8">创建人</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <input nz-input [(ngModel)]="q.create_user" name="create_user" id="create_user" [nzSize]="size"
+              placeholder="请输入" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">状态</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <nz-select [(ngModel)]="q.Status" [nzSize]="size" name="Status" id="Status" [nzPlaceHolder]="'请选择'"
-              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'wm_return_status')" nzAllowClear>
-              <nz-option *ngFor="let i of sub_wm_return_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
+              [nzShowSearch]="true" (nzOpenChange)="getCodeDetails($event,'wm_self_sheet_status')" nzAllowClear>
+              <nz-option *ngFor="let i of sub_wm_self_sheet_status.data;" [nzLabel]="i.text" [nzValue]="i.val">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -86,23 +84,23 @@
 
       <div nz-col [nzSpan]="16">
         <nz-form-item nzFlex>
-          <nz-form-label [nzSpan]="4">退货时间</nz-form-label>
+          <nz-form-label [nzSpan]="4">创建日期</nz-form-label>
           <nz-form-control [nzSpan]="20">
-            <nz-range-picker [(ngModel)]="q.ReturnTime" name="ReturnTime" id="ReturnTime" nzAllowClear [nzSize]="size"
+            <nz-range-picker [(ngModel)]="q.CreateTime" name="CreateTime" id="CreateTime" nzAllowClear [nzSize]="size"
               [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm">
             </nz-range-picker>
           </nz-form-control>
         </nz-form-item>
       </div>
 
-      <!-- <div nz-col [nzSpan]="8">
+      <div nz-col [nzSpan]="8">
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">导入文件</nz-form-label>
           <nz-form-control [nzSpan]="16">
             <input type="file" id="import" name="import" multiple="false" class="ml-sm" />
           </nz-form-control>
         </nz-form-item>
-      </div> -->
+      </div>
 
     </div>
 

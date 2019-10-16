@@ -5,16 +5,16 @@ import { CommonFunctionService, CommonApiService, ExpHttpService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { WmDiffwriteoffEditComponent } from './edit/edit.component';
-import { WmDiffwriteoffViewComponent } from './view/view.component';
+import { WmSelfsheetlistEditComponent } from './edit/edit.component';
+import { WmSelfsheetlistViewComponent } from './view/view.component';
 
 @Component({
-  selector: 'app-wm-diffwriteoff',
-  templateUrl: './diffwriteoff.component.html',
+  selector: 'app-wm-selfsheetlist',
+  templateUrl: './selfsheetlist.component.html',
 })
-export class WmDiffwriteoffComponent implements OnInit {
-  actionPath = 'Warehouse/DiffStockCancelList.aspx';
-  searchPath = '/wm/GetDiffWirteoffPager';
+export class WmSelfsheetlistComponent implements OnInit {
+  actionPath = 'WMManagement/SelfSheetList.aspx';
+  searchPath = '/wm/GetSelfSheetPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: ['Id'], type: 'checkbox', exported: false },
@@ -28,7 +28,7 @@ export class WmDiffwriteoffComponent implements OnInit {
           click: 'reload',
           modal: {
             size: 'xl',
-            component: WmDiffwriteoffEditComponent,
+            component: WmSelfsheetlistEditComponent,
           },
         },
         {
@@ -38,17 +38,26 @@ export class WmDiffwriteoffComponent implements OnInit {
           click: 'reload',
           modal: {
             size: 'xl',
-            component: WmDiffwriteoffViewComponent,
+            component: WmSelfsheetlistViewComponent,
           },
         },
       ],
     },
-    { title: '单号', index: 'SheetNo', sort: true },
-    { title: '工厂', index: 'PlantId', sort: true },
-    { title: '仓库', index: 'SourceWorkshop', sort: true },
-    { title: '单据状态', index: 'status_name', sort: true },
-    { title: '创单人', index: 'CreateUser_name', sort: true },
+    { title: '交易单编号', index: 'SelfSheetNo', sort: true },
     { title: '创单时间', index: 'CreateTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '修改时间', index: 'ModifyTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '工厂', index: 'PlantId', sort: true },
+    { title: '源仓库', index: 'SourceWH', sort: true },
+    { title: '目的仓库', index: 'TargetWH', sort: true },
+    { title: '移动类型', index: 'TransactionCode', sort: true },
+    { title: '移动类型名称', index: 'TransactionName', sort: true },
+    { title: '操作原因', index: 'Reason', sort: true },
+    { title: 'DOCK', index: 'Dock', sort: true },
+    { title: '配送路线代码', index: 'RouteId', sort: true },
+    { title: '状态', index: 'status_name', sort: true },
+    { title: '备注', index: 'Remark', sort: true },
+    { title: '创单人', index: 'CreateUser_name', sort: true },
+    { title: '修改人', index: 'ModifyUser_name', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -62,14 +71,16 @@ export class WmDiffwriteoffComponent implements OnInit {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
-    workshop: [],
+    workshop_s: [],
+    workshop_t: [],
     CreateTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   data: any[] = [];
   dataAction: any[] = [];
   pre_lists = [];
-  sub_workshops = [];
-  sub_wm_DiffStockCancel_status = new ItemData();
+  sub_workshops_s = [];
+  sub_workshops_t = [];
+  sub_wm_self_sheet_status = new ItemData();
 
   // dataPrints: any[] = [];
 
@@ -87,11 +98,12 @@ export class WmDiffwriteoffComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
 
-    this.capi.getPlant().subscribe(
+    this.capi.getPlantOfDiff('', '', '0').subscribe(
       (res: any) => {
         this.pre_lists = res;
         if (this.pre_lists.length > 0) {
-          this.sub_workshops = this.pre_lists[0].children;
+          this.sub_workshops_s = this.pre_lists[0].children;
+          this.sub_workshops_t = this.pre_lists[0].children;
           this.q.plant = this.pre_lists[0].value;
           this.plantChange(this.q.plant);
         }
@@ -121,32 +133,33 @@ export class WmDiffwriteoffComponent implements OnInit {
 
   getListItems(value: any, type: any): void {
     // tslint:disable-next-line: no-eval
-    const tmp_data = eval('this.sub_' + type);
-
-    if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
-      if (this.q.workshop.length > 0) {
-        this.loading = true;
-        this.capi.getListItems(type, this.q.plant, this.q.workshop.toString()).subscribe(
-          (res: any) => {
-            tmp_data.data = res;
-          },
-          (err: any) => this.msg.error('获取数据失败!'),
-        );
-        this.loading = false;
-        tmp_data.last_workshop = this.q.workshop.toString();
-      } else {
-        tmp_data.data = [];
-        tmp_data.last_workshop = '';
-      }
-      // tslint:disable-next-line: no-eval
-      eval('this.q.' + type + ' =  [];');
-    }
+    // const tmp_data = eval('this.sub_' + type);
+    // if (value && this.q.workshop.toString() !== tmp_data.last_workshop) {
+    //   if (this.q.workshop.length > 0) {
+    //     this.loading = true;
+    //     this.capi.getListItems(type, this.q.plant, this.q.workshop.toString()).subscribe(
+    //       (res: any) => {
+    //         tmp_data.data = res;
+    //       },
+    //       (err: any) => this.msg.error('获取数据失败!'),
+    //     );
+    //     this.loading = false;
+    //     tmp_data.last_workshop = this.q.workshop.toString();
+    //   } else {
+    //     tmp_data.data = [];
+    //     tmp_data.last_workshop = '';
+    //   }
+    //   // tslint:disable-next-line: no-eval
+    //   eval('this.q.' + type + ' =  [];');
+    // }
   }
 
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
-    this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.sub_workshops_s = l.children;
+    this.sub_workshops_t = l.children;
+    this.q.workshop_s = '';
+    this.q.workshop_t = '';
   }
 
   stChange(e: STChange) {
@@ -209,37 +222,37 @@ export class WmDiffwriteoffComponent implements OnInit {
   }
 
   import(): void {
-    // const file1 = document.getElementById('import') as HTMLInputElement;
-    // if (file1.files.length === 0) {
-    //   this.msg.error('请选择需要导入的数据文件！');
-    //   return;
-    // }
-    // const file = file1.files[0];
-    // this.loading = true;
-    // this.xlsx.import(file).then(res1 => {
-    //   // EXCEL文件之中文字段改为英文字段
-    //   // for (let j = 0, len = res1.sheet1[0].length; j < len; j++) {
-    //   //   res1.sheet1[0][j] = this.columns.find(p => p.title === res1.sheet1[0][j]).index;
-    //   // }
-    //   this.http
-    //     .post('/wm/DiffWirteoffImport', res1)
-    //     .pipe(tap(() => (this.loading = false)))
-    //     .subscribe(
-    //       res => {
-    //         if (res.successful) {
-    //           if (!res.data.result) {
-    //             // this.cfun.downErrorExcel(res.data.column, res.data.errDT, 'supplyDate_error.xlsx');
-    //           }
-    //           this.msg.success(res.data.msg);
-    //           this.st.reload();
-    //         } else {
-    //           this.msg.error(res.message);
-    //           this.loading = false;
-    //         }
-    //       },
-    //       (err: any) => this.msg.error('系统异常'),
-    //     );
-    // });
+    const file1 = document.getElementById('import') as HTMLInputElement;
+    if (file1.files.length === 0) {
+      this.msg.error('请选择需要导入的数据文件！');
+      return;
+    }
+    const file = file1.files[0];
+    this.loading = true;
+    this.xlsx.import(file).then(res1 => {
+      // EXCEL文件之中文字段改为英文字段
+      // for (let j = 0, len = res1.sheet1[0].length; j < len; j++) {
+      //   res1.sheet1[0][j] = this.columns.find(p => p.title === res1.sheet1[0][j]).index;
+      // }
+      this.http
+        .post('/wm/selfsheetImport', res1)
+        .pipe(tap(() => (this.loading = false)))
+        .subscribe(
+          res => {
+            if (res.successful) {
+              if (!res.data.result) {
+                // this.cfun.downErrorExcel(res.data.column, res.data.errDT, 'supplyDate_error.xlsx');
+              }
+              this.msg.success(res.data.msg);
+              this.st.reload();
+            } else {
+              this.msg.error(res.message);
+              this.loading = false;
+            }
+          },
+          (err: any) => this.msg.error('系统异常'),
+        );
+    });
   }
 
   Confirm(): void {
@@ -250,7 +263,7 @@ export class WmDiffwriteoffComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/wm/DiffWirteoffConfirm', this.selectedRows)
+        .post('/wm/selfsheetConfirm', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -294,7 +307,7 @@ export class WmDiffwriteoffComponent implements OnInit {
   }
 
   Download() {
-    // this.httpService.downLoadFile('/assets/tpl/DiffWirteoff_import.xlsx', 'DiffWirteoffTPL');
+    this.httpService.downLoadFile('/assets/tpl/selfsheet_import.xlsx', 'selfsheetTPL');
   }
 
   Delete(): void {
@@ -305,7 +318,7 @@ export class WmDiffwriteoffComponent implements OnInit {
       this.loading = true;
 
       this.http
-        .post('/wm/DiffWirteoffDelete', this.selectedRows)
+        .post('/wm/SelfSheetDelete', this.selectedRows)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
@@ -326,9 +339,28 @@ export class WmDiffwriteoffComponent implements OnInit {
   }
 
   Create() {
-    this.modal.create(WmDiffwriteoffEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(WmSelfsheetlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
+  }
+  initWhere() {
+    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
+    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
+    if (this.q.workshop_s === '' || this.q.workshop_s === undefined || this.q.workshop_s.length === 0) {
+      this.q.workshop_s = tmp_workshops_s;
+    }
+    if (this.q.workshop_t === '' || this.q.workshop_t === undefined || this.q.workshop_t.length === 0) {
+      this.q.workshop_t = tmp_workshops_t;
+    }
+
+    if (this.q.CreateTime !== undefined && this.q.CreateTime.length === 2)
+      this.q.CreateTime = this.cfun.getSelectDate(this.q.CreateTime);
+  }
+  clrearWhere() {
+    const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
+    const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
+    if (tmp_workshops_s.toString() === this.q.workshop_s.toString()) this.q.workshop_s = [];
+    if (tmp_workshops_t.toString() === this.q.workshop_t.toString()) this.q.workshop_t = [];
   }
 
   export() {
@@ -336,15 +368,16 @@ export class WmDiffwriteoffComponent implements OnInit {
       this.msg.error('请输入条件，查询出数据方可导出数据！');
       return false;
     }
+    this.initWhere();
 
     this.q.page.export = true;
-    this.initWhere();
     this.http
       .post(this.searchPath, this.q)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
+            // this.cfun.downErrorExcel(res.data.column, res.data.ExportDT, 'result.xlsx');
             this.st.export(res.data.rows, {
               callback: this.cfun.callbackOfExport,
               filename: 'result.xlsx',
@@ -368,6 +401,7 @@ export class WmDiffwriteoffComponent implements OnInit {
 
   getData() {
     this.loading = true;
+
     this.initWhere();
 
     this.http
@@ -388,16 +422,4 @@ export class WmDiffwriteoffComponent implements OnInit {
       );
     this.clrearWhere();
   }
-  initWhere() {
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-
-    if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
-      this.q.workshop = tmp_workshops;
-    }
-    if (this.q.CreateTime !== undefined && this.q.CreateTime.length === 2)
-    this.q.CreateTime = this.cfun.getSelectDate(this.q.CreateTime);
 }
-  clrearWhere() {
-    const tmp_workshops = this.sub_workshops.map(p => p.value);
-    if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
-  }}
