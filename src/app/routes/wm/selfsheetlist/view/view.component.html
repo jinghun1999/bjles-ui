@@ -2,16 +2,19 @@
   <div nz-row [nzGutter]="24" *ngIf="expandForm">
 
     <sv-container size="size">
-      <sv label="单号">{{ record.selfsheetNo }}</sv>
+      <sv label="单号">{{ record.SelfSheetNo }}</sv>
+      <sv label="移动类型">{{ record.TransactionCode }}</sv>
       <sv label="操作原因">{{ record.Reason }}</sv>
-
-      <sv label="工厂">{{ record.PlantID }}</sv>
+      <sv label="工厂">{{ record.PlantId }}</sv>
       <sv label="源仓库">{{ record.SourceWH }}</sv>
       <sv label="目的仓库">{{ record.TargetWH }}</sv>
+
+      <sv label="配送路线">{{ record.RouteId }}</sv>
+      <sv label="DOCK">{{ record.Dock }}</sv>
       <sv label="备注">{{ record.Remark }}</sv>
 
     </sv-container>
   </div>
 
-  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail"></st>
+  <st [data]="dataDetail" size="size" [columns]="columnsDetail"></st>
 </nz-card>

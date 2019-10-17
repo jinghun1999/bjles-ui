@@ -41,8 +41,8 @@
           <nz-form-label [nzSpan]="8" ngFor="supplier_code">供应商</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择供应商">
             <nz-select [(ngModel)]="q.supplier_id" [nzSize]="size" name="supplier_id" id="supplier_id"
-              [nzPlaceHolder]="'请选择'" (nzOpenChange)="GetSupplierOfPartNo($event,'supplier_code')" nzMode="multiple"
-              nzShowSearch="true" nzAllowClear [nzLoading]="loading">
+              [nzPlaceHolder]="'请选择'" [nzLoading]="loading" (nzOpenChange)="GetSupplierOfPartNo($event,'supplier_code')"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear [nzLoading]="loading">
               <nz-option *ngFor="let option of sub_supplier_code.data" [nzLabel]="option.itemText"
                 [nzValue]="option.itemValue">
               </nz-option>

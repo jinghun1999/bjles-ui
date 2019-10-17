@@ -23,7 +23,6 @@ export class WmSelfsheetlistViewComponent implements OnInit {
   part_no = '';
   i: any;
   dataDetail: any[] = [];
-  widthMode: STWidthMode = {};
   columnsDetail: STColumn[] = [
     { title: '序号', type: 'no' },
     { title: '零件号', index: 'PartNumber' },

@@ -312,13 +312,19 @@ export class WmMonthplanlistComponent implements OnInit {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval(`this.sub_${type}`);
     if (value) {
+      // if (this.q.part_no === undefined || this.q.part_no === '') {
+      //   this.msg.error('请输入零件号!');
+      //   return;
+      // }
+      if (this.q.part_no === undefined) this.q.part_no = '';
+      this.loading = true;
       this.http
         .get(`/supplier/GetSupplierOfPartNo?part_no=${this.q.part_no}`)
         .pipe(tap(() => (this.loading = false)))
         .subscribe(
           res => {
             if (res.successful) {
-              tmp_data.data = res;
+              tmp_data.data = res.data;
             } else {
               this.msg.error(res.message);
               this.loading = false;

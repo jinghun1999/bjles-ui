@@ -101,8 +101,15 @@ export class WmMonthplanlistEditComponent implements OnInit {
     }
   }
 
-  GetSupplierOfPartNo(value: any, type: any): void {
+  GetSupplierOfPartNo(value: any, type: any) {
     const part_no = value;
+    this.record.SupplierID = undefined;
+    if (part_no === '') {
+      this.msg.error('请输入零件号!');
+      this.sub_supplier.data = null;
+      return false;
+    }
+
     this.http
       .get(`/supplier/GetSupplierOfPartNo?part_no=${part_no}`)
       .pipe(tap(() => (this.loading = false)))

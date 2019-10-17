@@ -1,10 +1,170 @@
 <div class="modal-header">
-  <div class="modal-title">编辑 {{ record.id }} 信息</div>
+  <div class="modal-title">{{ title }}-自建单</div>
 </div>
-<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>
-<sf *ngIf="i" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
-  <div class="modal-footer">
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">保存</button>
-  </div>
-</sf>
+<form #f="ngForm" nz-form (ngSubmit)="save()">
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请选择工厂">
+      <nz-select [(ngModel)]="record.PlantId" [nzSize]="size" name="plant" required [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)" [nzDisabled]="!record.add" required>
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">源车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择源车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.SourceWH" [nzSize]="size" name="wh_s" id="wh_s" nzShowSearch="true"
+        nzAllowClear="false" [nzDisabled]="true">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">目标车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择目标车间" nzSpan="5">
+      <nz-select [(ngModel)]="record.TargetWH" [nzSize]="size" name="wh_t" id="wh_t" nzShowSearch="true"
+        nzAllowClear="false" [nzDisabled]="true">
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label [nzSpan]="2">移动类型*</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.TransactionCode" [nzSize]="size" name="t_code" id="t_code" [nzPlaceHolder]="'请选择'"
+        required nzShowSearch="true" [nzLoading]="loading" [nzDisabled]="!record.add"
+        (ngModelChange)="tranChange($event)">
+        <nz-option *ngFor="let option of sub_TransactionCode.data" [nzLabel]="option.ConfigName"
+          [nzValue]="option.TransactionCode">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label [nzSpan]="2">配送路线</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.RouteId" [nzSize]="size" name="route" id="route" [nzPlaceHolder]="'请选择'" required
+        nzShowSearch="true" [nzLoading]="loading" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_route.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label [nzSpan]="2">DOCK</nz-form-label>
+    <nz-form-control [nzSpan]="5" nzErrorTip="请选择窗口时间模式">
+      <nz-select [(ngModel)]="record.Dock" [nzSize]="size" name="dock" id="dock" [nzPlaceHolder]="'请选择'" required
+        nzShowSearch="true" [nzLoading]="loading" [nzDisabled]="!record.add">
+        <nz-option *ngFor="let option of sub_dock.data" [nzLabel]="option.ItemText" [nzValue]="option.ItemValue">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">操作原因</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <textarea rows="2" nzSize="size" nz-input [(ngModel)]="record.Reason" [disabled]="!record.add"
+        name="Reason"></textarea>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">备注</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <textarea rows="2" nzSize="size" nz-input [(ngModel)]="record.Remark" [disabled]="!record.add"
+        name="Remark"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <hr />
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="2">
+      <input nz-input [nzSize]="size" [(ngModel)]="q_s.part_no" name="part_no" maxlength="8" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商</nz-form-label>
+    <nz-form-control nzSpan="2">
+      <input nz-input [nzSize]="size" [(ngModel)]="q_s.SupplierId" name="SupplierId" />
+    </nz-form-control>
+
+    <button nz-button type="button" (click)="search_s($event)"> 查询 </button>
+    <button nz-button type="button" [disabled]="selectedRows_s.length === 0" (click)="add($event)">添加选择的零件</button>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <st #st [columns]="columns_s" [size]="size" [data]="data_s_filter" [loading]="loading" (change)="stChange_s($event)"
+      [page]="pages">
+    </st>
+  </nz-form-item>
+
+  <hr />
+  <nz-form-item class="mb-sm">
+    <button nz-button type="button" [disabled]="numberOfChecked === 0" (click)="remove($event)">移除选择的零件</button>
+    <!-- <button nz-button type="button" (click)="close()">关闭</button> -->
+    <button nz-button [nzLoading]="http.loading" [nzType]="'primary'">
+      保存
+    </button>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-table #editRowTable nzBordered [nzData]="data_t" (nzCurrentPageDataChange)="currentPageDataChange($event)">
+      <thead>
+        <tr>
+          <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="checkAll($event)"></th>
+
+          <th>零件号</th>
+          <th>供应商</th>
+          <th>零件名称</th>
+          <th>标准包装数</th>
+          <th nzWidth="5%">需求箱数</th>
+          <th nzWidth="5%">需求散件数</th>
+          <th>需求总件数</th>
+          <th>可用箱数</th>
+          <th>可用散件数</th>
+          <th>可用总件数</th>
+          <th>单位'</th>
+          <th>源库位</th>
+          <th>目的库位</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of editRowTable.data" class="editable-row">
+          <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.idx]" (nzCheckedChange)="refreshStatus()"></td>
+
+          <td>{{ data.part_no }}</td>
+          <td>{{ data.SupplierId }}</td>
+          <td>{{ data.part_cname }}</td>
+          <td>{{ data.packing_qty }}</td>
+          <td>
+            <div class="editable-cell" *ngIf="editId !== data.idx; else editTpl">
+              <div class="editable-cell-value-wrap" (click)="startEdit(data.idx, $event)">
+                {{ data.RequiredPackQty }}
+              </div>
+            </div>
+            <ng-template #editTpl>
+              <nz-input-number [(ngModel)]="data.RequiredPackQty" (ngModelChange)="PackQtyChange($event,data)"
+                name="Pack" [nzStep]="1" nzMin="1" [nzSize]="size"></nz-input-number>
+            </ng-template>
+          </td>
+          <td>
+            <div class="editable-cell" *ngIf="editId !== data.idx; else editTpl1">
+              <div class="editable-cell-value-wrap" (click)="startEdit(data.idx, $event)">
+                {{ data.RequiredFragpartQty }}
+              </div>
+            </div>
+            <ng-template #editTpl1>
+              <nz-input-number [(ngModel)]="data.RequiredFragpartQty" (ngModelChange)="FragPartsChange($event,data)"
+                name="Fragpart" [nzStep]="1" [nzSize]="size"></nz-input-number>
+            </ng-template>
+          </td>
+          <td>{{ data.RequiredPartQty }}</td>
+
+          <td>{{ data.current_storage }}</td>
+          <td>{{ data.current_fragpart_count }}</td>
+          <td>{{ data.current_parts }}</td>
+          <td>{{ data.Unit }}</td>
+          <td>{{ data.RdcDloc }}</td>
+          <td>{{ data.Dloc }}</td>
+
+        </tr>
+      </tbody>
+    </nz-table>
+
+  </nz-form-item>
+</form>

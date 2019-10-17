@@ -53,7 +53,7 @@ export class WmSelfsheetlistComponent implements OnInit {
     { title: '移动类型名称', index: 'TransactionName', sort: true },
     { title: '操作原因', index: 'Reason', sort: true },
     { title: 'DOCK', index: 'Dock', sort: true },
-    { title: '配送路线代码', index: 'RouteId', sort: true },
+    { title: '配送路线', index: 'RouteId', sort: true },
     { title: '状态', index: 'status_name', sort: true },
     { title: '备注', index: 'Remark', sort: true },
     { title: '创单人', index: 'CreateUser_name', sort: true },
