@@ -13,7 +13,7 @@ import { WmMovewheditComponent } from '../movewhedit/movewhedit.component';
   templateUrl: './movediffwhlist.component.html',
 })
 export class WmMovediffwhlistComponent implements OnInit {
-  actionPath = 'WMManagement/MoveWHList.aspx';
+  actionPath = 'WMManagement/DifferenceMoveWHList.aspx';
   searchPath = '/wm/GetMoveWHPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
@@ -29,6 +29,10 @@ export class WmMovediffwhlistComponent implements OnInit {
           modal: {
             size: 'xl',
             component: WmMovewheditComponent,
+            params: (record: STData) => {
+              record.diff = true;
+              return record;
+            },
           },
         },
         {
@@ -335,7 +339,7 @@ export class WmMovediffwhlistComponent implements OnInit {
   }
 
   Create() {
-    this.modal.create(WmMovewheditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(WmMovewheditComponent, { record: { add: true, diff: true } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
   }
@@ -387,7 +391,7 @@ export class WmMovediffwhlistComponent implements OnInit {
 
     if (this.q.CreateTime !== undefined && this.q.CreateTime.length === 2)
       this.q.CreateTime = this.cfun.getSelectDate(this.q.CreateTime);
- }
+  }
   clrearWhere() {
     const tmp_workshops_s = this.sub_workshops_s.map(p => p.value);
     const tmp_workshops_t = this.sub_workshops_t.map(p => p.value);
@@ -398,7 +402,6 @@ export class WmMovediffwhlistComponent implements OnInit {
   getData() {
     this.loading = true;
     this.initWhere();
-
 
     this.http
       .post(this.searchPath, this.q)

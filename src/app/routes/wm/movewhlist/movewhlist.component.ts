@@ -29,6 +29,10 @@ export class WmMovewhlistComponent implements OnInit {
           modal: {
             size: 'xl',
             component: WmMovewheditComponent,
+            params: (record: STData) => {
+              record.diff = false;
+              return record;
+            },
           },
         },
         {
@@ -335,7 +339,7 @@ export class WmMovewhlistComponent implements OnInit {
   }
 
   Create() {
-    this.modal.create(WmMovewheditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
+    this.modal.create(WmMovewheditComponent, { record: { add: true, diff: false } }, { size: 'xl' }).subscribe(res => {
       if (res) this.st.reload();
     });
   }

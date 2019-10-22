@@ -13,7 +13,6 @@ export class WmSelfsheetlistEditComponent implements OnInit {
   record: any;
   // actionPath = 'Warehouse/wmtrantypeedit.aspx';
 
-  editId: string | null;
 
   selectedRows_s: STData[] = [];
   pages: STPage = new PagerConfig();
@@ -22,6 +21,9 @@ export class WmSelfsheetlistEditComponent implements OnInit {
   data_s: any[] = [];
   data_s_filter: any[] = [];
   data_t: any[] = [];
+
+
+  editId: string | null;
   listOfDisplayData: any[] = [];
   mapOfCheckedId: { [key: string]: boolean } = {};
   isAllDisplayDataChecked = false;
@@ -59,29 +61,6 @@ export class WmSelfsheetlistEditComponent implements OnInit {
     { title: '源库位', index: 'RdcDloc', sort: true },
     { title: '目的库位', index: 'Dloc', sort: true },
   ];
-  // columns_t: STColumn[] = [
-  //   {
-  //     title: '',
-  //     index: ['plant', 'SourceWarehouse', 'TargetWarehouse', 'part_no', 'SupplierId'],
-  //     type: 'checkbox',
-  //     exported: false,
-  //   },
-  //   { title: '序号', type: 'no' },
-  //   { title: '零件号', index: 'part_no', sort: true },
-  //   { title: '供应商', index: 'SupplierId', sort: true },
-  //   { title: '零件名称', index: 'part_cname', sort: true },
-  //   { title: '标准包装数', index: 'packing_qty', sort: true },
-  //   { title: '需求箱数', render: 'rd_PackQty' },
-  //   { title: '需求散件数', render: 'rd_FragpartQty' },
-  //   { title: '需求总件数', render: 'rd_PartQty' },
-
-  //   { title: '可用箱数', index: 'current_storage', sort: true },
-  //   { title: '可用散件数', index: 'current_fragpart_count', sort: true },
-  //   { title: '可用总件数', index: 'current_parts', sort: true },
-  //   { title: '单位', index: 'Unit', sort: true },
-  //   { title: '源库位', index: 'RdcDloc', sort: true },
-  //   { title: '目的库位', index: 'Dloc', sort: true },
-  // ];
 
   size = 'small';
   pre_lists = [];
@@ -142,8 +121,9 @@ export class WmSelfsheetlistEditComponent implements OnInit {
   save() {
     this.loading = true;
     // this.record.workday = this.cfun.getDate(this.record.workday);
+    const removes = this.data_s.filter(p => p.Id > 0 && p.direction === 'left');
 
-    this.http.post('/wm/SelfSheetSave', { main: this.record, detail: this.data_t }).subscribe(
+    this.http.post('/wm/SelfSheetSave', { main: this.record, detail: this.data_t ,removes}).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);

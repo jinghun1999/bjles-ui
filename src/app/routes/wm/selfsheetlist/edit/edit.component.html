@@ -1,7 +1,7 @@
 <div class="modal-header">
   <div class="modal-title">{{ title }}-自建单</div>
 </div>
-<form #f="ngForm" nz-form (ngSubmit)="save()">
+<form #f="ngForm" nz-form>
   <nz-form-item class="mb-sm">
     <nz-form-label nzSpan="2">工厂*</nz-form-label>
     <nz-form-control nzSpan="5" nzErrorTip="请选择工厂">
@@ -95,7 +95,7 @@
   <nz-form-item class="mb-sm">
     <button nz-button type="button" [disabled]="numberOfChecked === 0" (click)="remove($event)">移除选择的零件</button>
     <!-- <button nz-button type="button" (click)="close()">关闭</button> -->
-    <button nz-button [nzLoading]="http.loading" [nzType]="'primary'">
+    <button nz-button type="button" (click)="save()" [disabled]="data_t.length===0" [nzLoading]="http.loading">
       保存
     </button>
   </nz-form-item>
@@ -104,22 +104,27 @@
     <nz-table #editRowTable nzBordered [nzData]="data_t" (nzCurrentPageDataChange)="currentPageDataChange($event)">
       <thead>
         <tr>
-          <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+          <th rowspan="2" nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
             (nzCheckedChange)="checkAll($event)"></th>
 
-          <th>零件号</th>
-          <th>供应商</th>
-          <th>零件名称</th>
-          <th>标准包装数</th>
-          <th nzWidth="5%">需求箱数</th>
-          <th nzWidth="5%">需求散件数</th>
-          <th>需求总件数</th>
-          <th>可用箱数</th>
-          <th>可用散件数</th>
-          <th>可用总件数</th>
-          <th>单位'</th>
-          <th>源库位</th>
-          <th>目的库位</th>
+          <th rowspan="2">零件名称</th>
+          <th rowspan="2">零件号</th>
+          <th rowspan="2">供应商</th>
+          <th rowspan="2">标准包装数</th>
+          <th colspan="3">需求</th>
+          <th colspan="3">可用</th>
+          <th rowspan="2">单位'</th>
+          <th rowspan="2">源库位</th>
+          <th rowspan="2">目的库位</th>
+
+        </tr>
+        <tr>
+          <th>箱数</th>
+          <th>散件数</th>
+          <th>总件数</th>
+          <th>箱数</th>
+          <th>散件数</th>
+          <th>总件数</th>
 
         </tr>
       </thead>
@@ -127,9 +132,9 @@
         <tr *ngFor="let data of editRowTable.data" class="editable-row">
           <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.idx]" (nzCheckedChange)="refreshStatus()"></td>
 
+          <td>{{ data.part_cname }}</td>
           <td>{{ data.part_no }}</td>
           <td>{{ data.SupplierId }}</td>
-          <td>{{ data.part_cname }}</td>
           <td>{{ data.packing_qty }}</td>
           <td>
             <div class="editable-cell" *ngIf="editId !== data.idx; else editTpl">
