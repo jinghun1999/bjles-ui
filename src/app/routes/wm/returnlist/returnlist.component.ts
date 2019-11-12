@@ -22,7 +22,7 @@ export class WmReturnlistComponent implements OnInit {
       title: '操作',
       buttons: [
         {
-          text: '编辑',
+          text: '修改',
           iif: item => item.Status === 0,
           type: 'modal',
           click: 'reload',
@@ -404,8 +404,8 @@ export class WmReturnlistComponent implements OnInit {
       this.q.workshop = tmp_workshops;
     }
     if (this.q.ReturnTime !== undefined && this.q.ReturnTime.length === 2)
-    this.q.ReturnTime = this.cfun.getSelectDate(this.q.ReturnTime);
-}
+      this.q.ReturnTime = this.cfun.getSelectDate(this.q.ReturnTime);
+  }
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];

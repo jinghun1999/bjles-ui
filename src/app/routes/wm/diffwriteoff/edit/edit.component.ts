@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { ItemData, PagerConfig, PageInfo, SortInfo } from 'src/app/model';
 import { CommonApiService, CommonFunctionService, ENUMSheetType, ExpHttpService } from '@core';
-import { STData, STPage, STComponent, STColumn, STChange, XlsxService } from '@delon/abc';
+import { STData, STComponent, STColumn, STChange, XlsxService } from '@delon/abc';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -15,7 +14,6 @@ export class WmDiffwriteoffEditComponent implements OnInit {
   actionPath = 'Warehouse/DiffStockCancelEdit.aspx';
 
   selectedRows_s: STData[] = [];
-  pages: STPage = new PagerConfig();
 
   expandForm = true;
   data_s: any[] = [];
@@ -31,11 +29,9 @@ export class WmDiffwriteoffEditComponent implements OnInit {
 
   q_s: any = {
     part_no: '',
-    page: new PageInfo(),
-    sort: new SortInfo(),
+    SupplierId: '',
   };
 
-  // @ViewChild('st', { static: true }) st: STComponent;
   @ViewChild('st', { static: true }) st: STComponent;
   columns_s: STColumn[] = [
     {
@@ -48,13 +44,57 @@ export class WmDiffwriteoffEditComponent implements OnInit {
     {
       title: '零件号',
       index: 'part_no',
-      sort: true,
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.part_no, b.part_no);
+        },
+      },
     },
-    { title: '零件名称', index: 'part_cname', sort: true },
-    { title: '供应商', index: 'SupplierId', sort: true },
-    { title: '供应商', index: 'supplier_name', sort: true },
-    { title: '库存数量', index: 'current_storage', sort: true },
-    { title: '标准包装数', index: 'packing_qty', sort: true },
+    {
+      title: '零件名称',
+      index: 'part_cname',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.part_cname, b.part_cname);
+        },
+      },
+    },
+    {
+      title: '供应商',
+      index: 'SupplierId',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.SupplierId, b.SupplierId);
+        },
+      },
+    },
+    {
+      title: '供应商名称',
+      index: 'supplier_name',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.supplier_name, b.supplier_name);
+        },
+      },
+    },
+    {
+      title: '库存数量',
+      index: 'current_storage',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.current_storage, b.current_storage);
+        },
+      },
+    },
+    {
+      title: '标准包装数',
+      index: 'packing_qty',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.packing_qty, b.packing_qty);
+        },
+      },
+    },
     // { title: '散件数', index: 'current_fragpart_count', sort: true },
     // { title: '总件数', index: 'current_parts', sort: true },
   ];
@@ -87,8 +127,6 @@ export class WmDiffwriteoffEditComponent implements OnInit {
       this.title = '编辑';
       this.record.add = false;
     }
-
-    this.pages.front = true;
 
     this.capi.getPlantOfDiff('', '1', '1').subscribe(
       (res: any) => {
@@ -273,24 +311,9 @@ export class WmDiffwriteoffEditComponent implements OnInit {
         this.selectedRows_s = e.checkbox!;
 
         break;
-      case 'filter':
-        // this.getData();
-        break;
-      case 'pi':
-        this.q_s.page.pi = e.pi;
-        // this.getData();
-        break;
-      case 'ps':
-        this.q_s.page.ps = e.ps;
-        // this.getData();
-        break;
-      case 'sort':
-        this.q_s.sort.field = e.sort.column._sort.key;
-        this.q_s.sort.order = e.sort.value;
-        // this.getData();
-        break;
     }
   }
+
   search_s(e: any): void {
     if (
       (this.q_s.part_no === undefined || this.q_s.part_no === '') &&

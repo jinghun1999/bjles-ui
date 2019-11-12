@@ -14,7 +14,6 @@ export class WmMovewheditComponent implements OnInit {
   // actionPath = 'Warehouse/wmtrantypeedit.aspx';
 
   selectedRows_s: STData[] = [];
-  pages: STPage = new PagerConfig();
 
   expandForm = true;
   data_s: any[] = [];
@@ -30,11 +29,8 @@ export class WmMovewheditComponent implements OnInit {
 
   q_s: any = {
     part_no: '',
-    page: new PageInfo(),
-    sort: new SortInfo(),
   };
 
-  // @ViewChild('st', { static: true }) st: STComponent;
   @ViewChild('st', { static: true }) st: STComponent;
   columns_s: STColumn[] = [
     {
@@ -47,17 +43,93 @@ export class WmMovewheditComponent implements OnInit {
     {
       title: '零件号',
       index: 'part_no',
-      sort: true,
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.part_no, b.part_no);
+        },
+      },
     },
-    { title: '零件名称', index: 'part_cname', sort: true },
-    { title: '供应商', index: 'SupplierId', sort: true },
-    { title: '可用箱数', index: 'current_storage', sort: true },
-    { title: '标准包装数', index: 'packing_qty', sort: true },
-    { title: '可用散件数', index: 'current_fragpart_count', sort: true },
-    { title: '可用总件数', index: 'current_parts', sort: true },
-    { title: '单位', index: 'Unit', sort: true },
-    { title: '源库位', index: 'RdcDloc', sort: true },
-    { title: '目的库位', index: 'Dloc', sort: true },
+    {
+      title: '零件名称',
+      index: 'part_cname',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.part_cname, b.part_cname);
+        },
+      },
+    },
+    {
+      title: '供应商',
+      index: 'SupplierId',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.SupplierId, b.SupplierId);
+        },
+      },
+    },
+    {
+      title: '可用箱数',
+      index: 'current_storage',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.current_storage, b.current_storage);
+        },
+      },
+    },
+    {
+      title: '标准包装数',
+      index: 'packing_qty',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.packing_qty, b.packing_qty);
+        },
+      },
+    },
+    {
+      title: '可用散件数',
+      index: 'current_fragpart_count',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.current_fragpart_count, b.current_fragpart_count);
+        },
+      },
+    },
+    {
+      title: '可用总件数',
+      index: 'current_parts',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.current_parts, b.current_parts);
+        },
+      },
+    },
+    {
+      title: '单位',
+      index: 'Unit',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.Unit, b.Unit);
+        },
+      },
+    },
+    {
+      title: '源库位',
+      index: 'RdcDloc',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.RdcDloc, b.RdcDloc);
+        },
+      },
+    },
+    {
+      title: '目的库位',
+      index: 'Dloc',
+      sort: {
+        compare: (a: any, b: any) => {
+          return this.cfun.sortCompare(a.Dloc, b.Dloc);
+        },
+      },
+    },
   ];
 
   size = 'small';
@@ -91,7 +163,6 @@ export class WmMovewheditComponent implements OnInit {
     if (this.record.diff) {
       due = '';
     }
-    this.pages.front = true;
 
     this.capi.getPlantOfDiff('', type, due).subscribe(
       (res: any) => {
@@ -224,22 +295,6 @@ export class WmMovewheditComponent implements OnInit {
       case 'checkbox':
         this.selectedRows_s = e.checkbox!;
 
-        break;
-      case 'filter':
-        // this.getData();
-        break;
-      case 'pi':
-        this.q_s.page.pi = e.pi;
-        // this.getData();
-        break;
-      case 'ps':
-        this.q_s.page.ps = e.ps;
-        // this.getData();
-        break;
-      case 'sort':
-        this.q_s.sort.field = e.sort.column._sort.key;
-        this.q_s.sort.order = e.sort.value;
-        // this.getData();
         break;
     }
   }

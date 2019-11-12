@@ -64,4 +64,11 @@ export class CommonFunctionService {
     });
     // return data;
   }
+
+  // 前端排序用
+  sortCompare(value_a: any, value_b: any) {
+    if (value_a > value_b) return 1;
+    else if (value_a < value_b) return -1;
+    else return 0;
+  }
 }
