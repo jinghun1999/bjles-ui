@@ -5,16 +5,15 @@ import { CommonFunctionService, CommonApiService, ExpHttpService } from '@core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
 import { tap } from 'rxjs/operators';
-import { WmReturnlistEditComponent } from './edit/edit.component';
-import { WmReturnlistViewComponent } from './view/view.component';
+import { WmInventoryreportViewComponent } from './/view/view.component';
 
 @Component({
-  selector: 'app-wm-returnlist',
-  templateUrl: './returnlist.component.html',
+  selector: 'app-wm-inventoryreport',
+  templateUrl: './inventoryreport.component.html',
 })
-export class WmReturnlistComponent implements OnInit {
-  actionPath = 'Warehouse/ReturnPartList.aspx';
-  searchPath = '/wm/GetReturnPager';
+export class WmInventoryreportComponent implements OnInit {
+  actionPath = 'Warehouse/StoreInventoryReportList.aspx';
+  searchPath = '/wm/GetInventoryPager';
   @ViewChild('st', { static: false }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: ['Id'], type: 'checkbox', exported: false },
@@ -22,35 +21,24 @@ export class WmReturnlistComponent implements OnInit {
       title: '操作',
       buttons: [
         {
-          text: '修改',
-          iif: item => item.Status === 0,
-          type: 'modal',
-          click: 'reload',
-          modal: {
-            size: 'xl',
-            component: WmReturnlistEditComponent,
-          },
-        },
-        {
           text: '查看',
           iif: item => item.Status !== 0,
           type: 'modal',
           click: 'reload',
           modal: {
             size: 'xl',
-            component: WmReturnlistViewComponent,
+            component: WmInventoryreportViewComponent,
           },
         },
       ],
     },
-    { title: '退货单号', index: 'ReturnSheetCode', sort: true },
+    { title: '盘点单号', index: 'InventoryCode', sort: true },
+    { title: '盘点类型', index: 'InventoryType_name', sort: true },
+    { title: '盘点模式', index: 'InventoryMode_name', sort: true },
     { title: '工厂', index: 'PlantID', sort: true },
     { title: '车间', index: 'Warehouse', sort: true },
-    { title: '供应商', index: 'SupplierID', sort: true },
-    { title: '供应商名称', index: 'SupplierName', sort: true },
-    { title: '退货单状态', index: 'status_name', sort: true },
-    { title: '原因', index: 'Reason', sort: true },
-    { title: '退货时间', index: 'ReturnTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
+    { title: '单据状态', index: 'status_name', sort: true },
+    { title: '盘点人', index: 'InventoryUser_name', sort: true },
     { title: '创单人', index: 'CreateUser_name', sort: true },
     { title: '创单时间', index: 'CreateTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
     { title: '修改人', index: 'ModifyUser_name', sort: true },
@@ -62,22 +50,23 @@ export class WmReturnlistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  // today = new Date().toLocaleDateString();
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
     plant: '',
     workshop: [],
-    supplier: [],
-    ReturnTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
+    usePage: 'report',
+    // CreateTime: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
   data: any[] = [];
   dataAction: any[] = [];
   pre_lists = [];
   sub_workshops = [];
-  sub_supplier = new ItemData();
 
-  sub_wm_return_status = new ItemData();
+  sub_wm_Inventory_status = new ItemData();
+  sub_wm_inventory_mode = new ItemData();
+  sub_wm_inventory_type = new ItemData();
 
   dataPrints: any[] = [];
 
@@ -90,7 +79,7 @@ export class WmReturnlistComponent implements OnInit {
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
     private httpService: ExpHttpService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -194,171 +183,28 @@ export class WmReturnlistComponent implements OnInit {
       case 'HideOrExpand':
         this.hideOrExpand();
         break;
-      case 'Create':
-        this.Create();
-        break;
-      case 'Delete':
-        // 批量更新
-        this.Delete();
-        break;
-      case 'Download':
-        this.Download();
-        break;
-      case 'Active':
-        this.Confirm();
-        break;
-      case 'Print':
-        this.print();
-        break;
-      case 'Import':
-        this.import();
-        break;
+
     }
   }
 
-  import(): void {
-    const file1 = document.getElementById('import') as HTMLInputElement;
-    if (file1.files.length === 0) {
-      this.msg.error('请选择需要导入的数据文件！');
-      return;
-    }
-    const file = file1.files[0];
-    this.loading = true;
-    this.xlsx.import(file).then(res1 => {
-      // EXCEL文件之中文字段改为英文字段
-      // for (let j = 0, len = res1.sheet1[0].length; j < len; j++) {
-      //   res1.sheet1[0][j] = this.columns.find(p => p.title === res1.sheet1[0][j]).index;
-      // }
-      this.http
-        .post('/wm/ReturnImport', res1)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              if (!res.data.result) {
-                // this.cfun.downErrorExcel(res.data.column, res.data.errDT, 'supplyDate_error.xlsx');
-              }
-              this.msg.success(res.data.msg);
-              this.st.reload();
-            } else {
-              this.msg.error(res.message);
-              this.loading = false;
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    });
-  }
-
-  Confirm(): void {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择需要确认的记录！');
-      return;
-    } else {
-      this.loading = true;
-
-      this.http
-        .post('/wm/ReturnConfirm', this.selectedRows)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.msg.success(res.data);
-              this.st.reload();
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    }
-  }
-
-  print() {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择要打印的记录');
-      return false;
-    } else {
-      this.loading = true;
-      this.http
-        .post('/wm/ReturnPrint', this.selectedRows)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.dataPrints = res.data.data;
-              this.msg.success(res.data.msg);
-
-              this.dataPrints.forEach(p => {
-                window.open(p.print_file, '_blank');
-              });
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    }
-    this.st.clearCheck();
-  }
-
-  Download() {
-    this.httpService.downLoadFile('/assets/tpl/Return_import.xlsx', 'ReturnTPL');
-  }
-
-  Delete(): void {
-    if (this.selectedRows.length === 0) {
-      this.msg.error('请选择需要删除的记录！');
-      return;
-    } else {
-      this.loading = true;
-
-      this.http
-        .post('/wm/ReturnDelete', this.selectedRows)
-        .pipe(tap(() => (this.loading = false)))
-        .subscribe(
-          res => {
-            if (res.successful) {
-              this.msg.success(res.data);
-              this.st.reload();
-            } else {
-              this.msg.error(res.message);
-            }
-          },
-          (err: any) => this.msg.error('系统异常'),
-        );
-    }
-  }
 
   hideOrExpand() {
     this.expandForm = !this.expandForm;
   }
 
-  Create() {
-    this.modal.create(WmReturnlistEditComponent, { record: { add: true } }, { size: 'xl' }).subscribe(res => {
-      if (res) this.st.reload();
-    });
-  }
-
   export() {
-    if (this.st.total === 0) {
-      this.msg.error('请输入条件，查询出数据方可导出数据！');
+    if (this.selectedRows.length === 0) {
+      this.msg.error('请选择至少一行记录导出！');
       return false;
     }
-
-    this.q.page.export = true;
-    this.initWhere();
+    const ids = this.selectedRows.map(p => p.Id).toString();
     this.http
-      .post(this.searchPath, this.q)
+      .get('/wm/GetReportDetailTable?ids=' + ids)
       .pipe(tap(() => (this.loading = false)))
       .subscribe(
         res => {
           if (res.successful) {
-            this.st.export(res.data.rows, {
-              callback: this.cfun.callbackOfExport,
-              filename: 'result.xlsx',
-              sheetname: 'sheet1',
-            });
+            this.cfun.downErrorExcel(res.data.column, res.data.dt, 'inventoryReport.xlsx');
           } else {
             this.msg.error(res.message);
             this.loading = false;
@@ -367,8 +213,6 @@ export class WmReturnlistComponent implements OnInit {
         (err: any) => this.msg.error('系统异常'),
       );
 
-    this.q.page.export = false;
-    this.clrearWhere();
   }
 
   search() {
@@ -403,8 +247,8 @@ export class WmReturnlistComponent implements OnInit {
     if (this.q.workshop === '' || this.q.workshop === undefined || this.q.workshop.length === 0) {
       this.q.workshop = tmp_workshops;
     }
-    if (this.q.ReturnTime !== undefined && this.q.ReturnTime.length === 2)
-      this.q.ReturnTime = this.cfun.getSelectDate(this.q.ReturnTime);
+    // if (this.q.CreateTime !== undefined && this.q.CreateTime.length === 2)
+    //   this.q.CreateTime = this.cfun.getSelectDate(this.q.CreateTime);
   }
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);

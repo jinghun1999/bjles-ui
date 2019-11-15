@@ -51,11 +51,12 @@
       <input nz-input [nzSize]="size" [(ngModel)]="q_s.SupplierId" name="SupplierId" />
     </nz-form-control>
 
-    <button nz-button type="button" (click)="search_s($event)"> 查询 </button>
+    <button nz-button type="button" [disabled]="data_s_filter.length === 0" (click)="search_s($event)"> 查询 </button>
     <button nz-button type="button" [disabled]="selectedRows_s.length === 0" (click)="add1($event)">添加选择的零件</button>
   </nz-form-item>
 
   <nz-form-item class="mb-sm">
+    <nz-form-label>待选零件</nz-form-label>
     <st #st [columns]="columns_s" [size]="size" [data]="data_s_filter" [loading]="loading"
       (change)="stChange_s($event)">
     </st>
@@ -71,6 +72,7 @@
   </nz-form-item>
 
   <nz-form-item class="mb-sm">
+    <nz-form-label>已选零件</nz-form-label>
     <nz-table #editRowTable nzBordered [nzData]="data_t" (nzCurrentPageDataChange)="currentPageDataChange($event)">
       <thead>
         <tr>

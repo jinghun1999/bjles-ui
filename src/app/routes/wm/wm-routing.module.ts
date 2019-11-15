@@ -17,6 +17,9 @@ import { WmStockwarninglistComponent } from './stockwarninglist/stockwarninglist
 import { WmReturnlistComponent } from './returnlist/returnlist.component';
 import { WmSelfsheetlistComponent } from './selfsheetlist/selfsheetlist.component';
 import { WmTrantypelistComponent } from './trantypelist/trantypelist.component';
+import { WmInventorylistComponent } from './inventorylist/inventorylist.component';
+import { WmInventoryresultComponent } from './inventoryresult/inventoryresult.component';
+import { WmInventoryreportComponent } from './inventoryreport/inventoryreport.component';
 
 const routes: Routes = [
 
@@ -36,7 +39,10 @@ const routes: Routes = [
   { path: 'stockwarninglist', component: WmStockwarninglistComponent },
   { path: 'returnlist', component: WmReturnlistComponent },
   { path: 'selfsheetlist', component: WmSelfsheetlistComponent },
-  { path: 'trantypelist', component: WmTrantypelistComponent }];
+  { path: 'trantypelist', component: WmTrantypelistComponent },
+  { path: 'inventorylist', component: WmInventorylistComponent },
+  { path: 'inventoryresult', component: WmInventoryresultComponent },
+  { path: 'inventoryreport', component: WmInventoryreportComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

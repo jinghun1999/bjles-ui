@@ -1,0 +1,187 @@
+<div class="modal-header">
+  <div class="modal-title">{{ title }}-退货单</div>
+</div>
+<form #f="ngForm" nz-form>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">工厂*</nz-form-label>
+    <nz-form-control nzSpan="5" nzErrorTip="请选择工厂">
+      <nz-select
+        [(ngModel)]="record.PlantID"
+        [nzSize]="size"
+        name="plant"
+        [nzAllowClear]="false"
+        (ngModelChange)="plantChange($event)"
+        [nzDisabled]="!record.add"
+      >
+        <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">车间</nz-form-label>
+    <nz-form-control nzErrorTip="请选择车间" nzSpan="5">
+      <nz-select
+        [(ngModel)]="record.Warehouse"
+        [nzSize]="size"
+        name="wh_s"
+        id="wh_s"
+        nzShowSearch="true"
+        nzAllowClear="false"
+        [nzDisabled]="!record.add"
+        (ngModelChange)="workshopChange($event)"
+      >
+        <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value"> </nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">盘点类型</nz-form-label>
+    <nz-form-control nzErrorTip="请选择盘点类型" nzSpan="5">
+      <nz-select
+        [(ngModel)]="record.InventoryType"
+        [nzSize]="size"
+        name="iType"
+        id="iType"
+        nzShowSearch="true"
+        nzAllowClear="false"
+        [nzDisabled]="!record.add"
+      >
+        <nz-option *ngFor="let option of sub_wm_inventory_type.data" [nzLabel]="option.text" [nzValue]="option.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">盘点模式</nz-form-label>
+    <nz-form-control nzErrorTip="请选择盘点模式" nzSpan="5">
+      <nz-select
+        [(ngModel)]="record.InventoryMode"
+        [nzSize]="size"
+        name="iMode"
+        id="iMode"
+        nzShowSearch="true"
+        nzAllowClear="false"
+        [nzDisabled]="!record.add"
+      >
+        <nz-option *ngFor="let option of sub_wm_inventory_mode.data" [nzLabel]="option.text" [nzValue]="option.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+
+    <nz-form-label nzSpan="2">盘点人</nz-form-label>
+    <nz-form-control nzErrorTip="请选择盘点人" nzSpan="5">
+      <nz-select
+        [(ngModel)]="record.InventoryUser"
+        [nzSize]="size"
+        name="iUser"
+        id="iUser"
+        nzShowSearch="true"
+        nzAllowClear="false"
+      >
+        <nz-option *ngFor="let option of sub_InventoryUser.data" [nzLabel]="option.text" [nzValue]="option.val">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">备注</nz-form-label>
+    <nz-form-control nzSpan="19">
+      <textarea rows="2" nzSize="size" nz-input [(ngModel)]="record.Remark" name="Remark"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <hr />
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">零件号</nz-form-label>
+    <nz-form-control nzSpan="2">
+      <input nz-input [nzSize]="size" [(ngModel)]="q_s.PartNumber" name="PartNumber" maxlength="8" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">供应商代码</nz-form-label>
+    <nz-form-control nzSpan="2">
+      <input nz-input [nzSize]="size" [(ngModel)]="q_s.SupplierId" name="SupplierId" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">库位地址</nz-form-label>
+    <nz-form-control nzSpan="2">
+      <input nz-input [nzSize]="size" [(ngModel)]="q_s.Dloc" name="Dloc" />
+    </nz-form-control>
+
+    <nz-form-control nzSpan="8">
+      <label
+        nz-checkbox
+        [(ngModel)]="this.record.IsAllParts"
+        name="IsAllParts"
+        [nzDisabled]="data_s_filter.length === 0"
+        (ngModelChange)="addAllParts($event)"
+        >全库盘点</label
+      >
+      <button nz-button type="button" [disabled]="data_s_filter.length === 0" (click)="search_s($event)">查询</button>
+      <button nz-button type="button" [disabled]="selectedRows_s.length === 0" (click)="add1($event)">
+        添加选择的零件
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label>可选零件</nz-form-label>
+    <st
+      #st
+      [columns]="columns_s"
+      [size]="size"
+      [data]="data_s_filter"
+      [loading]="loading"
+      (change)="stChange_s($event)"
+    >
+    </st>
+  </nz-form-item>
+
+  <hr />
+  <nz-form-item class="mb-sm">
+    <button nz-button type="button" [disabled]="numberOfChecked === 0" (click)="remove($event)">移除选择的零件</button>
+    <!-- <button nz-button type="button" (click)="close()">关闭</button> -->
+    <button nz-button type="button" (click)="save()" [disabled]="data_t.length === 0" [nzLoading]="http.loading">
+      保存
+    </button>
+  </nz-form-item>
+
+  <nz-form-item class="mb-sm">
+    <nz-form-label>已选零件</nz-form-label>
+    <nz-table #editRowTable nzBordered [nzData]="data_t" (nzCurrentPageDataChange)="currentPageDataChange($event)">
+      <thead>
+        <tr>
+          <th
+            nzShowCheckbox
+            [(nzChecked)]="isAllDisplayDataChecked"
+            [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="checkAll($event)"
+          ></th>
+
+          <th>零件号</th>
+          <th>零件名称</th>
+          <th>供应商</th>
+          <th>供应商名称</th>
+          <th>库位地址</th>
+          <th>备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of editRowTable.data" class="editable-row">
+          <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.idx]" (nzCheckedChange)="refreshStatus()"></td>
+
+          <td>{{ data.PartNumber }}</td>
+          <td>{{ data.PartName }}</td>
+          <td>{{ data.SupplierId }}</td>
+          <td>{{ data.SupplierName }}</td>
+          <td>{{ data.Dloc }}</td>
+          <td>
+            <div class="editable-cell" *ngIf="editId !== data.idx; else editTpl">
+              <div class="editable-cell-value-wrap" (click)="startEdit(data.idx, $event)">
+                {{ data.Remark }}
+              </div>
+            </div>
+            <ng-template #editTpl>
+              <input nz-input [(ngModel)]="data.Remark" name="Remark" nzSize="size" maxlength="100" />
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-form-item>
+</form>

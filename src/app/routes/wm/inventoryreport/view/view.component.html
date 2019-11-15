@@ -1,0 +1,43 @@
+<nz-card [nzHoverable]="true" [nzBordered]="false" nzTitle="详细信息">
+  <!-- begin 差异原因有效 -->
+  <div class="search-buttons" *ngIf="this.record.pageStatus !== ''">
+    <button *ngFor="let i of dataAction;" [nzLoading]="loading" nz-button type="click" (click)="toolBarOnClick(i)">
+      {{ i.action_name_cn }}
+    </button>
+  </div>
+  <nz-form-item class="mb-sm" *ngIf="this.record.pageStatus === 'Confirm'">
+    <nz-form-label nzSpan="2">分析差异原因</nz-form-label>
+    <nz-form-control nzSpan="19">
+      <textarea rows="2" nzSize="size" nz-input [(ngModel)]="record.DiffReason" name="DiffReason"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- end 差异原因有效 -->
+  <div nz-row [nzGutter]="24" *ngIf="expandForm">
+
+    <sv-container size="size">
+      <sv label="单号">{{ record.InventoryCode }}</sv>
+      <sv label="工厂">{{ record.PlantID }}</sv>
+      <sv label="车间">{{ record.Warehouse }}</sv>
+      <sv label="盘点类型">{{ record.InventoryType_name }}</sv>
+      <sv label="盘点模式">{{ record.InventoryMode_name }}</sv>
+      <sv label="盘点人">{{ record.InventoryUser_name }}</sv>
+      <sv label="全库盘点"><label nz-checkbox [(ngModel)]="record.IsAllParts" [nzDisabled]="true"></label></sv>
+      <sv label="备注信息">{{ record.Remark }}</sv>
+    </sv-container>
+  </div>
+
+  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail">
+    <ng-template st-row="rd_supplier" let-item let-index="index">
+      <div class="truncation" id="divSupplier" title="{{item.SupplierId+'('+item.SupplierName+')'}}">
+        {{item.SupplierId + '(' + item.SupplierName + ')'}}
+      </div>
+    </ng-template>
+    <ng-template st-row="rd_part" let-item let-index="index">
+      <div class="truncation" id="divPart" title="{{item.PartName}}">
+        {{item.PartName }}
+      </div>
+    </ng-template>
+
+  </st>
+</nz-card>

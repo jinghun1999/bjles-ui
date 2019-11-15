@@ -13,7 +13,7 @@ export class DdDetailComponent implements OnInit {
     public msgSrv: NzMessageService,
     public http: _HttpClient,
     public msg: NzMessageService,
-  ) {}
+  ) { }
   size: 'small';
   record: any = {};
   i: any;
@@ -23,7 +23,7 @@ export class DdDetailComponent implements OnInit {
     { title: '零件序号', type: 'no', width: 60 },
     { title: '拉动方式', index: 'interface_types' },
     { title: '零件号', index: 'part_code' },
-    { title: '零件名称', index: 'part_name' },
+    { title: '零件名称', index: 'part_name', render: 'rd_part', },
     { title: '需求箱数', index: 'required_pack_count' },
     { title: '整包装数', index: 'pack_size' },
     { title: '包装型号', index: 'pack_type' },

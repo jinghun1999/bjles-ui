@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
-import { ItemData, PagerConfig, PageInfo, SortInfo } from 'src/app/model';
+import { ItemData } from 'src/app/model';
 import { CommonApiService, CommonFunctionService, ENUMSheetType } from '@core';
-import { STData, STPage, STComponent, STColumn, STChange } from '@delon/abc';
+import { STData, STComponent, STColumn, STChange } from '@delon/abc';
 
 @Component({
-  selector: 'app-wm-movewhedit',
-  templateUrl: './movewhedit.component.html',
+  selector: 'app-wm-inventorylist-edit',
+  templateUrl: './edit.component.html',
 })
-export class WmMovewheditComponent implements OnInit {
+export class WmInventorylistEditComponent implements OnInit {
   record: any;
   // actionPath = 'Warehouse/wmtrantypeedit.aspx';
 
@@ -28,9 +28,12 @@ export class WmMovewheditComponent implements OnInit {
   numberOfChecked = 0;
 
   q_s: any = {
-    part_no: '',
+    PartNumber: '',
+    SupplierId: '',
+    Dloc: '',
   };
 
+  // @ViewChild('st', { static: true }) st: STComponent;
   @ViewChild('st', { static: true }) st: STComponent;
   columns_s: STColumn[] = [
     {
@@ -42,19 +45,19 @@ export class WmMovewheditComponent implements OnInit {
     { title: '序号', type: 'no' },
     {
       title: '零件号',
-      index: 'part_no',
+      index: 'PartNumber',
       sort: {
         compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.part_no, b.part_no);
+          return this.cfun.sortCompare(a.PartNumber, b.PartNumber);
         },
       },
     },
     {
       title: '零件名称',
-      index: 'part_cname',
+      index: 'PartName',
       sort: {
         compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.part_cname, b.part_cname);
+          return this.cfun.sortCompare(a.PartName, b.PartName);
         },
       },
     },
@@ -68,66 +71,19 @@ export class WmMovewheditComponent implements OnInit {
       },
     },
     {
-      title: '可用箱数',
-      index: 'current_storage',
+      title: '供应商名称',
+      index: 'SupplierName',
       sort: {
         compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.current_storage, b.current_storage);
+          return this.cfun.sortCompare(a.SupplierName, b.SupplierName);
         },
       },
     },
     {
-      title: '标准包装数',
-      index: 'packing_qty',
-      sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.packing_qty, b.packing_qty);
-        },
-      },
-    },
-    {
-      title: '可用散件数',
-      index: 'current_fragpart_count',
-      sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.current_fragpart_count, b.current_fragpart_count);
-        },
-      },
-    },
-    {
-      title: '可用总件数',
-      index: 'current_parts',
-      sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.current_parts, b.current_parts);
-        },
-      },
-    },
-    {
-      title: '单位',
-      index: 'Unit',
-      sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.Unit, b.Unit);
-        },
-      },
-    },
-    {
-      title: '源库位',
-      index: 'RdcDloc',
-      sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.RdcDloc, b.RdcDloc);
-        },
-      },
-    },
-    {
-      title: '目的库位',
+      title: '库位地址',
       index: 'Dloc',
       sort: {
-        compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.Dloc, b.Dloc);
-        },
+        compare: (a: any, b: any) => a.Dloc - b.Dloc,
       },
     },
   ];
@@ -136,6 +92,9 @@ export class WmMovewheditComponent implements OnInit {
   pre_lists = [];
   sub_workshops = [];
 
+  sub_wm_inventory_mode = new ItemData();
+  sub_wm_inventory_type = new ItemData();
+  sub_InventoryUser = new ItemData();
   // dataAction: any[] = [];
 
   loading = false;
@@ -157,6 +116,7 @@ export class WmMovewheditComponent implements OnInit {
     } else {
       this.title = '编辑';
       this.record.add = false;
+      this.record.InventoryUser = this.record.InventoryUser + '';
     }
     const type = '';
     let due = '0';
@@ -183,14 +143,54 @@ export class WmMovewheditComponent implements OnInit {
     // });
 
     this.initCodeDetail();
+
+    this.http.get(`/system/GetUserListBind`).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          this.sub_InventoryUser.data = res.data;
+        } else this.msg.error(res.message);
+
+        this.loading = false;
+      },
+      (err: any) => this.msg.error('获取盘点人失败!'),
+    );
   }
 
   save() {
+    let result = true;
+    this.data_t.forEach(p => {
+      // tslint:disable-next-line: prefer-conditional-expression
+      if (p.InventoryPartQty > 0) result = false;
+      else result = true;
+    });
+    if (this.data_t.length === 0) {
+      this.msg.error('请选择盘点零件!');
+      return;
+    }
+    if (this.record.add) {
+      if (this.record.Warehouse === undefined || this.record.Warehouse.length === 0) {
+        this.msg.error('请选择车间!');
+        return;
+      }
+      if (this.record.InventoryType === undefined || this.record.InventoryType.length === 0) {
+        this.msg.error('请选择盘点类型!');
+        return;
+      }
+      if (this.record.InventoryMode === undefined || this.record.InventoryMode.length === 0) {
+        this.msg.error('请选择盘点模式!');
+        return;
+      }
+      if (this.record.InventoryUser === undefined || this.record.InventoryUser.length === 0) {
+        this.msg.error('请选择盘点人!');
+        return;
+      }
+    }
+
     this.loading = true;
     // this.record.workday = this.cfun.getDate(this.record.workday);
     const removes = this.data_s.filter(p => p.Id > 0 && p.direction === 'left');
 
-    this.http.post('/wm/MoveWHSave', { main: this.record, detail: this.data_t, removes }).subscribe(
+    this.http.post('/wm/InventorySave', { main: this.record, detail: this.data_t, removes }).subscribe(
       (res: any) => {
         if (res.successful) {
           this.msg.success(res.data);
@@ -212,36 +212,33 @@ export class WmMovewheditComponent implements OnInit {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
 
-    this.GetSupplierPartsOfZJ();
+    this.GetSupplierPartsOfInventory();
   }
 
   workshopChange(value: string): void {
-    this.GetSupplierPartsOfZJ();
+    this.GetSupplierPartsOfInventory();
   }
-  GetSupplierPartsOfZJ() {
+  GetSupplierPartsOfInventory() {
     const plant = this.record.PlantID;
-    const sourceWH = this.record.SourceWH;
-    const targetWH = this.record.TargetWH;
+    const workshop = this.record.Warehouse;
     const Id = this.record.Id;
-    if (sourceWH === undefined || sourceWH.length === 0 || targetWH === undefined || targetWH.length === 0) {
+    if (workshop === undefined || workshop.length === 0) {
       return;
     }
 
     // 供应商零件信息
-    this.http
-      .get(`/wm/GetSupplierPartsOfYK?plant=${plant}&sourceWH=${sourceWH}&targetWH=${targetWH}&Id=${Id}`)
-      .subscribe(
-        (res: any) => {
-          if (res.successful) {
-            this.data_s = res.data;
-            this.filter();
-            // tslint:disable-next-line: no-unused-expression
-          } else this.msg.error(res.message);
+    this.http.get(`/wm/GetSupplierPartsOfInventory?plant=${plant}&workshop=${workshop}&Id=${Id}`).subscribe(
+      (res: any) => {
+        if (res.successful) {
+          this.data_s = res.data;
+          this.filter();
+          // tslint:disable-next-line: no-unused-expression
+        } else this.msg.error(res.message);
 
-          this.loading = false;
-        },
-        (err: any) => this.msg.error('保存失败!'),
-      );
+        this.loading = false;
+      },
+      (err: any) => this.msg.error('保存失败!'),
+    );
   }
   filter() {
     // this.st.filteredData(p => p.direction === 'left');
@@ -251,33 +248,29 @@ export class WmMovewheditComponent implements OnInit {
   }
 
   initCodeDetail() {
-    // this.capi.getCodeDetailInfo('SAPMode', '', 'int').subscribe((res: any) => {
-    //   this.sub_SAPMode.data = res;
-    //   if (this.record.add === true && (this.record.SapSourceMode === null || this.record.SapSourceMode === undefined))
-    //     this.record.SapSourceMode = res[0].val;
-    //   if (this.record.add === true && (this.record.SapTargetMode === null || this.record.SapTargetMode === undefined))
-    //     this.record.SapTargetMode = res[0].val;
-    // });
-    // this.capi.getCodeDetailInfo('wm_tran_sheet_type', '', 'string').subscribe((res: any) => {
-    //   this.sub_wm_tran_sheet_type.data = res;
-    // });
+    this.capi.getCodeDetailInfo('wm_inventory_type', '', 'string').subscribe((res: any) => {
+      this.sub_wm_inventory_type.data = res;
+    });
+    this.capi.getCodeDetailInfo('wm_inventory_mode', '', 'string').subscribe((res: any) => {
+      this.sub_wm_inventory_mode.data = res;
+    });
   }
 
   getListItems(value: any, type: any): void {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);
 
-    if (value && this.record.TargetWH.toString() !== tmp_data.last_workshop) {
-      if (this.record.TargetWH.length > 0) {
+    if (value && this.record.Warehouse.toString() !== tmp_data.last_workshop) {
+      if (this.record.Warehouse.length > 0) {
         this.loading = true;
-        this.capi.getListItems(type, this.record.PlantID, this.record.TargetWH.toString()).subscribe(
+        this.capi.getListItems(type, this.record.PlantID, this.record.Warehouse.toString()).subscribe(
           (res: any) => {
             tmp_data.data = res;
           },
           (err: any) => this.msg.error('获取数据失败!'),
         );
         this.loading = false;
-        tmp_data.last_workshop = this.record.TargetWH.toString();
+        tmp_data.last_workshop = this.record.Warehouse.toString();
       } else {
         tmp_data.data = [];
         tmp_data.last_workshop = '';
@@ -296,22 +289,32 @@ export class WmMovewheditComponent implements OnInit {
         this.selectedRows_s = e.checkbox!;
 
         break;
+
+      // case 'sort':
+      //   this.q_s.sort.field = e.sort.column._sort.key;
+      //   this.q_s.sort.order = e.sort.value;
+      //   // this.getData();
+      //   break;
     }
   }
   search_s(e: any): void {
     if (
-      (this.q_s.part_no === undefined || this.q_s.part_no === '') &&
-      (this.q_s.SupplierId === undefined || this.q_s.SupplierId === '')
+      (this.q_s.PartNumber === undefined || this.q_s.PartNumber === '') &&
+      (this.q_s.SupplierId === undefined || this.q_s.SupplierId === '') &&
+      (this.q_s.Dloc === undefined || this.q_s.Dloc.length === 0)
     ) {
       this.filter();
       return;
     }
     this.data_s_filter = this.data_s.filter(
       p =>
-        (this.q_s.part_no !== undefined && this.q_s.part_no.length > 0 && p.part_no.indexOf(this.q_s.part_no) > -1) ||
+        (this.q_s.PartNumber !== undefined &&
+          this.q_s.PartNumber.length > 0 &&
+          p.PartNumber.indexOf(this.q_s.PartNumber) > -1) ||
         (this.q_s.SupplierId !== undefined &&
           this.q_s.SupplierId.length > 0 &&
-          p.SupplierId.indexOf(this.q_s.SupplierId) > -1),
+          p.SupplierId.indexOf(this.q_s.SupplierId) > -1) ||
+        (this.q_s.Dloc !== undefined && this.q_s.Dloc.length > 0 && p.Dloc.indexOf(this.q_s.Dloc) > -1),
     );
     this.cdr.detectChanges();
   }
@@ -319,63 +322,47 @@ export class WmMovewheditComponent implements OnInit {
   add1(e: any): void {
     this.initData();
     this.selectedRows_s.forEach(p => {
-      const item = this.data_s.find(
-        pp => pp.idx === p.idx,
-      );
+      const item = this.data_s.find(pp => pp.idx === p.idx);
       item.direction = 'right';
     });
     this.filter();
     // this.selectedRows_s = [];
     this.st.clearCheck();
   }
+  addAllParts(e:any): void {
+    if (e) {
+      this.data_s
+        .filter(p => p.direction === 'left')
+        .forEach(p => {
+          p.direction = 'right';
+        });
+    }
+    this.filter();
+  }
   remove(e: any): void {
     this.initData();
     this.data_t
       .filter(item => this.mapOfCheckedId[item.idx])
       .forEach(p => {
-        const item = this.data_s.find(
-          pp => pp.idx === p.idx,
-          );
+        const item = this.data_s.find(pp => pp.idx === p.idx);
         item.direction = 'left';
+        this.mapOfCheckedId[item.idx] = false;
       });
     this.filter();
+    if (this.data_s_filter.length > 0) this.record.IsAllParts = false;
+    this.refreshStatus();
+
     // this.st.clearCheck();
   }
   initData() {
-    this.data_t.forEach(p => {
-      const item = this.data_s.find(pp => pp.idx === p.idx);
-      if (item !== undefined) {
-        item.RequiredPackQty = p.RequiredPackQty;
-        item.RequiredFragpartQty = p.RequiredFragpartQty;
-        item.RequiredPartQty = p.RequiredPartQty;
-      }
-    });
-  }
-  PackQtyChange(value: any, item: any) {
-    // tslint:disable-next-line: radix
-    let c = parseInt(value);
-    // tslint:disable-next-line: radix
-    let f = parseInt(item.RequiredFragpartQty);
-    if (isNaN(c)) {
-      c = 1;
-    } else if (isNaN(f)) {
-      f = 0;
-    }
-    c = f > 0 ? c - 1 : c;
-    item.RequiredPartQty = c * item.packing_qty + f;
-  }
-  FragPartsChange(value: any, item: any) {
-    // tslint:disable-next-line: radix
-    let f = parseInt(value);
-    // tslint:disable-next-line: radix
-    let c = parseInt(item.RequiredPackQty);
-    if (isNaN(c)) {
-      c = 1;
-    } else if (isNaN(f)) {
-      f = 0;
-    }
-    c = f > 0 ? c - 1 : c;
-    item.RequiredPartQty = c * item.packing_qty + f;
+    // this.data_t.forEach(p => {
+    //   const item = this.data_s.find(pp => pp.idx === p.idx);
+    //   if (item !== undefined) {
+    //     // tslint:disable-next-line: prefer-conditional-expression
+    //     if (p.InventoryPartQty === 0) item.InventoryPartQty = '';
+    //     else item.InventoryPartQty = p.InventoryPartQty;
+    //   }
+    // });
   }
 
   startEdit(id: string, event: MouseEvent): void {

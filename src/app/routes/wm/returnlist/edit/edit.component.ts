@@ -152,6 +152,10 @@ export class WmReturnlistEditComponent implements OnInit {
 
   save() {
     let result = true;
+    if (this.data_t.length === 0) {
+      this.msg.error('请选择退货零件!');
+      return;
+    }
     this.data_t.forEach(p => {
       // tslint:disable-next-line: prefer-conditional-expression
       if (p.ReturnPartQty > 0) result = false;
@@ -287,14 +291,16 @@ export class WmReturnlistEditComponent implements OnInit {
     if (
       (this.q_s.PartNumber === undefined || this.q_s.PartNumber === '') &&
       (this.q_s.PartName === undefined || this.q_s.PartName === '')
-    )
+    ) {
+      this.filter();
       return;
+    }
     this.data_s_filter = this.data_s.filter(
       p =>
         (this.q_s.PartNumber !== undefined &&
-          this.q_s.PartNumber !== null &&
+          this.q_s.PartNumber.length > 0 &&
           p.PartNumber.indexOf(this.q_s.PartNumber) > -1) ||
-        (this.q_s.PartName !== undefined && this.q_s.PartName !== null && p.PartName.indexOf(this.q_s.PartName) > -1),
+        (this.q_s.PartName !== undefined && this.q_s.PartName.length > 0 && p.PartName.indexOf(this.q_s.PartName) > -1),
     );
     this.cdr.detectChanges();
   }
@@ -303,7 +309,7 @@ export class WmReturnlistEditComponent implements OnInit {
     this.initData();
     this.selectedRows_s.forEach(p => {
       const item = this.data_s.find(
-        pp => pp.plant === p.plant && pp.PartNumber === p.PartNumber && pp.PartName === p.PartName,
+        pp => pp.idx === p.idx,
       );
       item.direction = 'right';
     });
@@ -317,8 +323,8 @@ export class WmReturnlistEditComponent implements OnInit {
       .filter(item => this.mapOfCheckedId[item.idx])
       .forEach(p => {
         const item = this.data_s.find(
-          pp => pp.plant === p.plant && pp.PartNumber === p.PartNumber && pp.PartName === p.PartName,
-        );
+          pp => pp.idx === p.idx,
+          );
         item.direction = 'left';
       });
     this.filter();

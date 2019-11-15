@@ -318,13 +318,15 @@ export class WmDiffwriteoffEditComponent implements OnInit {
     if (
       (this.q_s.part_no === undefined || this.q_s.part_no === '') &&
       (this.q_s.SupplierId === undefined || this.q_s.SupplierId === '')
-    )
+    ) {
+      this.filter();
       return;
+    }
     this.data_s_filter = this.data_s.filter(
       p =>
-        (this.q_s.part_no !== undefined && this.q_s.part_no !== null && p.part_no.indexOf(this.q_s.part_no) > -1) ||
+        (this.q_s.part_no !== undefined && this.q_s.part_no.length > 0 && p.part_no.indexOf(this.q_s.part_no) > -1) ||
         (this.q_s.SupplierId !== undefined &&
-          this.q_s.SupplierId !== null &&
+          this.q_s.SupplierId.length > 0 &&
           p.SupplierId.indexOf(this.q_s.SupplierId) > -1),
     );
     this.cdr.detectChanges();
@@ -334,7 +336,7 @@ export class WmDiffwriteoffEditComponent implements OnInit {
     this.initData();
     this.selectedRows_s.forEach(p => {
       const item = this.data_s.find(
-        pp => pp.plant === p.plant && pp.part_no === p.part_no && pp.SupplierId === p.SupplierId,
+        pp => pp.idx === p.idx,
       );
       item.direction = 'right';
     });
@@ -348,8 +350,8 @@ export class WmDiffwriteoffEditComponent implements OnInit {
       .filter(item => this.mapOfCheckedId[item.idx])
       .forEach(p => {
         const item = this.data_s.find(
-          pp => pp.plant === p.plant && pp.part_no === p.part_no && pp.SupplierId === p.SupplierId,
-        );
+          pp => pp.idx === p.idx,
+          );
         item.direction = 'left';
       });
     this.filter();

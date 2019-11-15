@@ -21,5 +21,11 @@
 
   </sv-container>
   <div class="text-xs my-md" style="color:black">物料单明细记录</div>
-  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail"></st>
+  <st [data]="dataDetail" size="size" [widthMode]="widthMode" [columns]="columnsDetail">
+    <ng-template st-row="rd_part" let-item let-index="index">
+      <div class="truncation" id="divPart" title="{{item.part_name}}">
+        {{item.part_name }}
+      </div>
+    </ng-template>
+  </st>
 </nz-card>

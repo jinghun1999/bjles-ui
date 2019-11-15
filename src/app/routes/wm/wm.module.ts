@@ -39,6 +39,14 @@ import { WmSelfsheetlistViewComponent } from './selfsheetlist/view/view.componen
 import { WmSelfsheetlistEditComponent } from './selfsheetlist/edit/edit.component';
 import { WmTrantypelistComponent } from './trantypelist/trantypelist.component';
 import { WmTrantypelistEditComponent } from './trantypelist/edit/edit.component';
+import { WmInventorylistComponent } from './inventorylist/inventorylist.component';
+import { WmInventorylistViewComponent } from './inventorylist/view/view.component';
+import { WmInventorylistEditComponent } from './inventorylist/edit/edit.component';
+import { WmInventorylistImportComponent } from './inventorylist/import/import.component';
+import { WmInventoryresultComponent } from './inventoryresult/inventoryresult.component';
+import { WmInventoryreportComponent } from './inventoryreport/inventoryreport.component';
+import { WmInventoryreportViewComponent } from './inventoryreport/view/view.component';
+import { WmInventoryresultViewComponent } from './inventoryresult/view/view.component';
 
 const COMPONENTS = [
   WmTerminallistComponent,
@@ -57,7 +65,10 @@ const COMPONENTS = [
   WmStockwarninglistComponent,
   WmReturnlistComponent,
   WmSelfsheetlistComponent,
-  WmTrantypelistComponent];
+  WmTrantypelistComponent,
+  WmInventorylistComponent,
+  WmInventoryresultComponent,
+  WmInventoryreportComponent];
 const COMPONENTS_NOROUNT = [
   WmTerminallistEditComponent,
   WmInboundconfirmlistEditComponent,
@@ -79,7 +90,12 @@ const COMPONENTS_NOROUNT = [
   WmReturnlistViewComponent,
   WmSelfsheetlistViewComponent,
   WmSelfsheetlistEditComponent,
-  WmTrantypelistEditComponent];
+  WmTrantypelistEditComponent,
+  WmInventorylistViewComponent,
+  WmInventorylistEditComponent,
+  WmInventorylistImportComponent,
+  WmInventoryreportViewComponent,
+  WmInventoryresultViewComponent];
 
 @NgModule({
   imports: [
