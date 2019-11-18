@@ -8,7 +8,7 @@ import { PageInfo, SortInfo } from 'src/app/model';
   providedIn: 'root',
 })
 export class CommonApiService {
-  constructor(private http: HttpClient, public cache: CacheService) {}
+  constructor(private http: HttpClient, public cache: CacheService) { }
 
   getPlant() {
     return new Observable(observe => {
@@ -103,6 +103,9 @@ export class CommonApiService {
       case 'supplier_code':
       case 'supplier':
         url = '/supplier/getSuppliers';
+        break;
+      case 'supplier_inner':
+        url = '/supplier/getSuppliers_inner';
         break;
       case 'supplier_print':
         url = '/supplier/GetSuppliersByPrint';
