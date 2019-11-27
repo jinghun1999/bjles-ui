@@ -62,7 +62,7 @@
     </div>
   </form>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" virtualItemSize="q.ps" [loading]="loading" (change)="stChange($event)"
+    <st #st [columns]="columns" [size]="size" virtualItemSize="q.page.ps" [loading]="loading" (change)="stChange($event)"
       [page]="pages" [data]="data">
     </st>
   </ng-container>
