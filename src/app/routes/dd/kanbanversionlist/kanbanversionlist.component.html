@@ -52,7 +52,7 @@
           <nz-form-label [nzSpan]="8">零件卡号</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请输入零件卡号">
             <input nz-input maxlength="8" [(ngModel)]="q.card_no" name="card_no" id="card_no" [nzSize]="size"
-              placeholder="请输入零件号" />
+              placeholder="请输入零件卡号" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -66,7 +66,7 @@
     </div>
   </form>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" virtualItemSize="q.ps" [loading]="loading" (change)="stChange($event)"
+    <st #st [columns]="columns" [size]="size" virtualItemSize="q.page.ps" [loading]="loading" (change)="stChange($event)"
       [page]="pages" [data]="data">
       <ng-template st-row="rd_part_name" let-item let-index="index">
         <div class="truncation" id="div_part_name" title="{{item.part_name}}">

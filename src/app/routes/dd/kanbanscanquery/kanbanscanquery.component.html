@@ -113,7 +113,7 @@
     </div>
   </form>
   <ng-container>
-    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '1600px'}" virtualItemSize="q.ps" [loading]="loading"
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '1600px'}" virtualItemSize="q.page.ps" [loading]="loading"
       (change)="stChange($event)" [page]="pages" [data]="data">
       <ng-template st-row="rd_part_name" let-item let-index="index">
         <div class="truncation" id="div_part_name" title="{{item.part_name}}">
