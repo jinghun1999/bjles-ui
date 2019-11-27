@@ -1,9 +1,81 @@
-<page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
+<page-header></page-header>
+<nz-card nzBordered="false">
+  <form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24" *ngIf="expandForm">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">工厂</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
+            <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)" required>
+              <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">车间</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
+            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="wk" id="wk" [nzPlaceHolder]="'请选择'"
+              nzShowSearch="true" [nzMaxTagCount]="1" required>
+              <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">看板卡号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入看板卡号">
+            <input nz-input maxlength="12" [(ngModel)]="q.KBCode12" name="kb12" id="kb12" [nzSize]="size"
+              placeholder="请输入看板卡号" (keyup)="kb12_keyup($event)" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSpan]="8">10位看板卡号</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="请输入10位看板卡号">
+            <input nz-input maxlength="10" [(ngModel)]="q.KBCode10" name="kb10" id="kb10" [nzSize]="size"
+              placeholder="请输入10位看板卡号" (keyup)="kb10_keyup($event)" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div class="search-buttons">
+      <button style="display:none"></button>
+      <button *ngFor="let i of dataAction;" id="btn{{i.action_name}}" nz-button type="click"
+        (click)="toolBarOnClick(i)">
+        {{ i.action_name_cn }}
+      </button>
+
+      <ng-template #contentTemplate>
+        <div>
+          <p *ngFor="let i of dataRepeat">重复卡号：{{i}}</p>
+        </div>
+        <div>
+          <p *ngFor="let i of dataError">错误卡号：{{i.ScanNo}}</p>
+        </div>
+      </ng-template>
+      <button nz-button nz-popover nzPopoverTitle="问题卡号" [nzPopoverContent]="contentTemplate" nzPopoverTrigger="hover">
+        问题卡号{{ this.dataError.length+this.dataRepeat.length}}条
+      </button>
+
+    </div>
+  </form>
+  <ng-container>
+
+    <st #st_Scan *ngIf="expand_Scan" [columns]="columns" [size]="size" [loading]="loading" (change)="stChange($event)"
+      [data]="data">
+    </st>
+
+    <st #st_Sum *ngIf="expand_Sum" [columns]="columns_sum" [size]="size" [loading]="loading" (change)="stChange($event)"
+      [data]="dataSum">
+    </st>
+
+  </ng-container>
 </nz-card>
