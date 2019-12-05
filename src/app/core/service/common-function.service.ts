@@ -6,7 +6,7 @@ import { XlsxService } from '@delon/abc';
   providedIn: 'root',
 })
 export class CommonFunctionService {
-  constructor(private xlsx: XlsxService) {}
+  constructor(private xlsx: XlsxService) { }
 
   callbackOfExport(e: any) {
     // 更新到8.3.2后不需要 这个功能 了
@@ -34,7 +34,7 @@ export class CommonFunctionService {
   getSelectDate(e: any) {
     if (e !== undefined && e !== '' && e.length > 0) {
       for (let j = 0, len = e.length; j < len; j++) {
-        e[j] = format(e[j], 'YYYY-MM-DD HH:mm:ss');
+        e[j] = format(e[j], 'YYYY/MM/DD HH:mm:ss');
       }
     }
     return e;
@@ -42,6 +42,14 @@ export class CommonFunctionService {
   getDate(e: any) {
     if (e !== undefined && e !== '') {
       e = format(e, 'YYYY-MM-DD HH:mm:ss');
+    }
+    return e;
+  }
+
+  getDateFormat(e: any, _format: any) {
+    if (e !== undefined && e !== '') {
+      if (_format !== undefined && _format !== '' && _format !== null)
+        e = format(e, _format);
     }
     return e;
   }

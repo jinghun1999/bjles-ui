@@ -20,7 +20,7 @@ export class JisSheetlistComponent implements OnInit, OnDestroy {
     private cfun: CommonFunctionService,
   ) {}
 
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),

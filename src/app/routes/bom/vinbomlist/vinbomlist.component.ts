@@ -39,7 +39,7 @@ export class BomVinbomlistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -63,7 +63,7 @@ export class BomVinbomlistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;

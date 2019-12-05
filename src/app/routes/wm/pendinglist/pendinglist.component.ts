@@ -67,7 +67,7 @@ export class WmPendinglistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),

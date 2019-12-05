@@ -65,7 +65,7 @@ export class WmSelfsheetlistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
 
   q: any = {
     page: new PageInfo(),
@@ -93,7 +93,7 @@ export class WmSelfsheetlistComponent implements OnInit {
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
     private httpService: ExpHttpService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;

@@ -16,7 +16,7 @@ export class DdKanbanscanqueryComponent implements OnInit {
   actionPath = 'DDManagement/ScanCardQuery.aspx';
   searchPath = '/dd/GetkbScanQueryPager';
 
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),

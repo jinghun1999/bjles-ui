@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 })
 export class DdSheetlistComponent implements OnInit, OnDestroy {
   actionPath = 'DDManagement/RunSheetList.aspx';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -105,7 +105,7 @@ export class DdSheetlistComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -220,7 +220,7 @@ export class DdSheetlistComponent implements OnInit, OnDestroy {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => {});
+    setTimeout(() => { });
     // setTimeout(() => this.getData());
   }
 

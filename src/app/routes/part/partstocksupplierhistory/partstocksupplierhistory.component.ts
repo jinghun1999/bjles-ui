@@ -44,7 +44,8 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
+
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -53,6 +54,7 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
     dock: [],
     Synchronization_time: [new Date(this.today + ' 00:00:00'), new Date(this.today + ' 23:59:59')],
   };
+
   data: any[] = [];
   data_import: any;
   dataAction: any[] = [];
@@ -68,7 +70,7 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -129,8 +131,8 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value; this.getData();
         break;
     }
   }
@@ -258,7 +260,7 @@ export class PartPartstocksupplierhistoryComponent implements OnInit {
     if (this.q.Synchronization_time !== undefined && this.q.Synchronization_time.length === 2) {
       this.q.Synchronization_time = this.cfun.getSelectDate(this.q.Synchronization_time);
     }
- }
+  }
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];

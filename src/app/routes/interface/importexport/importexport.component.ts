@@ -17,7 +17,7 @@ export class InterfaceImportexportComponent implements OnInit {
   expandForm = true;
   loading: boolean;
 
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   size = 'small';
   q: any = {
     tableName: '',

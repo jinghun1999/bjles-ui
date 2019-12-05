@@ -23,7 +23,7 @@ export class JisRackComponent implements OnInit {
     private modelSrv: NzModalService,
     private xlsx: XlsxService,
   ) {}
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),

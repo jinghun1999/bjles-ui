@@ -31,7 +31,7 @@ export class BomVsnbomversionlistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),
@@ -50,7 +50,7 @@ export class BomVsnbomversionlistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -93,8 +93,8 @@ export class BomVsnbomversionlistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value; this.getData();
         break;
     }
   }

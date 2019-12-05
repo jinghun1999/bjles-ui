@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 })
 export class DdSheetlistPartComponent implements OnInit, OnDestroy {
   actionPath = 'DDManagement/RunSheetListByPart.aspx';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   q: any = {
     page: new PageInfo(),
     sort: new SortInfo(),

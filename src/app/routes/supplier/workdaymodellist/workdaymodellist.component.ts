@@ -46,7 +46,7 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
   loading: boolean;
 
   size = 'small';
-  today = new Date().toLocaleDateString();
+  today = this.cfun.getDateFormat(new Date(), 'YYYY/MM/DD');
   currentStartDate = new Date(this.today + ' 00:00:00');
   currentEndDate = new Date(this.today + ' 23:59:59');
   q: any = {
