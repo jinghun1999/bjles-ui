@@ -123,9 +123,9 @@ export class CommonFunctionService {
   }
 
   getParentElement(el: any, tagName: string): any {
-    // while (el !== undefined && el.tagName != tagName) {
-    //   el = el.parentElement;
-    // }
+    while (el !== undefined && el.tagName !== tagName) {
+      el = el.parentElement;
+    }
     return el;
   }
 
