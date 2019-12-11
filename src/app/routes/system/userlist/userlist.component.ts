@@ -81,7 +81,7 @@ export class SystemUserlistComponent implements OnInit {
     { title: '用户状态', index: 'status_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

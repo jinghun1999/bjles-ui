@@ -59,7 +59,7 @@ export class SystemMenulistComponent implements OnInit {
     { title: '备注', index: 'comments', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

@@ -61,7 +61,7 @@ export class SystemActionlistComponent implements OnInit {
     { title: '客户端脚本', index: 'client_js', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

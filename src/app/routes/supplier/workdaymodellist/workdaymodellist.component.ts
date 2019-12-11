@@ -41,7 +41,7 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
     { title: '窗口时间模式', index: 'mode_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -134,7 +134,7 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {

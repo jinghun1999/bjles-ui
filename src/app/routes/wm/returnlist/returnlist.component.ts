@@ -57,7 +57,7 @@ export class WmReturnlistComponent implements OnInit {
     { title: '修改时间', index: 'ModifyTime', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -154,7 +154,7 @@ export class WmReturnlistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {

@@ -88,7 +88,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
     // { title: '任务单编号', index: 'task_no', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
 
   timer; // 定时器
@@ -223,7 +223,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getListItems(value: any, type: any): void {

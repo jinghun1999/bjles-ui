@@ -46,7 +46,7 @@ export class SystemCodelistComponent implements OnInit {
     { title: '代码英文描述', index: 'code_edescription', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

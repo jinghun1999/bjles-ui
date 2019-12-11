@@ -91,7 +91,7 @@ export class JisSheetinnerComponent implements OnInit, OnDestroy {
     { title: '打印状态', index: 'print_status_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
 
   expandForm = true;
   timer; // 定时器
@@ -220,7 +220,7 @@ export class JisSheetinnerComponent implements OnInit, OnDestroy {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshop = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getListItems(value: any, type: string): void {

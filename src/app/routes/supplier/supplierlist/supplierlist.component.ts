@@ -53,7 +53,7 @@ export class SupplierSupplierlistComponent implements OnInit {
     { title: '内部供应商', type: 'yn', index: 'isInternal', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

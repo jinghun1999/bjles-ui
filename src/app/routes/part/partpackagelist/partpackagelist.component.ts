@@ -47,7 +47,7 @@ export class PartPartpackagelistComponent implements OnInit {
     { title: '删除标识', index: 'part_flag', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();  expandForm = true;
+pages: STPage = new PagerConfig() as STPage;  expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -118,7 +118,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {

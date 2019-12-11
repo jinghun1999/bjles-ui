@@ -22,7 +22,7 @@ export class SystemOperationloglistComponent implements OnInit {
   ];
 
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

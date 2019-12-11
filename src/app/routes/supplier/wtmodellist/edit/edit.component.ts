@@ -43,7 +43,7 @@ export class SupplierWtmodellistEditComponent implements OnInit {
     { title: '窗口时间', index: 'window_time', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

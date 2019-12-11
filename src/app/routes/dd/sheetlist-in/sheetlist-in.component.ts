@@ -89,7 +89,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
     // { title: '通讯状态', index: 'mq_status_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
 
   timer; // 定时器
@@ -225,7 +225,7 @@ export class DdSheetlistInComponent implements OnInit, OnDestroy {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getListItems(value: any, type: any): void {

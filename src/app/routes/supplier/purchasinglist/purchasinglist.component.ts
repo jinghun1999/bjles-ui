@@ -54,7 +54,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
     { title: '是否是当前拉动', index: 'current_pull_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -83,7 +83,7 @@ export class SupplierPurchasinglistComponent implements OnInit {
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
     private httpService: ExpHttpService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -123,10 +123,12 @@ export class SupplierPurchasinglistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {
+    this.cfun.stChange(e, this.selectedRows);
+
     switch (e.type) {
       case 'checkbox':
         this.selectedRows = e.checkbox!;
@@ -246,28 +248,31 @@ export class SupplierPurchasinglistComponent implements OnInit {
       return false;
     }
 
-    this.q.page.export = true;
     this.initWhere();
-    this.http
-      .post(this.searchPath, this.q)
-      .pipe(tap(() => (this.loading = false)))
-      .subscribe(
-        res => {
-          if (res.successful) {
-            this.st.export(res.data.rows, {
-              callback: this.cfun.callbackOfExport,
-              filename: 'result.xlsx',
-              sheetname: 'sheet1',
-            });
-          } else {
-            this.msg.error(res.message);
-            this.loading = false;
-          }
-        },
-        (err: any) => this.msg.error('系统异常'),
-      );
 
-    this.q.page.export = false;
+    this.cfun.exportExcel(this.q, this.searchPath, this.columns, this);
+
+    // this.q.page.export = true;
+    // this.http
+    //   .post(this.searchPath, this.q)
+    //   .pipe(tap(() => (this.loading = false)))
+    //   .subscribe(
+    //     res => {
+    //       if (res.successful) {
+    //         this.st.export(res.data.rows, {
+    //           callback: this.cfun.callbackOfExport,
+    //           filename: 'result.xlsx',
+    //           sheetname: 'sheet1',
+    //         });
+    //       } else {
+    //         this.msg.error(res.message);
+    //         this.loading = false;
+    //       }
+    //     },
+    //     (err: any) => this.msg.error('系统异常'),
+    //   );
+    // this.q.page.export = false;
+
     this.clrearWhere();
   }
 
@@ -310,4 +315,5 @@ export class SupplierPurchasinglistComponent implements OnInit {
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
-  }}
+  }
+}

@@ -10,7 +10,7 @@ export class PagerConfig {
   front = false; // 关闭前端分页，true是前端分页，false后端控制分页
   showSize = true;
   pageSizes = [10, 30, 50, 100];
-  // position = `both`;
+  position = 'both';
 }
 
 export class SortInfo {

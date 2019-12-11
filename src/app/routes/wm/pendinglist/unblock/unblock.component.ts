@@ -41,7 +41,7 @@ export class WmPendinglistUnblockComponent implements OnInit {
     { title: '解封原因', render: 'rd_Why' },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

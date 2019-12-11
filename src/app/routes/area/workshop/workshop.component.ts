@@ -31,7 +31,7 @@ export class AreaWorkshopComponent implements OnInit {
     plant: '',
     workshop: '',
   };
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'workshop', type: 'checkbox', exported: false },

@@ -105,7 +105,7 @@ export class WmInventorylistImportComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   toolBarOnClick(e: any) {

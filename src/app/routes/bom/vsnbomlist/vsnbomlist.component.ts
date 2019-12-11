@@ -35,7 +35,7 @@ export class BomVsnbomlistComponent implements OnInit {
     { title: '版本号', index: 'VersionNo', sort: true },
   ];
   selectedRows: STData[] = [];
-pages: STPage = new PagerConfig();  expandForm = true;
+  pages: STPage = new PagerConfig() as STPage; expandForm = true;
   loading: boolean;
 
   size = 'small';
@@ -61,7 +61,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -101,7 +101,7 @@ pages: STPage = new PagerConfig();  expandForm = true;
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {
@@ -122,8 +122,8 @@ pages: STPage = new PagerConfig();  expandForm = true;
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value; this.getData();
         break;
     }
   }
@@ -216,4 +216,5 @@ pages: STPage = new PagerConfig();  expandForm = true;
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
-  }}
+  }
+}

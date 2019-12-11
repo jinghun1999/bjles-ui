@@ -44,7 +44,7 @@ export class DdKanbanversionlistComponent implements OnInit {
     { title: '最后打印时间', index: 'ModifyTime', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
 
 
@@ -165,7 +165,7 @@ export class DdKanbanversionlistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getListItems(value: any, type: any): void {

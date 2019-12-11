@@ -1,5 +1,5 @@
 export const environment = {
-  SERVER_URL: `http://localhost:58593/api`,
+  SERVER_URL: `http://10.1.126.171/qdApi/api`,
   production: true,
   useHash: true,
   hmr: false,

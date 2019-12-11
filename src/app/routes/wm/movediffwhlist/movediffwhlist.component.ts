@@ -60,7 +60,7 @@ export class WmMovediffwhlistComponent implements OnInit {
     { title: '修改人', index: 'ModifyUser_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

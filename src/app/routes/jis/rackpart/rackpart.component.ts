@@ -69,7 +69,7 @@ export class JisRackpartComponent implements OnInit {
     { title: '累计消耗个数', index: 'total_amount', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
 
   expandForm = true;
 
@@ -185,7 +185,7 @@ export class JisRackpartComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshop = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getListItems(value: any, type: string): void {

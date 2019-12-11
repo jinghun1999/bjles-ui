@@ -21,7 +21,7 @@ export class SystemEventlistComponent implements OnInit {
     { title: '事件类型', index: 'event_type_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

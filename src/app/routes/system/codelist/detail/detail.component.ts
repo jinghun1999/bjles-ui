@@ -29,7 +29,7 @@ export class SystemCodelistDetailComponent implements OnInit {
     { title: '英文描述', render: 'en_desc' },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
   isVisible = false;

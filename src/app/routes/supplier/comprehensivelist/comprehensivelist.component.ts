@@ -98,7 +98,7 @@ export class SupplierComprehensivelistComponent implements OnInit {
     { title: '同步时间', index: 'SynchronizeDate', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -160,7 +160,7 @@ export class SupplierComprehensivelistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   getCodeDetails(value: any, type: any) {

@@ -39,7 +39,7 @@ export class SystemAppconfiglistComponent implements OnInit {
     { title: '描述', index: 'application_description', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

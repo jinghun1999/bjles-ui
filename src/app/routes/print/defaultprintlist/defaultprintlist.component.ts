@@ -37,7 +37,7 @@ export class PrintDefaultprintlistComponent implements OnInit {
     { title: '打印机名称', index: 'printer_name', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -121,7 +121,7 @@ export class PrintDefaultprintlistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
     this.getListItems(true, 'supplier_print');
   }
 

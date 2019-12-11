@@ -44,7 +44,7 @@ export class SupplierWorkdaylistComponent implements OnInit {
     { title: '最后发送时间', index: 'last_send_time', sort: true, type: 'date', dateFormat: `YYYY-MM-DD HH:mm` },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -141,7 +141,7 @@ export class SupplierWorkdaylistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {

@@ -57,7 +57,7 @@ export class SystemProcesslistComponent implements OnInit {
     { title: '检查间隔时间', index: 'check_interval', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

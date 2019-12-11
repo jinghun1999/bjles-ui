@@ -39,7 +39,7 @@ export class WmWarehouselistComponent implements OnInit {
     { title: '操作员', index: 'InOutEmployeeName', sort: { key: 'InOutUserName' } },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 
@@ -69,7 +69,7 @@ export class WmWarehouselistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -133,7 +133,7 @@ export class WmWarehouselistComponent implements OnInit {
   plantChange(value: string): void {
     const l = this.pre_lists.find(p => p.value === value);
     this.sub_workshops = l.children;
-    this.q.workshop = '';
+    this.q.workshop = [];
   }
 
   stChange(e: STChange) {

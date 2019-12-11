@@ -27,7 +27,7 @@ export class SystemEventloglistComponent implements OnInit {
     { title: '事件处理描述', index: 'event_disposal', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

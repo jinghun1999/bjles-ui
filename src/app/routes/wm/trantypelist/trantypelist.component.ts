@@ -84,7 +84,7 @@ export class WmTrantypelistComponent implements OnInit {
     { title: '说明', index: 'Remark', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

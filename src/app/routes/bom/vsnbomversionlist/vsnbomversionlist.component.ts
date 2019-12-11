@@ -26,7 +26,7 @@ export class BomVsnbomversionlistComponent implements OnInit {
     { title: '手工生效操作员', index: 'UserName', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

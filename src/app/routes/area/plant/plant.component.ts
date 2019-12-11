@@ -31,7 +31,7 @@ export class AreaPlantComponent implements OnInit {
     plant_code: '',
     plant_name: '',
   };
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'plant_code', type: 'checkbox', exported: false },

@@ -38,7 +38,7 @@ export class SystemSysconfiglistComponent implements OnInit {
     { title: '参数缺省值', index: 'default_value', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

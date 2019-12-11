@@ -24,7 +24,7 @@ export class SystemInfoErrorlistComponent implements OnInit {
     { title: '消息', index: 'exception_message', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

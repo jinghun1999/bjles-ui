@@ -56,7 +56,7 @@ export class WmMonthplanlistComponent implements OnInit {
     { title: '增补标识', index: 'Identifier', sort: true },
   ];
   selectedRows: STData[] = [];
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   expandForm = true;
   loading: boolean;
 

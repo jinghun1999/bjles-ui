@@ -31,7 +31,7 @@ export class AreaRouteComponent implements OnInit {
     plant: '',
     workshop: '',
   };
-  pages: STPage = new PagerConfig();
+  pages: STPage = new PagerConfig() as STPage;
   @ViewChild('st', { static: true }) st: STComponent;
   columns: STColumn[] = [
     { title: '', index: 'route', type: 'checkbox', exported: false },
