@@ -1031,88 +1031,88 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@delon/abc@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/abc/-/abc-8.7.0.tgz#ca1ef23302227d2b495a9009382388aebf3eb6f1"
-  integrity sha512-joCmH8qtQIyGdb+IQXKdzbCOChg5N7hKzNcsAWR0firHLO2OXS/U4lslf/bG3dJ8l+O4oAgQueg/+zmhzjacfw==
+"@delon/abc@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/abc/-/abc-8.7.1.tgz#1ee6e3fedb9ad54fa0af6ab3a2f47b5289dc5273"
+  integrity sha512-ITNTNROy+riOg3edM6QsmpugpWFTf5z75Hq6gAxElaDvRITrL/TGc6oJbhLXU0DSPw/lqa/mOwhRn9MUtBuXQA==
   dependencies:
-    "@delon/acl" "^8.7.0"
-    "@delon/theme" "^8.7.0"
-    "@delon/util" "^8.7.0"
+    "@delon/acl" "^8.7.1"
+    "@delon/theme" "^8.7.1"
+    "@delon/util" "^8.7.1"
     file-saver "^1.3.3"
     ngx-countdown "^8.0.0"
     qrious "^4.0.2"
     tslib "^1.9.0"
 
-"@delon/acl@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/acl/-/acl-8.7.0.tgz#2f136f85d7f887d2861958cc27b47c719802ca84"
-  integrity sha512-KWaf5QskgiD+7d7U/SomBQCTIVBFTkkvKxe5rwB5Csz7pFwr9XoHR5Uv0qOkA6aZk5zsNKNkAjKJu40VdnIUdQ==
+"@delon/acl@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/acl/-/acl-8.7.1.tgz#920ff9f42fe2c6c4913d0572d3f58ad134188905"
+  integrity sha512-XOy1sA5WKXQr9wX48iW46dds4T2njLiP+DtVIgpNjqEUCYSja+cirnYGup3/z8UcL5DC/1AgHRwW/GQzxfjn2Q==
   dependencies:
-    "@delon/util" "^8.7.0"
+    "@delon/util" "^8.7.1"
     tslib "^1.9.0"
 
-"@delon/auth@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/auth/-/auth-8.7.0.tgz#f522d2eaf14eb0096c1c1c92455e13b3867dcef7"
-  integrity sha512-I8NKXsazE4ZBIiI4gjTWAPp9HcYgEQnQIBZM97v2qM0mvSs5QZ95Qa7NfenlwzP0twG+AZ3pPCC475WNUo/pNA==
-  dependencies:
-    tslib "^1.9.0"
-
-"@delon/cache@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/cache/-/cache-8.7.0.tgz#cd0e8bafc18cf7c58024dce5fa5dd3a0021fb543"
-  integrity sha512-et6g+/bJsrryGam0q1bCclQ+vmVFvoELxssx6kG4CqatLnHDudQeqfX/hzADBrWtYmiNoVz/32vQnisRegr0oA==
+"@delon/auth@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/auth/-/auth-8.7.1.tgz#0a1ae7b5ebf79235d73f2cba788663589e60f4e7"
+  integrity sha512-TN5TueA8cLCc2EGonhMKNHU9/DCObUp9bjYXTawvW7OvOnyjfY9O8FXD7PwSRdaUV29MGBRa5jhulbjPURVG8Q==
   dependencies:
     tslib "^1.9.0"
 
-"@delon/chart@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/chart/-/chart-8.7.0.tgz#bb836e1ea833e699728da81eccd5173357fff945"
-  integrity sha512-dj4FOdPEBVQ7Om1lpTP8uid1CMehfjuSaLOUgspFK6jFU2MsprdJpm1kWl2N43Wpi/7uIz72B0Ar1O4EVjGJ7Q==
-  dependencies:
-    "@delon/theme" "^8.7.0"
-    "@delon/util" "^8.7.0"
-    tslib "^1.9.0"
-
-"@delon/form@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/form/-/form-8.7.0.tgz#e6a706cffa92e1adbbc85fa0bfcdfab4af9ccecf"
-  integrity sha512-j/S7b07yEVY0V0qePeqX8o6BFz2tdrK7ySzgrN4H543kxQ9rjTSdpZeYux1srZx5G+cE1/7S6DRHQVurli7d2g==
-  dependencies:
-    "@delon/acl" "^8.7.0"
-    "@delon/theme" "^8.7.0"
-    "@delon/util" "^8.7.0"
-    tslib "^1.9.0"
-
-"@delon/mock@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/mock/-/mock-8.7.0.tgz#47e54309fce59bb50112459571d87d3241380e61"
-  integrity sha512-OkK07QRyO0zwXvtu1SWevoDZyDD/3ayRicx67oKrQ/WV5BQLD6y2y733NNQxSrmV9yxU+FDTVZ9XIG2fx5Pzmw==
+"@delon/cache@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/cache/-/cache-8.7.1.tgz#cb0079ddb4528f5aafcf02ca138a3b1358665ba7"
+  integrity sha512-As/JLl27GoQxC1fV8XDmVpD7EouN17HCq2GJeqee8kFCrkhqjSJXRzwH9WEiSvzf7i9wfPTTxc95g/fByphK3w==
   dependencies:
     tslib "^1.9.0"
 
-"@delon/testing@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/testing/-/testing-8.7.0.tgz#4a1c0d693003d0e5a59184668b061909602f8cc2"
-  integrity sha512-oH5ACkFH9VUSIaC+PLoqNj1BSN5/dENw4Ic+lvfJRo7bxFPHv7S8csGcmsoPynY6KNXZEGN6mK/NvdUKgkWsUA==
+"@delon/chart@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/chart/-/chart-8.7.1.tgz#5aca4b30f19ff988cd06c2f7a104909db48327b4"
+  integrity sha512-F5T1mSXz/jrdtwevyD6OyaKDF/ZRte6mnAjZL4/9kSC+OeLU/UPDJhSzIrloANC6N+U3NFwecBZpfwmD11TaZA==
+  dependencies:
+    "@delon/theme" "^8.7.1"
+    "@delon/util" "^8.7.1"
+    tslib "^1.9.0"
+
+"@delon/form@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/form/-/form-8.7.1.tgz#8b124928665477fc57c7d05575b9ed15006241c0"
+  integrity sha512-hJF01UM7o1JCjw33daxoHgwSt9WBoOanFYguQUJnvDxYkN/cqXOS22YF5ZsfxslWWWIm8kDlCYiAIRPGrGnjDA==
+  dependencies:
+    "@delon/acl" "^8.7.1"
+    "@delon/theme" "^8.7.1"
+    "@delon/util" "^8.7.1"
+    tslib "^1.9.0"
+
+"@delon/mock@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/mock/-/mock-8.7.1.tgz#9356543ae8532bcf896a48dd4e5a391c04030477"
+  integrity sha512-UedMnRcQ21YU/NvsgdenXihN6VMmxXCzLOlCfy3SLZgfhlqUBqrJZWl15zxdkNtIx7panMMHSvSlOW+iM/U/kQ==
   dependencies:
     tslib "^1.9.0"
 
-"@delon/theme@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/theme/-/theme-8.7.0.tgz#3665b13f656660d896ac99f9fd2390aaf509b32f"
-  integrity sha512-t+eLHyGW/3pnVoFfcDaEr31JGcjM5Wh/9QTWVXkxfstlH0PGPcjd0deSd0Dkji5SIqsFr5xASiqzltokmg1KcQ==
+"@delon/testing@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/testing/-/testing-8.7.1.tgz#977b489f19c66b50bf3d4fcb11e54c90a06a97c0"
+  integrity sha512-dpjpyUpieh0/teXMRo6wHooFGXOtMYMhiajp6fpPSSwEQt542tvCM9tJfs4kJnA3X1t6KZ3YcsKbVGK+9x7pIw==
   dependencies:
-    "@delon/acl" "^8.7.0"
-    "@delon/util" "^8.7.0"
+    tslib "^1.9.0"
+
+"@delon/theme@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/theme/-/theme-8.7.1.tgz#b8dfa154bd8d7fee54c409f79d063a93cc29150d"
+  integrity sha512-sG0P19Iw/ytgY55Rn0vnKijicmT8ZkJBEiVixh1uKXurvUwPVAQHcLI7IALeF92eOvDEG3y0aNvRIItzmB0RYg==
+  dependencies:
+    "@delon/acl" "^8.7.1"
+    "@delon/util" "^8.7.1"
     ng-zorro-antd "^8.5.2"
     tslib "^1.9.0"
 
-"@delon/util@^8.7.0":
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/@delon/util/-/util-8.7.0.tgz#bac007ed5299f63a84c331182d5b9085e347a904"
-  integrity sha512-oj1mc2c3wHXyYHxSH4N9ygagxav+QhcyaflNMSR++ROO3/h9assGbsbLgcCvyhKzRGUi+8y2DWgdwRtHLALPvg==
+"@delon/util@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@delon/util/-/util-8.7.1.tgz#83b0413973c769b8f65ac424295d6d3e93156702"
+  integrity sha512-XgleelRxXvTRVlU4y11p+M3gff4WlsUaMAewaX/Zr6ltAQySOygi28nbcMIGkOMJl9s227UPwcDKa1ZuAap7dQ==
   dependencies:
     extend "^3.0.0"
     tslib "^1.9.0"
@@ -7183,10 +7183,10 @@ ng-alain-codelyzer@^0.0.1:
   resolved "https://registry.yarnpkg.com/ng-alain-codelyzer/-/ng-alain-codelyzer-0.0.1.tgz#feef58971fb3c31d66765f06fda699b805fd7999"
   integrity sha512-/xa2c9/VbKs2rWTVPBvfbZ9GYIECMQQK+JSYyElL8XPY7j4ChF/si8sn3xS2/YdWL/rVXxMEU4QO7HCkKduxcg==
 
-ng-alain@^8.7.0:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/ng-alain/-/ng-alain-8.7.0.tgz#7115e3dfd5398ad7000092195fb9fe2f66b28191"
-  integrity sha512-iXPIlsuQ+GtUX6ooztLwZ8+T5sC4hG+hk/ehG6ZMZqsyBgxtj1uaPfWIXmgmZ/d03DsRyOubwF8Wags+z9MSFA==
+ng-alain@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/ng-alain/-/ng-alain-8.7.1.tgz#3dd632cd5eafa6c6915c89e3d24356f97259d892"
+  integrity sha512-mCe0dNWXNvixttVVAIYcvmxbx9k88MpNzFyEy7rm7feRsjsUJNP0FQ18iNYRKKJ/C7KKyjfFKFPf3NKgc5DIXQ==
 
 ng-zorro-antd@^8.5.2:
   version "8.5.2"

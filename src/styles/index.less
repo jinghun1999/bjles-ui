@@ -68,3 +68,21 @@ div.truncation {
 
   /* border: 1px solid #000000; */
 }
+
+.@{table-prefix-cls} {
+
+  &-tbody>tr {
+
+    &:nth-child(odd) {
+      background-color: #f5f5f5;
+    }
+
+    &.checked {
+      background: #fff3e0;
+    }
+
+    &.checked:hover {
+      background: #ffebbc
+    }
+  }
+}

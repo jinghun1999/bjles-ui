@@ -8,17 +8,16 @@
     "build": "npm run color-less && node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod",
     "analyze": "npm run color-less && node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
     "lint": "npm run lint:ts && npm run lint:style",
-    "lint:ts": "tslint -c tslint.json \"src/**/*.ts\" --fix",
+    "lint:ts": "tslint -p tsconfig.app.json -c tslint.json \"src/**/*.ts\" --fix",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less --fix",
     "lint-staged": "lint-staged",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "e2e": "ng e2e",
-    "test": "ng test",
+    "test": "ng test --watch",
     "test-coverage": "ng test --code-coverage --watch=false",
     "color-less": "node scripts/color-less.js",
     "icon": "ng g ng-alain:plugin icon"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.11",
     "@angular/common": "~8.2.11",
@@ -37,15 +36,15 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "ajv": "^6.10.2",
-    "@delon/abc": "^8.7.0",
-    "@delon/acl": "^8.7.0",
-    "@delon/auth": "^8.7.0",
-    "@delon/cache": "^8.7.0",
-    "@delon/chart": "^8.7.0",
-    "@delon/form": "^8.7.0",
-    "@delon/mock": "^8.7.0",
-    "@delon/theme": "^8.7.0",
-    "@delon/util": "^8.7.0",
+    "@delon/abc": "^8.7.1",
+    "@delon/acl": "^8.7.1",
+    "@delon/auth": "^8.7.1",
+    "@delon/cache": "^8.7.1",
+    "@delon/chart": "^8.7.1",
+    "@delon/form": "^8.7.1",
+    "@delon/mock": "^8.7.1",
+    "@delon/theme": "^8.7.1",
+    "@delon/util": "^8.7.1",
     "file-saver": "^2.0.2",
     "ng-zorro-antd": "^8.5.2",
     "ngx-tinymce": "^7.0.0",
@@ -95,9 +94,14 @@
     "webpack-bundle-analyzer": "^3.6.0",
     "antd-theme-generator": "^1.1.7",
     "xlsx": "^0.15.1",
-    "@delon/testing": "^8.7.0",
-    "ng-alain": "^8.7.0",
+    "@delon/testing": "^8.7.1",
+    "ng-alain": "^8.7.1",
     "ng-alain-codelyzer": "^0.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
   },
   "lint-staged": {
     "linters": {
@@ -113,11 +117,6 @@
     "ignore": [
       "src/assets/*"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint-staged"
-    }
   },
   "description": "English | [简体中文](README-zh_CN.md)",
   "main": "karma.conf.js",
