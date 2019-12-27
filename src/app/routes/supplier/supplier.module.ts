@@ -23,6 +23,8 @@ import { SupplierComprehensivelistEditComponent } from './comprehensivelist/edit
 import { SupplierSupplyschedulelistComponent } from './supplyschedulelist/supplyschedulelist.component';
 import { SupplierSupplyschedulelistEditComponent } from './supplyschedulelist/edit/edit.component';
 
+import { CalendarModule } from 'primeng/calendar';
+
 const COMPONENTS = [
   SupplierSupplierlistComponent,
   SupplierPurchasinglistComponent,
@@ -49,6 +51,7 @@ const COMPONENTS_NOROUNT = [
 
 @NgModule({
   imports: [
+    CalendarModule,
     SharedModule,
     SupplierRoutingModule
   ],

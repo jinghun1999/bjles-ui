@@ -70,7 +70,7 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -155,8 +155,8 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value; this.getData();
         break;
     }
   }
@@ -282,9 +282,10 @@ export class SupplierWorkdaymodellistComponent implements OnInit {
       this.q.workshop = tmp_workshops;
     }
     if (this.q.workday !== undefined && this.q.workday.length === 2)
-    this.q.workday = this.cfun.getSelectDate(this.q.workday);
-}
+      this.q.workday = this.cfun.getSelectDate(this.q.workday);
+  }
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
-  }}
+  }
+}

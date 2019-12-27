@@ -6,13 +6,8 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" nzFor="plant">工厂</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择工厂">
-            <nz-select
-              [(ngModel)]="q.plant"
-              [nzSize]="size"
-              name="plant"
-              id="plant"
-              (ngModelChange)="plantChange($event)"
-            >
+            <nz-select [(ngModel)]="q.plant" [nzSize]="size" name="plant" id="plant"
+              (ngModelChange)="plantChange($event)">
               <nz-option *ngFor="let option of pre_lists" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -23,16 +18,8 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8" ngFor="workshop">车间</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择车间">
-            <nz-select
-              [(ngModel)]="q.workshop"
-              [nzSize]="size"
-              name="workshop"
-              id="workshop"
-              [nzPlaceHolder]="'请选择'"
-              nzMode="multiple"
-              nzShowSearch="true"
-              nzAllowClear
-            >
+            <nz-select [(ngModel)]="q.workshop" [nzSize]="size" name="workshop" id="workshop" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" nzShowSearch="true" nzAllowClear>
               <nz-option *ngFor="let option of sub_workshops" [nzLabel]="option.text" [nzValue]="option.value">
               </nz-option>
             </nz-select>
@@ -44,23 +31,11 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">供应商代码</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="请选择窗口时间模式">
-            <nz-select
-              [(ngModel)]="q.supplier"
-              [nzSize]="size"
-              name="supplier"
-              id="supplier"
-              [nzPlaceHolder]="'请选择'"
-              nzMode="multiple"
-              (nzOpenChange)="getListItems($event, 'supplier')"
-              nzShowSearch="true"
-              nzAllowClear
-              [nzLoading]="loading"
-            >
-              <nz-option
-                *ngFor="let option of sub_supplier.data"
-                [nzLabel]="option.itemText"
-                [nzValue]="option.itemValue"
-              >
+            <nz-select [(ngModel)]="q.supplier" [nzSize]="size" name="supplier" id="supplier" [nzPlaceHolder]="'请选择'"
+              nzMode="multiple" (nzOpenChange)="getListItems($event, 'supplier')" nzShowSearch="true" nzAllowClear
+              [nzLoading]="loading">
+              <nz-option *ngFor="let option of sub_supplier.data" [nzLabel]="option.itemText"
+                [nzValue]="option.itemValue">
               </nz-option>
             </nz-select>
           </nz-form-control>
@@ -79,14 +54,8 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">零件名称</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input
-              nz-input
-              [(ngModel)]="q.part_name"
-              name="part_name"
-              id="part_name"
-              [nzSize]="size"
-              placeholder="请输入"
-            />
+            <input nz-input [(ngModel)]="q.part_name" name="part_name" id="part_name" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -95,14 +64,8 @@
         <nz-form-item nzFlex>
           <nz-form-label [nzSpan]="8">计划员</nz-form-label>
           <nz-form-control [nzSpan]="16">
-            <input
-              nz-input
-              [(ngModel)]="q.FollowUpID"
-              name="FollowUpID"
-              id="FollowUpID"
-              [nzSize]="size"
-              placeholder="请输入"
-            />
+            <input nz-input [(ngModel)]="q.FollowUpID" name="FollowUpID" id="FollowUpID" [nzSize]="size"
+              placeholder="请输入" />
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -124,16 +87,8 @@
     </div>
   </form>
   <ng-container>
-    <st
-      #st
-      [columns]="columns"
-      [size]="size"
-      [scroll]="{ x: '2800px' }"
-      [data]="data"
-      [loading]="loading"
-      (change)="stChange($event)"
-      [page]="pages"
-    >
+    <st #st [columns]="columns" [size]="size" [scroll]="{ x: '2800px' }" [data]="data" [loading]="loading"
+      (change)="stChange($event)" [page]="pages" [rowClassName]="rowClassName">
     </st>
   </ng-container>
 </nz-card>

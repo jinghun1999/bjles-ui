@@ -96,7 +96,9 @@
     "xlsx": "^0.15.1",
     "@delon/testing": "^8.7.1",
     "ng-alain": "^8.7.1",
-    "ng-alain-codelyzer": "^0.0.1"
+    "ng-alain-codelyzer": "^0.0.1",
+    "primeng": "^8.1.1",
+    "primeicons": "^2.0.0"
   },
   "husky": {
     "hooks": {

@@ -21,21 +21,22 @@ export class SupplierWorkdaymodellistEditComponent implements OnInit {
   loading = false;
   title = '';
 
+  minDate: Date = new Date();
+
   constructor(
     private modal: NzModalRef,
     private msg: NzMessageService,
     public http: _HttpClient,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // tslint:disable-next-line: prefer-conditional-expression
     if (this.record.add === true) {
       this.title = '添加';
       this.record.Periods = '0';
-      const today = new Date().toLocaleDateString();
-      this.record.workday = today;
+      this.record.workday = new Date();
     } else {
       this.title = '编辑';
       this.record.mode_id = this.record.mode_id + '';
@@ -57,11 +58,13 @@ export class SupplierWorkdaymodellistEditComponent implements OnInit {
     );
 
     this.initCodeDetail();
+
   }
 
   save() {
     this.loading = true;
     this.record.workday = this.cfun.getDate(this.record.workday);
+    // this.record.MultDate = this.cfun.getSelectDate(this.record.MultDate);
 
     this.http.post('/supplier/WorkDayModelSave', this.record).subscribe(
       (res: any) => {
@@ -104,7 +107,7 @@ export class SupplierWorkdaymodellistEditComponent implements OnInit {
     // tslint:disable-next-line: no-eval
     const tmp_data = eval('this.sub_' + type);
 
-    if (value && this.record.workshop.toString() !== tmp_data.last_workshop) {
+    if (value && this.record.workshop !== undefined && this.record.workshop.toString() !== tmp_data.last_workshop) {
       if (this.record.workshop.length > 0) {
         this.loading = true;
         this.capi.getListItems(type, this.record.plant, this.record.workshop.toString()).subscribe(

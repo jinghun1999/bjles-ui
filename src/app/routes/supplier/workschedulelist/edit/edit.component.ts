@@ -29,7 +29,7 @@ export class SupplierWorkschedulelistEditComponent implements OnInit {
     public http: _HttpClient,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.capi.getPlant().subscribe(
@@ -53,7 +53,8 @@ export class SupplierWorkschedulelistEditComponent implements OnInit {
       this.record.Periods = '0';
       this.record.work_schedule_type = this.sub_Work_schedule_type.data.find(p => p.text === '工作时间').val;
       this.record.shift = this.sub_Shift.data[0].val;
-      const today = new Date().toLocaleDateString();
+      let today = new Date();
+      today = this.cfun.getDateFormat(today, 'YYYY/MM/DD');
       this.record.start_end_time = [new Date(today + ' 00:00:00'), new Date(today + ' 23:59:59')];
       this.record.work_date = today;
       this.record.work_schedule_sn = 0;

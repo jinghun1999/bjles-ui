@@ -5,8 +5,9 @@
 </div>
 <form #f="ngForm" nz-form (ngSubmit)="save()">
   <div>
-    <button nz-button type="button" (click)="close()">关闭</button>
-    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" [nzLoading]="http.loading" [nzType]="'primary'">
+    <button nz-button type="button" (click)="close()" name="btn_close">关闭</button>
+    <button nz-button [disabled]="!f.form.valid || !f.form.dirty" name="btn_save" [nzLoading]="http.loading"
+      [nzType]="'primary'">
       保存
     </button>
   </div>
@@ -17,6 +18,7 @@
         <nz-option nzValue="0" nzLabel="按日"></nz-option>
         <nz-option nzValue="1" nzLabel="按周"></nz-option>
         <nz-option nzValue="2" nzLabel="按月"></nz-option>
+        <nz-option nzValue="3" nzLabel="自定义"></nz-option>
       </nz-select>
     </nz-form-control>
     <nz-form-label nzSpan="2" *ngIf="record.Periods==='1' || record.Periods==='2'">星期六</nz-form-label>
@@ -26,6 +28,14 @@
     <nz-form-label nzSpan="2" *ngIf="record.Periods==='1' || record.Periods==='2'">星期日</nz-form-label>
     <nz-form-control nzSpan="5" *ngIf="record.Periods==='1' || record.Periods==='2'">
       <input type="checkbox" [(ngModel)]="record.Sun" name="Sun" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2" *ngIf="record.Periods==='3'">选择多个日期</nz-form-label>
+    <nz-form-control nzSpan="5" *ngIf="record.Periods==='3'">
+      <div style="line-height: 10px;">
+        <p-calendar [(ngModel)]="record.MultDate" name="MultDate" dateFormat="yy/mm/dd" [minDate]="minDate"
+          selectionMode="multiple" [readonlyInput]="true">
+        </p-calendar>
+      </div>
     </nz-form-control>
   </nz-form-item>
 
@@ -46,7 +56,8 @@
     </nz-form-control>
     <nz-form-label nzSpan="2">工作日*</nz-form-label>
     <nz-form-control nzSpan="5">
-      <nz-date-picker [(ngModel)]="record.workday" name="workday" [nzAllowClear]="false"></nz-date-picker>
+      <nz-date-picker [(ngModel)]="record.workday" nzFormat="yyyy/MM/dd" name="workday" [nzAllowClear]="false">
+      </nz-date-picker>
     </nz-form-control>
   </nz-form-item>
 
