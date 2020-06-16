@@ -52,6 +52,9 @@ export class PartPartcardlistComponent implements OnInit {
     { title: '卡片类型', index: 'card_type_name', sort: true },
     { title: '零件活动状态', index: 'part_state_name', sort: true },
     { title: '删除标识', index: 'Flag', sort: true },
+    { title: '拉动数量', index: 'PullQty', sort: true },
+    { title: '是否慢流物料', index: 'IsSlowMertail', sort: true },
+    { title: '是否单框物料', index: 'IsSingleMertail', sort: true },
   ];
   selectedRows: STData[] = [];
   pages: STPage = new PagerConfig() as STPage;
@@ -80,7 +83,7 @@ export class PartPartcardlistComponent implements OnInit {
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -141,8 +144,8 @@ export class PartPartcardlistComponent implements OnInit {
         this.getData();
         break;
       case 'sort':
-                 this.q.sort.field = e.sort.column._sort.key;
-        this.q.sort.order = e.sort.value;        this.getData();
+        this.q.sort.field = e.sort.column._sort.key;
+        this.q.sort.order = e.sort.value; this.getData();
         break;
     }
   }
@@ -270,4 +273,5 @@ export class PartPartcardlistComponent implements OnInit {
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
-  }}
+  }
+}

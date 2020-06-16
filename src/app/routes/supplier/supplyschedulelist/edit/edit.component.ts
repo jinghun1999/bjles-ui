@@ -27,12 +27,13 @@ export class SupplierSupplyschedulelistEditComponent implements OnInit {
     public http: _HttpClient,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.record.add === true) {
       this.title = '添加';
-      const today = new Date().toLocaleDateString();
+      let today = new Date();
+      today = this.cfun.getDateFormat(today, 'YYYY/MM/DD');
       this.record.start_end_time = [new Date(today + ' 00:00:00'), new Date(today + ' 23:59:59')];
     } else {
       this.title = '编辑';

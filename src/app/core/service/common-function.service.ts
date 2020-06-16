@@ -42,7 +42,7 @@ export class CommonFunctionService {
   getSelectDate(e: any) {
     if (e !== undefined && e !== '' && e.length > 0) {
       for (let j = 0, len = e.length; j < len; j++) {
-        e[j] = format(e[j], 'YYYY/MM/DD HH:mm:ss');
+        e[j] = format(e[j], 'YYYY/MM/DD HH:mm');
       }
     }
     return e;

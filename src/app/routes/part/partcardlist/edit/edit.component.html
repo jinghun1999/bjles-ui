@@ -128,5 +128,30 @@
       <input nz-input [nzSize]="size" [(ngModel)]="record.VehicleConfig" name="VehicleConfig" />
     </nz-form-control>
   </nz-form-item>
+  <nz-form-item class="mb-sm">
+    <nz-form-label nzSpan="2">拉动数量</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <input nz-input [nzSize]="size" [(ngModel)]="record.PullQty" name="PullQty" />
+    </nz-form-control>
+    <nz-form-label nzSpan="2">是否慢流物料</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [nzSize]="size" [(ngModel)]="record.IsSlowMertail" name="IsSlowMertail" id="IsSlowMertail"
+        [nzShowSearch]="true">
+        <nz-option [nzLabel]="''" [nzValue]="''"></nz-option>
+        <nz-option [nzLabel]="'是'" [nzValue]="'是'"></nz-option>
+        <nz-option [nzLabel]="'否'" [nzValue]="'否'"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <nz-form-label nzSpan="2">是否单框物料</nz-form-label>
+    <nz-form-control nzSpan="5">
+      <nz-select [nzSize]="size" [(ngModel)]="record.IsSingleMertail" name="IsSingleMertail" id="IsSingleMertail"
+        [nzShowSearch]="true">
+        <nz-option [nzLabel]="''" [nzValue]="''"></nz-option>
+        <nz-option [nzLabel]="'是'" [nzValue]="'是'"></nz-option>
+        <nz-option [nzLabel]="'否'" [nzValue]="'否'"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
 
 </form>

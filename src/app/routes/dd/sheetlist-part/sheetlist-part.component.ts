@@ -59,7 +59,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
     { title: '供应商代码', index: 'supplier_code', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
     { title: '零件号', index: 'part_no', sort: true },
-    { title: '物料单类型', index: 'runsheet_type_name', sort: true },
+    { title: '物料单类型', index: 'runsheet_type_name', sort: { key: 'runsheet_type' } },
     { title: '预期到货时间', index: 'expected_arrival_time', type: 'date', sort: true },
     { title: '实际到货时间', index: 'actual_arrival_time', type: 'date', sort: true },
     { title: '需求箱数', index: 'required_pack_count' },
@@ -67,7 +67,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
     { title: '实际箱数', index: 'actual_pack_count' },
     { title: '实际件数', index: 'actual_part_count' },
     { title: '整包装数', index: 'pack_size' },
-    { title: '出入库单状态', index: 'sheet_process_status_name', sort: true },
+    { title: '出入库单状态', index: 'sheet_process_status_name', sort: { key: 'sheet_process_status' } },
 
     // { title: '工厂', index: 'plant', sort: true },
     // { title: '车间', index: 'workshop', sort: true },
@@ -101,7 +101,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private capi: CommonApiService,
     private cfun: CommonFunctionService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -212,7 +212,7 @@ export class DdSheetlistPartComponent implements OnInit, OnDestroy {
 
   reset() {
     // wait form reset updated finished
-    setTimeout(() => {});
+    setTimeout(() => { });
     // setTimeout(() => this.getData());
   }
 

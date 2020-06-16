@@ -71,7 +71,7 @@ export class WmStockwarninglistComponent implements OnInit {
     private cfun: CommonFunctionService,
     private xlsx: XlsxService,
     private httpService: ExpHttpService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -369,5 +369,24 @@ export class WmStockwarninglistComponent implements OnInit {
   clrearWhere() {
     const tmp_workshops = this.sub_workshops.map(p => p.value);
     if (tmp_workshops.toString() === this.q.workshop.toString()) this.q.workshop = [];
+  }
+
+  rowClassName(record: STData, index: number): string {
+    const min: any = record.min_storage === undefined ? 0 : record.min_storage; // 最小库存(箱)
+    const currentStorage: any = record.current_storage === undefined ? 0 : record.current_storage; // 当前库存(箱)
+    const packingQty: any = record.packing_qty === undefined ? 0 : record.packing_qty; // 未出库件数
+    const oncarrier: any = record.oncarrier === undefined ? 0 : record.oncarrier; // 未出库件数
+    const currentParts: any = record.current_parts === undefined ? 0 : record.current_parts; // 当前数量
+
+    const partboxs: any = Math.ceil((currentParts - oncarrier) / packingQty);
+
+    // 黄色预警
+    if (currentStorage > min && partboxs < min) {
+      return "stockWarningYellow";
+    }
+    // 红色预警
+    if (currentStorage < min) {
+      return "stockWarningRed";
+    }
   }
 }

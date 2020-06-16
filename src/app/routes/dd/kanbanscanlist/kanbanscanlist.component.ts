@@ -49,9 +49,13 @@ export class DdKanbanscanlistComponent implements OnInit {
   columns: STColumn[] = [
     { title: '', index: 'Scan_CardCode', type: 'checkbox', exported: false },
     {
-      title: '卡号', index: 'card_code', sort: {
+      title: '卡号', index: 'card_code',
+      format: (item: STData, col: STColumn, index: number) => {
+        return item.Scan_CardCode.substring(0, 10);
+      },
+      sort: {
         compare: (a: any, b: any) => {
-          return this.cfun.sortCompare(a.card_code, b.card_code);
+          return this.cfun.sortCompare(a.Scan_CardCode, b.Scan_CardCode);
         },
       },
     },

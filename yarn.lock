@@ -8339,6 +8339,16 @@ prettier@^1.18.2, prettier@^1.7.0:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
+primeicons@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-2.0.0.tgz#ec3e5a8d4d04a09309225a5a57deb911e08dc0d3"
+  integrity sha512-GJTCeMSQU8UU1GqbsaDrg/IH+b/vSinJQl52NVpdJ7sShYLZA8Eq6jLF48Ye3N/dQloGrE07i7XsZvxQ9pNbqg==
+
+primeng@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-8.1.1.tgz#3b1f95f503f1bd70834caea775dbfd2e4e322b5c"
+  integrity sha512-8dP8A3qkmOvDTe97kCeFvoCk6oPNDdgMTdT4UBzhC4ua5wM7i7pjYXuKzAXm3oEFf+iSEB6WqzzfSqyZdbEA+w==
+
 printj@~1.1.0, printj@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/printj/-/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@ang
 import { _HttpClient } from '@delon/theme';
 import { STColumn, STComponent, STData, STPage, STChange } from '@delon/abc';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { tap } from 'rxjs/operators';
+import { tap, finalize } from 'rxjs/operators';
 import { CacheService } from '@delon/cache';
 import { DdDetailComponent } from '../detail/detail.component';
 import { PageInfo, SortInfo, ItemData, PagerConfig } from 'src/app/model';
@@ -74,9 +74,9 @@ export class DdSheetlistComponent implements OnInit, OnDestroy {
     { title: '车间', index: 'workshop', sort: true },
     { title: '供应商代码', index: 'supplier_code', sort: true },
     { title: '供应商名称', index: 'supplier_name', sort: true },
-    { title: '物料单类型', index: 'runsheet_type_name', sort: true },
-    { title: '拉动类型', index: 'part_type_name', sort: true },
-    { title: '物料单状态', index: 'sheet_status_name', sort: true },
+    { title: '物料单类型', index: 'runsheet_type_name', sort: { key: 'part_type' } },
+    { title: '拉动类型', index: 'part_type_name', sort: { key: 'part_type' } },
+    { title: '物料单状态', index: 'sheet_status_name', sort: { key: 'sheet_status' } },
     { title: '车间物料单编号', index: 'workshop_runsheet_code', sort: true },
     { title: '车间流水号', index: 'workshop_sn', sort: true },
     { title: '供应商流水号', index: 'supplier_sn', sort: true },
@@ -85,9 +85,9 @@ export class DdSheetlistComponent implements OnInit, OnDestroy {
     { title: '配送路线代码', index: 'route_code', sort: true },
     { title: '卸货时间(分)', index: 'unloading_time', sort: true },
     { title: '收料', index: 'receiver_name', sort: true },
-    { title: '重做标志', index: 'redo_flag_name', sort: true },
-    { title: '通讯状态', index: 'mq_status_name', sort: true },
-    { title: '出入库单状态', index: 'sheet_process_status_name', sort: true },
+    { title: '重做标志', index: 'redo_flag_name', sort: { key: 'redo_flag' } },
+    { title: '通讯状态', index: 'mq_status_name', sort: { key: 'mq_status' } },
+    { title: '出入库单状态', index: 'sheet_process_status_name', sort: { key: 'sheet_process_status' } },
     { title: '打印状态', index: 'print_status_name', sort: true },
     { title: '任务单编号', index: 'task_no', sort: true },
   ];
@@ -136,7 +136,9 @@ export class DdSheetlistComponent implements OnInit, OnDestroy {
 
     this.http
       .post('/dd/GetRunsheetPager', this.q)
-      .pipe(tap(() => (this.loading = false)))
+      .pipe(
+        tap(() => (this.loading = false))
+      )
       .subscribe(
         res => {
           if (res.successful) {
