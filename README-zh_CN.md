@@ -1,5 +1,3 @@
-[English](README.md) | 简体中文
+# 快速入门
 
-## 快速入门
-
--使用最新Angular技术
+-使用最新Angular技术开发
