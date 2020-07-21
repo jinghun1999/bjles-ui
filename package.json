@@ -65,7 +65,7 @@
     "@types/mockjs": "^1.0.2",
     "@types/node": "~8.9.4",
     "antd-theme-generator": "^1.1.7",
-    "codecov": "^3.6.1",
+    "codecov": "^3.7.1",
     "codelyzer": "^5.0.0",
     "gh-pages": "^2.1.1",
     "husky": "^3.0.9",
